@@ -1,0 +1,37 @@
+{
+  "protocol": "modbus/nmea",
+
+  "serial": {
+    "path": "/dev/tty*",
+    "baud_rate": 4800,
+    "stop_bits_count": 1,
+    "parity_check": false
+  },
+
+  "output": {
+    "type": "db/file",
+    "ip:port": "0.0.0.0:5000",
+    "path": "/path/to/output"
+  },
+
+  "slaves": [
+    {
+      "name": "name",
+      "address": 1,
+      "registers": [
+        {
+          "name": "REGISTER_A",
+          "address": 40000,
+          "data_order": "ABCD",
+          "poll_pause_ms": 150
+        },
+        {
+          "name": "REGISTER_B",
+          "address": 40004,
+          "data_order": "BADCFEHG",
+          "poll_pause_ms": 500
+        }
+      ]
+    }
+  ]
+}

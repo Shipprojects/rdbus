@@ -1,0 +1,120 @@
+AccessModifierOffset: -4
+
+AlignAfterOpenBracket: Align
+
+AlignConsecutiveAssignments: false
+
+AlignOperands: false
+
+AlignTrailingComments: true
+
+AllowAllParametersOfDeclarationOnNextLine: false
+
+AllowShortBlocksOnASingleLine: false
+
+AllowShortCaseLabelsOnASingleLine: false
+
+AllowShortEnumsOnASingleLine: false
+
+AllowShortFunctionsOnASingleLine: false
+
+AllowShortIfStatementsOnASingleLine: false
+
+AllowShortLoopsOnASingleLine: false
+
+AlwaysBreakBeforeMultilineStrings: false
+
+AlwaysBreakTemplateDeclarations: Yes
+
+BinPackParameters: false
+
+BraceWrapping:
+    AfterCaseLabel: true
+    AfterClass: true
+    AfterControlStatement: Always
+    AfterEnum: true
+    AfterExternBlock: true
+    AfterFunction: true
+    AfterNamespace: true
+    AfterStruct: true
+    AfterUnion: true
+    BeforeCatch: true
+    BeforeElse: true
+    BeforeLambdaBody: true
+    BeforeWhile: true
+
+BreakBeforeBinaryOperators: None
+
+BreakBeforeBraces: Custom
+
+BreakBeforeTernaryOperators: false
+
+BreakStringLiterals: true
+
+ColumnLimit: 0
+
+CommentPragmas: ''
+
+ConstructorInitializerIndentWidth: 0
+
+ContinuationIndentWidth: 0
+
+Cpp11BracedListStyle: false
+
+IndentCaseLabels: true
+
+IndentWidth: 4
+
+IndentWrappedFunctionNames: false
+
+KeepEmptyLinesAtTheStartOfBlocks: false
+
+Language: Cpp
+
+MaxEmptyLinesToKeep: 2
+
+NamespaceIndentation: None
+
+PenaltyBreakBeforeFirstCallParameter: 100
+
+PenaltyBreakComment: 100
+
+PenaltyBreakFirstLessLess: 0
+
+PenaltyBreakString: 100
+
+PenaltyExcessCharacter: 1
+
+PenaltyReturnTypeOnItsOwnLine: 20
+
+PointerAlignment: Left
+
+ReflowComments: false
+
+SortIncludes: true
+
+SpaceAfterCStyleCast: false
+
+SpaceBeforeAssignmentOperators: true
+
+SpaceBeforeParens: ControlStatements
+
+SpaceInEmptyParentheses: false
+
+SpacesBeforeTrailingComments: 1
+
+SpacesInAngles: true
+
+SpacesInCStyleCastParentheses: true
+
+SpacesInContainerLiterals: false
+
+SpacesInParentheses: true
+
+SpacesInSquareBrackets: true
+
+Standard: Cpp11
+
+TabWidth: 4
+
+UseTab: Never

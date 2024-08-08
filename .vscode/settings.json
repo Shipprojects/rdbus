@@ -1,0 +1,34 @@
+{
+    "C_Cpp.autoAddFileAssociations": false,
+    "C_Cpp.intelliSenseEngine": "disabled",
+    "clangd.path": "/usr/bin/clangd-18",
+    "cmake.options.advanced": {
+        "build": {
+            "statusBarVisibility": "visible"
+        },
+        "buildTarget": {
+            "statusBarVisibility": "visible"
+        },
+        "configurePreset": {
+            "statusBarVisibility": "visible"
+        },
+        "ctest": {
+            "statusBarVisibility": "visible"
+        },
+        "debug": {
+            "statusBarVisibility": "visible"
+        },
+        "testPreset": {
+            "statusBarVisibility": "visible"
+        }
+    },
+    "editor.defaultFormatter": "xaver.clang-format",
+    "editor.formatOnSave": true,
+    "files.associations": {
+        "*.json.example": "jsonc",
+        ".clang*": "yaml"
+    },
+    "workbench.editorAssociations": {
+        "*.md": "vscode.markdown.preview.editor"
+    }
+}

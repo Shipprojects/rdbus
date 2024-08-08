@@ -1,0 +1,27 @@
+{
+	"build": {
+		"context": "context",
+		"dockerfile": "context/Dockerfile"
+	},
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"nathanridley.autotrim",
+				"ms-vscode.cpptools",
+				"xaver.clang-format",
+				"llvm-vs-code-extensions.vscode-clangd",
+				"twxs.cmake",
+				"ms-vscode.cmake-tools",
+				"ms-python.python",
+				"ms-python.vscode-pylance",
+				"shardulm94.trailing-spaces",
+			]
+		}
+	},
+	"mounts": [
+		"source=${localEnv:HOME}/.ssh,target=/home/developer/.ssh,type=bind,consistency=cached"
+	],
+	"name": "rdbus",
+	"workspaceFolder": "/code",
+	"workspaceMount": "source=${localWorkspaceFolder},target=/code,type=bind,consistency=cached"
+}

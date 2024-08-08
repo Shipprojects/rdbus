@@ -1,0 +1,9 @@
+build-essential
+clang-format
+cmake
+git
+gnupg2
+gnupg2
+openssh-server
+software-properties-common
+wget
