@@ -27,10 +27,8 @@ function(add_gtest TARGET_NAME)
     include(FetchContent)
     FetchContent_Declare(
         googletest
-        URL https://github.com/google/googletest/archive/2f80c2ba71c0e8922a03b9b855e5b019ad1f7064.zip
+        URL https://github.com/google/googletest/archive/5376968f6948923e2411081fd9372e71a59d8e77.zip
     )
-    set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-    target_link_libraries(${TARGET_NAME} PRIVATE gtest_main)
     FetchContent_MakeAvailable(googletest)
 endfunction()
 

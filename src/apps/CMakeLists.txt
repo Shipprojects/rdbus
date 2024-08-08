@@ -8,6 +8,8 @@ add_executable(${TARGET_NAME}
     ${SOURCE_FILES}
 )
 
+add_compile_options(${TARGET_NAME} ${COMPILE_OPTIONS})
+
 target_include_directories(${TARGET_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_SOURCE_DIR}/src)
 target_link_libraries(${TARGET_NAME} PRIVATE lib_rdbus)
 

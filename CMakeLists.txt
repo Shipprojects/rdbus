@@ -7,6 +7,8 @@ project(rdbus)
 include(CTest)
 include(ExternalLibs)
 
+set(COMPILE_OPTIONS -Wall -Wextra -Wpedantic)
+
 add_subdirectory(src/rdbus)
 add_subdirectory(src/apps)
 add_subdirectory(tests)

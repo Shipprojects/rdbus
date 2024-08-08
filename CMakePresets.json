@@ -41,16 +41,15 @@
             "targets":[
                 "all",
                 "rdbus",
-                "lib_rdbus"
+                "lib_rdbus",
+                "rdbus_tests"
             ]
         },
         {
             "name": "Release build",
             "configurePreset": "Release",
             "inherits": [ "Common" ]
-
-        }
-        ,
+        },
         {
             "name": "Debug build",
             "configurePreset": "Debug",

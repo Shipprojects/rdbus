@@ -8,4 +8,6 @@ add_library(${TARGET_NAME}
     ${SOURCE_FILES}
 )
 
+add_compile_options(${TARGET_NAME} ${COMPILE_OPTIONS})
+
 target_include_directories(${TARGET_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
