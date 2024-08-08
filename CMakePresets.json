@@ -1,0 +1,61 @@
+{
+    "version": 3,
+    "cmakeMinimumRequired": {
+      "major": 3,
+      "minor": 21,
+      "patch": 0
+    },
+    "configurePresets": [
+        {
+            "name": "Common",
+            "hidden": true,
+            "cacheVariables": {
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+            }
+        },
+        {
+            "name": "Release",
+            "displayName": "Release",
+            "description": "Release configuration",
+            "inherits": [ "Common" ],
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release"
+            },
+            "binaryDir": "${sourceDir}/build/Release"
+        },
+        {
+            "name": "Debug",
+            "displayName": "Debug",
+            "description": "Debug configuration",
+            "inherits": [ "Common" ],
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
+            },
+            "binaryDir": "${sourceDir}/build/Debug"
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "Common",
+            "hidden": true,
+            "targets":[
+                "all",
+                "rdbus",
+                "lib_rdbus"
+            ]
+        },
+        {
+            "name": "Release build",
+            "configurePreset": "Release",
+            "inherits": [ "Common" ]
+
+        }
+        ,
+        {
+            "name": "Debug build",
+            "configurePreset": "Debug",
+            "inherits": [ "Common" ]
+
+        }
+    ]
+}
