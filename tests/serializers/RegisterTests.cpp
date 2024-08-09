@@ -1,5 +1,5 @@
-#include "rdbus/config/Register.hpp"
-#include "rdbus/config/exception.hpp"
+#include "config/Register.hpp"
+#include "config/exception.hpp"
 #include "tests/utility.hpp"
 #include <gtest/gtest.h>
 #include <nlohmann/json.hpp>

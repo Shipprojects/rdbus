@@ -14,3 +14,4 @@ target_include_directories(${TARGET_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
 add_json(${TARGET_NAME})
 add_spdlog(${TARGET_NAME})
+add_modbus(${TARGET_NAME})

@@ -10,6 +10,18 @@ function(add_spdlog TARGET_NAME)
     target_include_directories ( ${TARGET_NAME} PUBLIC ${spdlog_SOURCE_DIR}/include )
 endfunction()
 
+function(add_modbus TARGET_NAME)
+    include(FetchContent)
+    FetchContent_Declare(
+            modbus
+            GIT_REPOSITORY  "https://github.com/Mazurel/Modbus"
+            GIT_TAG         "master"
+    )
+
+    set( MODBUS_COMMUNICATION off )
+    FetchContent_MakeAvailable( modbus )
+    target_include_directories ( ${TARGET_NAME} PUBLIC ${protocolConverter_SOURCE_DIR}/include )
+endfunction()
 
 function(add_json TARGET_NAME)
     include(FetchContent)
