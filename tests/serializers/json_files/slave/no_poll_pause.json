@@ -1,0 +1,10 @@
+{
+    "address": 1,
+    "name": "Sensor",
+    "registers": [
+        {
+            "address": 40000,
+            "data_order": "ABCD"
+        }
+    ]
+}
