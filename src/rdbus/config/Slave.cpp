@@ -1,5 +1,4 @@
 #include "Slave.hpp"
-#include "Register.hpp"
 #include "_utility.hpp"
 #include "exception.hpp"
 

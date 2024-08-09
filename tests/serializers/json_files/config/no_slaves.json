@@ -1,0 +1,16 @@
+{
+    "protocol": "modbus",
+
+    "output": {
+      "path": "/path/to/output"
+    },
+
+    "serial": {
+      "baud_rate": 4800,
+      "parity": false,
+      "path": "/dev/ttyS1",
+      "stop_bits_count": 1
+    },
+
+    "slaves": []
+  }

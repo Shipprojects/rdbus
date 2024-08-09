@@ -1,0 +1,34 @@
+{
+    "protocol": "something",
+
+    "output": {
+      "path": "/path/to/output"
+    },
+
+    "serial": {
+      "baud_rate": 4800,
+      "parity": false,
+      "path": "/dev/ttyS0",
+      "stop_bits_count": 1
+    },
+
+    "slaves": [
+      {
+        "address": 1,
+        "name": "name",
+        "poll_time_ms": 150,
+        "registers": [
+          {
+            "address": 40000,
+            "data_order": "ABCD",
+            "name": "REGISTER_A"
+          },
+          {
+            "address": 40004,
+            "data_order": "BADCFEHG",
+            "name": "REGISTER_B"
+          }
+        ]
+      }
+    ]
+  }

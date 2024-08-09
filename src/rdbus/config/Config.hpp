@@ -1,10 +1,11 @@
 #pragma once
 
-#include "config/Output.hpp"
-#include "config/Serial.hpp"
+#include "Output.hpp"
+#include "Serial.hpp"
+#include "Slave.hpp"
+#include <list>
 #include <nlohmann/json.hpp>
 #include <string>
-#include <vector>
 
 namespace config
 {
@@ -12,9 +13,14 @@ namespace config
 struct Config
 {
     std::string protocol;
-    // std::vector< Slave > slaves;
+
+    using Slaves = std::list< Slave >;
+    Slaves slaves;
+
     Output output;
     Serial serial;
 };
+
+void from_json( const nlohmann::json& j, Config& x );
 
 } // namespace config

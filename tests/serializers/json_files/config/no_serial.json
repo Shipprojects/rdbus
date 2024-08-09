@@ -1,0 +1,27 @@
+{
+    "protocol": "modbus",
+
+    "output": {
+      "path": "/path/to/output"
+    },
+
+    "slaves": [
+      {
+        "address": 1,
+        "name": "name",
+        "poll_time_ms": 150,
+        "registers": [
+          {
+            "address": 40000,
+            "data_order": "ABCD",
+            "name": "REGISTER_A"
+          },
+          {
+            "address": 40004,
+            "data_order": "BADCFEHG",
+            "name": "REGISTER_B"
+          }
+        ]
+      }
+    ]
+  }
