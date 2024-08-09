@@ -1,0 +1,34 @@
+{
+    "protocol": "modbus",
+
+    "serial": {
+      "path": "/dev/tty*",
+      "baud_rate": 4800,
+      "stop_bits_count": 1,
+      "parity_check": false
+    },
+
+    "output": {
+      "path": "/path/to/output"
+    },
+
+    "slaves": [
+      {
+        "name": "name",
+        "address": 1,
+        "poll_pause_ms": 150,
+        "registers": [
+          {
+            "name": "REGISTER_A",
+            "address": 40000,
+            "data_order": "ABCD"
+          },
+          {
+            "name": "REGISTER_B",
+            "address": 40004,
+            "data_order": "BADCFEHG",
+          }
+        ]
+      }
+    ]
+  }
