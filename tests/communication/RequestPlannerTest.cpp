@@ -116,7 +116,7 @@ TEST( TestRequestPlanner, TestSubsequentAndBreaks )
 
     auto result = communication::modbus::requestPlan( slave );
 
-    ASSERT_EQ( result.size(), 3 );
+    ASSERT_EQ( result.size(), 2 );
 
     auto it = result.begin();
     EXPECT_EQ( it->registerAddress(), 100 );

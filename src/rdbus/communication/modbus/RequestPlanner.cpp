@@ -17,7 +17,7 @@ std::list< MB::ModbusRequest > requestPlan( const Slave& slave )
     // Sort registers for easier address grouping
     auto registers = slave.registers;
     registers.sort( []( const Register& left, const Register& right )
-                    { return left.address > right.address; } );
+                    { return left.address < right.address; } );
 
 
     // Starting address of register group
@@ -29,8 +29,8 @@ std::list< MB::ModbusRequest > requestPlan( const Slave& slave )
 
         // If next register is not directly adjacent to the current one or next
         // register is the last register
-        if ( ( it->address + it->byteOrder.size() + 1 != std::next( it )->address ) ||
-             std::next( it ) == registers.end() )
+        if ( ( it->address + it->byteOrder.size() != std::next( it )->address ) ||
+             ( std::next( it ) == registers.end() ) )
         {
             // TODO: Will probably need to find a way how to read from coils too, otherwise the only reading
             // that is possible now is from holding registers due to hardcoded function code
