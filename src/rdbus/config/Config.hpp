@@ -1,4 +1,6 @@
 #pragma once
+
+#include "config/Output.hpp"
 #include <nlohmann/json.hpp>
 #include <string>
 #include <vector>
@@ -6,15 +8,13 @@
 namespace config
 {
 
-class Config
+struct Config
 {
-public:
     Config( const std::string& protocol /*const std::vector<Slave> slaves, const Output& output*/ );
 
-private:
     std::string protocol;
     // std::vector< Slave > slaves;
-    // Output output;
+    Output output;
 };
 
-} // namespace rdbus
+} // namespace config
