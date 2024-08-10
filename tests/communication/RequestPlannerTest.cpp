@@ -5,7 +5,6 @@
 
 using namespace config;
 
-
 TEST( TestRequestPlanner, TestSubsequent )
 {
     Slave slave;
