@@ -2,6 +2,5 @@
     "address": 1,
     "name": "Sensor",
     "poll_time_ms": 150,
-    "CRC": true,
     "registers": []
 }

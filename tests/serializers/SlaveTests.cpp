@@ -44,18 +44,6 @@ TEST( TestSlave, TestDeserializationNoPollPause )
                   config::ParseException );
 }
 
-TEST( TestSlave, TestDeserializationNoCRC )
-{
-    const auto path = testFilePath + "no_CRC.json";
-
-    const auto jsonIn = getJsonFromPath( path );
-
-    EXPECT_THROW( {
-        config::Slave slave = jsonIn;
-    },
-                  config::ParseException );
-}
-
 TEST( TestSlave, TestDeserializationValid )
 {
     const auto path = testFilePath + "valid.json";

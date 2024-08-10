@@ -19,8 +19,6 @@ struct Slave
 
     using Registers = std::list< Register >;
     Registers registers;
-
-    bool CRC = false;
 };
 
 void from_json( const nlohmann::json& j, Slave& x );

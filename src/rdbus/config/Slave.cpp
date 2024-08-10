@@ -21,16 +21,12 @@ void from_json( const nlohmann::json& j, Slave& x )
     Slave::Registers registers;
     parseKeyValue( j, "registers", registers, "No slave registers present!" );
 
-    bool CRC = false;
-    parseKeyValue( j, "CRC", CRC, "No CRC field present in slave settings!" );
-
     if ( registers.empty() )
     {
         throw ParseException( "No slave registers present!" );
     }
 
     x.name = name;
-    x.CRC = CRC;
     x.address = address;
     x.pollTimeMs = Slave::Millis( pollTimeMs );
     x.registers = registers;
