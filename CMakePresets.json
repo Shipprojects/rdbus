@@ -43,7 +43,8 @@
                 "rdbus",
                 "lib_rdbus",
                 "rdbus_tests"
-            ]
+            ],
+            "jobs": 20
         },
         {
             "name": "Release build",
