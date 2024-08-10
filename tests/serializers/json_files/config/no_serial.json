@@ -10,7 +10,6 @@
         "address": 1,
         "name": "name",
         "poll_time_ms": 150,
-        "CRC": true,
         "registers": [
           {
             "address": 40000,
