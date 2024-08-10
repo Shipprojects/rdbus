@@ -1,6 +1,7 @@
 {
     "address": 1,
     "name": "Sensor",
+    "CRC": true,
     "registers": [
         {
             "address": 40000,

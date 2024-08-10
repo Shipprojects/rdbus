@@ -1,6 +1,7 @@
 {
     "name": "Sensor",
     "poll_time_ms": 150,
+    "CRC": false,
     "registers": [
         {
             "address": 40000,
