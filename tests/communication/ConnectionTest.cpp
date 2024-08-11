@@ -1,6 +1,6 @@
-#include "communication/Connection.hpp"
+#include "rdbus/communication/Connection.hpp"
 #include "OSMock.hpp"
-#include "config/Serial.hpp"
+#include "rdbus/config/Serial.hpp"
 #include <gtest/gtest.h>
 
 using namespace communication;

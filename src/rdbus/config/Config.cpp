@@ -1,6 +1,6 @@
-#include "config/Config.hpp"
+#include "Config.hpp"
 #include "_utility.hpp"
-#include "config/exception.hpp"
+#include "exception.hpp"
 #include <nlohmann/json.hpp>
 
 using namespace nlohmann;

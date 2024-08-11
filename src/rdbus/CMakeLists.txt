@@ -10,7 +10,7 @@ add_library(${TARGET_NAME}
 
 add_compile_options(${TARGET_NAME} ${COMPILE_OPTIONS})
 
-target_include_directories(${TARGET_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(${TARGET_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/src)
 
 add_json(${TARGET_NAME})
 add_spdlog(${TARGET_NAME})

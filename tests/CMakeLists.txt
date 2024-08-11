@@ -22,7 +22,7 @@ target_include_directories(${TARGET_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}
                                                   ${gtest_SOURCE_DIR}/include
                                                   ${gmock_SOURCE_DIR}/include
                                                   ${TEST_DATA_DIR_HEADER_PATH}
-                                                  ${CMAKE_SOURCE_DIR}/src/rdbus)
+                                                  ${CMAKE_SOURCE_DIR}/src)
 
 target_link_libraries(${TARGET_NAME} PRIVATE lib_rdbus GTest::gtest_main GTest::gmock Modbus)
 
