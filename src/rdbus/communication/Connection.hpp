@@ -1,8 +1,9 @@
 #pragma once
 
-#include "config/Serial.hpp"
+#include "rdbus/config/Serial.hpp"
 #include <chrono>
 #include <fcntl.h>
+#include <iostream>
 #include <poll.h>
 #include <stdexcept>
 #include <stdint.h>
@@ -70,9 +71,10 @@ public:
         fileDescriptor = -1;
     }
 
-
     void sendData( const std::vector< uint8_t >& data )
     {
+        std::cout << "Sending data " << toHexString( data.data(), data.size() ) << '\n';
+
         // Ensure that nothing will intervene in our communication by discarding data that has been written but not transmitted
         os.tcflush( fileDescriptor, TCOFLUSH );
         // Write
@@ -87,20 +89,31 @@ public:
         pollfd waitingFileDescriptor = { .fd = fileDescriptor, .events = POLLIN, .revents = POLLIN };
 
         // Wait for incoming data
-        if ( os.poll( &waitingFileDescriptor, 1, timeout.count() ) <= 0 )
+        if ( os.poll( &waitingFileDescriptor, 1, std::chrono::milliseconds( timeout ).count() ) <= 0 )
         {
             throw Timeout( "Device timeout!" );
         }
 
-        const auto size = os.read( fileDescriptor, data.begin().base(), maxSize );
-
-        if ( size < 0 )
+        // Read while there is data available
+        constexpr int readTimeoutMs = 100;
+        ssize_t size = 0;
+        do
         {
-            throw Exception( "Device failure!" );
+            const auto readBytes = os.read( fileDescriptor, data.data() + size, maxSize );
+
+            if ( readBytes < 0 )
+            {
+                throw Exception( "Device failure!" );
+            }
+
+            size += readBytes;
         }
+        while ( os.poll( &waitingFileDescriptor, 1, readTimeoutMs ) > 0 );
 
         data.resize( size );
         data.shrink_to_fit();
+
+        std::cout << "Data received " + toHexString( data.data(), data.size() ) << '\n';
 
         return data;
     }
@@ -192,6 +205,19 @@ private:
 
         cfsetospeed( &termios_, speed );
         cfsetispeed( &termios_, speed );
+    }
+
+    std::string toHexString( const uint8_t* data, int len )
+    {
+        std::stringstream ss;
+        ss << std::hex;
+
+        for ( int i( 0 ); i < len; ++i )
+        {
+            ss << std::setw( 2 ) << std::setfill( '0' ) << ( int )data[ i ];
+        }
+
+        return ss.str();
     }
 };
 
