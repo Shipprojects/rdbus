@@ -21,14 +21,14 @@ TEST( TestRequestPlanner, TestSubsequent )
 
     {
         Register reg;
-        reg.address = 104;
+        reg.address = 101;
         reg.byteOrder = { 0, 1, 2, 3, 4, 5, 6, 7 };
         slave.registers.emplace_back( std::move( reg ) );
     }
 
     {
         Register reg;
-        reg.address = 112;
+        reg.address = 102;
         reg.byteOrder = { 0, 1, 2, 3 };
         slave.registers.emplace_back( std::move( reg ) );
     }
@@ -63,7 +63,7 @@ TEST( TestRequestPlanner, TestWithBreaks )
 
     {
         Register reg;
-        reg.address = 124;
+        reg.address = 110;
         reg.byteOrder = { 0, 1, 2, 3 };
         slave.registers.emplace_back( std::move( reg ) );
     }
@@ -81,7 +81,7 @@ TEST( TestRequestPlanner, TestWithBreaks )
     EXPECT_EQ( it->numberOfRegisters(), 1 );
 
     it++;
-    EXPECT_EQ( it->registerAddress(), 124 );
+    EXPECT_EQ( it->registerAddress(), 110 );
     EXPECT_EQ( it->numberOfRegisters(), 1 );
 }
 
@@ -101,14 +101,14 @@ TEST( TestRequestPlanner, TestSubsequentAndBreaks )
 
     {
         Register reg;
-        reg.address = 108;
+        reg.address = 103;
         reg.byteOrder = { 0, 1, 2, 3, 4, 5, 6, 7 };
         slave.registers.emplace_back( std::move( reg ) );
     }
 
     {
         Register reg;
-        reg.address = 116;
+        reg.address = 104;
         reg.byteOrder = { 0, 1, 2, 3 };
         slave.registers.emplace_back( std::move( reg ) );
     }
@@ -122,6 +122,6 @@ TEST( TestRequestPlanner, TestSubsequentAndBreaks )
     EXPECT_EQ( it->numberOfRegisters(), 1 );
 
     it++;
-    EXPECT_EQ( it->registerAddress(), 108 );
+    EXPECT_EQ( it->registerAddress(), 103 );
     EXPECT_EQ( it->numberOfRegisters(), 2 );
 }

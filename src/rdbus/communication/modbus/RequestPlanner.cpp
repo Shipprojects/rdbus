@@ -29,7 +29,7 @@ std::list< MB::ModbusRequest > requestPlan( const Slave& slave )
 
         // If next register is not directly adjacent to the current one or next
         // register is the last register
-        if ( ( it->address + it->byteOrder.size() != std::next( it )->address ) ||
+        if ( ( it->address + 1 != std::next( it )->address ) ||
              ( std::next( it ) == registers.end() ) )
         {
             // TODO: Will probably need to find a way how to read from coils too, otherwise the only reading
