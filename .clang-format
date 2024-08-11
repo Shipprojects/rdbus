@@ -6,7 +6,7 @@ AlignConsecutiveAssignments: false
 
 AlignOperands: false
 
-AlignTrailingComments: true
+AlignTrailingComments: false
 
 AllowAllParametersOfDeclarationOnNextLine: false
 

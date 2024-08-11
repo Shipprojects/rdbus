@@ -1,5 +1,5 @@
-#include "config/Output.hpp"
-#include "config/exception.hpp"
+#include "rdbus/config/Output.hpp"
+#include "rdbus/config/exception.hpp"
 #include "tests/utility.hpp"
 #include <gtest/gtest.h>
 #include <nlohmann/json.hpp>

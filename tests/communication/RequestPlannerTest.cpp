@@ -1,10 +1,9 @@
-#include "communication/modbus/RequestPlanner.hpp"
-#include "config/Register.hpp"
-#include "config/Slave.hpp"
+#include "rdbus/communication/modbus/RequestPlanner.hpp"
+#include "rdbus/config/Register.hpp"
+#include "rdbus/config/Slave.hpp"
 #include <gtest/gtest.h>
 
 using namespace config;
-
 
 TEST( TestRequestPlanner, TestSubsequent )
 {

@@ -2,13 +2,13 @@
   "protocol": "modbus",
 
   "output": {
-    "path": "/path/to/output"
+    "path": "something"
   },
 
   "serial": {
-    "baud_rate": 4800,
+    "baud_rate": 9600,
     "parity": false,
-    "path": "/dev/tty*",
+    "path": "/dev/ttyS1",
     "stop_bits_count": 1
   },
 
@@ -19,14 +19,34 @@
       "poll_time_ms": 150,
       "registers": [
         {
-          "address": 40000,
+          "address": 130,
           "data_order": "ABCD",
           "name": "REGISTER_A"
         },
         {
-          "address": 40004,
-          "data_order": "BADCFEHG",
+          "address": 134,
+          "data_order": "ABCD",
           "name": "REGISTER_B"
+        },
+        {
+          "address": 138,
+          "data_order": "ABCD",
+          "name": "REGISTER_C"
+        },
+        {
+          "address": 142,
+          "data_order": "ABCD",
+          "name": "REGISTER_D"
+        },
+        {
+          "address": 146,
+          "data_order": "ABCD",
+          "name": "REGISTER_E"
+        },
+        {
+          "address": 150,
+          "data_order": "ABCD",
+          "name": "REGISTER_F"
         }
       ]
     }

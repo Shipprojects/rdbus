@@ -1,7 +1,7 @@
 #include "RequestPlanner.hpp"
 #include "MB/modbusRequest.hpp"
 #include "MB/modbusUtils.hpp"
-#include "config/Register.hpp"
+#include "rdbus/config/Register.hpp"
 
 namespace communication
 {

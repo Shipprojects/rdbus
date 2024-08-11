@@ -1,6 +1,6 @@
 #pragma once
 
-#include "config/Slave.hpp"
+#include "rdbus/config/Slave.hpp"
 #include <MB/modbusRequest.hpp>
 
 namespace communication
