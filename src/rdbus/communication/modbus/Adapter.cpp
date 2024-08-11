@@ -22,13 +22,11 @@ Adapter::Adapter( const config::Serial& settings )
 {
 }
 
-auto Adapter::request( const Request& request ) -> Response
+auto Adapter::send( const Request& request, std::chrono::seconds timeout ) -> Response
 {
     connection.sendData( toRaw( request ) );
 
-    // Hardcoded request timeout
-    constexpr std::chrono::seconds requestTimeout( 15 );
-    return Response( connection.getData( std::chrono::seconds( requestTimeout ) ), true );
+    return Response( connection.getData( std::chrono::seconds( timeout ) ), true );
 }
 
 } // namespace communication::modbus
