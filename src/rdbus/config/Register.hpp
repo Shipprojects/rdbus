@@ -1,5 +1,6 @@
 #pragma once
 
+#include "rdbus/Data.hpp"
 #include <list>
 #include <nlohmann/json.hpp>
 #include <string>
@@ -17,6 +18,8 @@ struct Register
     // means that the first byte will go to 2nd position, second byte will go to 3rd position, third
     // byte will go to 0th position, last byte will go to 1st position.
     std::list< int > byteOrder;
+
+    rdbus::Type type;
 };
 
 void from_json( const nlohmann::json& j, Register& x );
