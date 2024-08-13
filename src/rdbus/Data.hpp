@@ -1,5 +1,6 @@
 #pragma once
 
+#include <chrono>
 #include <list>
 #include <string>
 #include <variant>
@@ -26,6 +27,9 @@ struct Output
         std::variant< float, double, uint32_t, int32_t > value;
 
         Type type;
+
+        using Timestamp = std::chrono::time_point< std::chrono::system_clock >;
+        Timestamp timestamp;
     };
 
     std::list< Field > fields;

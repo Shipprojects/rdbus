@@ -1,18 +1,16 @@
 #include "RequestPlanner.hpp"
 #include "MB/modbusRequest.hpp"
 #include "MB/modbusUtils.hpp"
+#include "rdbus/communication/modbus/RequestDescription.hpp"
 #include "rdbus/config/Register.hpp"
 
-namespace communication
-{
-
-namespace modbus
+namespace communication::modbus
 {
 
 using namespace config;
-std::list< MB::ModbusRequest > requestPlan( const Slave& slave )
+RequestDescriptions requestPlan( const Slave& slave )
 {
-    std::list< MB::ModbusRequest > requests;
+    RequestDescriptions requestDescriptions;
 
     // Sort registers for easier address grouping
     auto registers = slave.registers;
@@ -22,10 +20,10 @@ std::list< MB::ModbusRequest > requestPlan( const Slave& slave )
 
     // Starting address of register group
     int address = registers.begin()->address;
-    int requestRegisterCount = 0;
+    std::list< config::Register > group;
     for ( auto it = registers.begin(); it != registers.end(); it++ )
     {
-        requestRegisterCount++;
+        group.push_back( *it );
 
         // If next register is not directly adjacent to the current one or next
         // register is the last register
@@ -34,10 +32,10 @@ std::list< MB::ModbusRequest > requestPlan( const Slave& slave )
         {
             // TODO: Will probably need to find a way how to read from coils too, otherwise the only reading
             // that is possible now is from holding registers due to hardcoded function code
-            requests.emplace_back( slave.address, MB::utils::MBFunctionCode::ReadAnalogOutputHoldingRegisters,
-                                   address, requestRegisterCount );
-
-            requestRegisterCount = 0;
+            auto request = MB::ModbusRequest( slave.address, MB::utils::MBFunctionCode::ReadAnalogOutputHoldingRegisters,
+                                              address, group.size() );
+            requestDescriptions.emplace_back( std::move( request ), std::move( group ) );
+            group.clear();
 
             if ( std::next( it ) != registers.end() )
             {
@@ -47,9 +45,7 @@ std::list< MB::ModbusRequest > requestPlan( const Slave& slave )
         }
     }
 
-    return requests;
+    return requestDescriptions;
 }
 
-} // namespace modbus
-
-} // namespace communication
+} // namespace communication::modbus

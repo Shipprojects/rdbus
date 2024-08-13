@@ -1,5 +1,6 @@
 #include "Communicator.hpp"
 #include "RequestPlanner.hpp"
+#include "rdbus/Data.hpp"
 
 namespace communication::modbus
 {
@@ -9,14 +10,16 @@ Communicator::Communicator( const config::Serial& settings )
 {
 }
 
-void Communicator::request( const config::Slave& slave )
+std::list< rdbus::Output > Communicator::request( const config::Slave& slave )
 {
-    const auto& requests = requestPlan( slave );
+    const auto& requestDescriptions = requestPlan( slave );
 
-    for ( const auto& request : requests )
+    for ( const auto& description : requestDescriptions )
     {
-        const auto& response = adapter.send( request );
+        const auto& response = adapter.send( description.request );
     }
+
+    return {};
 }
 
 } // namespace communication::modbus
