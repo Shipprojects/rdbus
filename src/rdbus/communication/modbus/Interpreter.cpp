@@ -111,7 +111,7 @@ Fields toParsedFields( const SmallEndianRegisters& input, const Registers& regis
     for ( const auto& reg : registers )
     {
         const int i = output.size();
-        rdbus::Output::Field field = {
+        rdbus::Data::Field field = {
             .name = reg.name,
             .type = reg.type,
             .timestamp = timestamp
@@ -144,9 +144,9 @@ Fields toParsedFields( const SmallEndianRegisters& input, const Registers& regis
 
 } // namespace tools
 
-std::list< rdbus::Output::Field > parse( const MB::ModbusResponse& response,
+std::list< rdbus::Data::Field > parse( const MB::ModbusResponse& response,
                                          const std::list< config::Register >& registers,
-                                         const rdbus::Output::Field::Timestamp& timestamp )
+                                         const rdbus::Data::Field::Timestamp& timestamp )
 {
     using namespace tools;
 

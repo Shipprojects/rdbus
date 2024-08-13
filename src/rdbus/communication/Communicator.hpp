@@ -9,7 +9,7 @@ namespace communication
 class Communicator
 {
 public:
-    virtual std::list< rdbus::Output > request( const config::Slave& slave ) = 0;
+    virtual std::list< rdbus::Data > request( const config::Slave& slave ) = 0;
 
     virtual ~Communicator() = default;
 };

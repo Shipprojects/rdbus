@@ -48,13 +48,13 @@ BigEndianRegisters toUserInterpretation( const RawMergedList&, const Registers& 
 using SmallEndianRegisters = RawedBytesList;
 SmallEndianRegisters toMachineInterpretation( const SmallEndianRegisters& );
 // The last step is to parse little-endian data into output fields.
-using Fields = std::list< rdbus::Output::Field >;
-using Timestamp = rdbus::Output::Field::Timestamp;
+using Fields = std::list< rdbus::Data::Field >;
+using Timestamp = rdbus::Data::Field::Timestamp;
 Fields toParsedFields( const SmallEndianRegisters&, const Registers&, const Timestamp& );
 
 } // namespace tools
 
-std::list< rdbus::Output::Field > parse( const MB::ModbusResponse&,
+std::list< rdbus::Data::Field > parse( const MB::ModbusResponse&,
                                          const tools::Registers&,
                                          const tools::Timestamp& );
 

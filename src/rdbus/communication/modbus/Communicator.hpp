@@ -13,7 +13,7 @@ class Communicator : public communication::Communicator
 public:
     Communicator( const config::Serial& settings );
 
-    std::list< rdbus::Output > request( const config::Slave& slave ) override;
+    std::list< rdbus::Data > request( const config::Slave& slave ) override;
 
 private:
     Adapter adapter;

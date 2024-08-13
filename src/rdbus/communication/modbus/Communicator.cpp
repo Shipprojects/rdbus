@@ -10,7 +10,7 @@ Communicator::Communicator( const config::Serial& settings )
 {
 }
 
-std::list< rdbus::Output > Communicator::request( const config::Slave& slave )
+std::list< rdbus::Data > Communicator::request( const config::Slave& slave )
 {
     const auto& requestDescriptions = requestPlan( slave );
 

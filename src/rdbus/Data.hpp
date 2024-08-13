@@ -17,7 +17,7 @@ enum class Type
     Blob
 };
 
-struct Output
+struct Data
 {
     std::string deviceName;
 
