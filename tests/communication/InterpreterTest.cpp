@@ -54,8 +54,8 @@ TEST( TestInterpreter, TestToRawMergedRegisters )
     const auto& rawMergedRegisters = tools::toRawMergedRegisters( raw32BitRegisters, registers );
 
     const tools::RawMergedList need = { { 0x8f, 0xb9, 0x05, 0x88, 0x3f, 0xca, 0xdb, 0xe5 }, { 0x82, 0x74, 0x0d, 0xc2 } };
-    EXPECT_EQ( rawMergedRegisters, need );
     EXPECT_EQ( rawMergedRegisters.size(), 2 );
+    EXPECT_EQ( rawMergedRegisters, need );
 }
 
 TEST( TestInterpreter, TestToUserInterpretation )

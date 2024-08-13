@@ -1,6 +1,8 @@
 #include "Interpreter.hpp"
 #include "rdbus/Data.hpp"
 #include <cstdint>
+#include <exception>
+#include <stdexcept>
 
 namespace communication::modbus::interpreter
 {
@@ -15,11 +17,11 @@ RawUint16List toRaw16BitRegisters( const std::vector< MB::ModbusCell >& input )
     for ( const auto& cell : input )
     {
         const uint16_t reg = cell.reg();
-        const uint8_t msb = reg & 0xff;
-        const uint8_t lsb = ( reg >> 8 ) & 0xff;
-        // Swap byte order, because Modbus library does it too, so we actually result
-        // with the same order as data before parsing through the library
-        output.push_back( { lsb, msb } );
+        const uint8_t lsb = reg & 0xff;
+        const uint8_t msb = ( reg >> 8 ) & 0xff;
+        // Swap byte order, because Modbus library does it too when storing register values,
+        // so we actually result with the same order as data before parsing through the library
+        output.push_back( { msb, lsb } );
     }
 
     return output;
@@ -31,9 +33,9 @@ RawUint32List toRaw32BitRegisters( const RawUint16List& input )
 
     for ( auto it = input.begin(); it != input.end(); it += sizeof( uint16_t ) )
     {
-        const auto left = *it;
-        const auto right = *std::next( it );
-        output.push_back( { left[ 0 ], left[ 1 ], right[ 0 ], right[ 1 ] } );
+        const auto msw = *it;
+        const auto lsw = *std::next( it );
+        output.push_back( { msw[ 0 ], msw[ 1 ], lsw[ 0 ], lsw[ 1 ] } );
     }
 
     return output;
@@ -46,17 +48,18 @@ RawMergedList toRawMergedRegisters( const RawUint32List& input, const Registers&
     int i = 0;
     for ( const auto& reg : registers )
     {
-        output.push_back( { input[ i ][ 0 ], input[ i ][ 1 ], input[ i ][ 2 ], input[ i ][ 3 ] } );
+        std::vector< uint8_t > word;
+
+        word.insert( word.end(), input[ i ].begin(), input[ i ].end() );
         i++;
 
         if ( reg.byteOrder.size() > sizeof( uint32_t ) )
         {
-            output.back().push_back( input[ i ][ 0 ] );
-            output.back().push_back( input[ i ][ 1 ] );
-            output.back().push_back( input[ i ][ 2 ] );
-            output.back().push_back( input[ i ][ 3 ] );
+            word.insert( word.end(), input[ i ].begin(), input[ i ].end() );
             i++;
         }
+
+        output.emplace_back( std::move( word ) );
     }
 
     assert( output.size() == registers.size() );
@@ -68,19 +71,17 @@ BigEndianRegisters toUserInterpretation( const RawMergedList& input, const Regis
 {
     BigEndianRegisters output;
 
-    int i = 0;
     for ( const auto& reg : registers )
     {
-        std::vector< uint8_t > buffer;
+        const int i = output.size();
+        std::vector< uint8_t > word;
 
         for ( const auto position : reg.byteOrder )
         {
-            buffer.push_back( input[ i ][ position ] );
+            word.push_back( input[ i ][ position ] );
         }
 
-        output.emplace_back( std::move( buffer ) );
-
-        i++;
+        output.emplace_back( std::move( word ) );
     }
 
     return output;
@@ -90,11 +91,10 @@ SmallEndianRegisters toMachineInterpretation( const SmallEndianRegisters& input 
 {
     SmallEndianRegisters output;
 
-    for ( const auto& i : input )
+    for ( auto word : input )
     {
-        auto data = i;
-        std::reverse( data.begin(), data.end() );
-        output.emplace_back( std::move( data ) );
+        std::reverse( word.begin(), word.end() );
+        output.emplace_back( std::move( word ) );
     }
 
     return output;
@@ -108,13 +108,14 @@ Fields toParsedFields( const SmallEndianRegisters& input, const Registers& regis
 
     Fields output;
 
-    int i = 0;
     for ( const auto& reg : registers )
     {
-        rdbus::Output::Field field;
-        field.name = reg.name;
-        field.type = reg.type;
-        field.timestamp = timestamp;
+        const int i = output.size();
+        rdbus::Output::Field field = {
+            .name = reg.name,
+            .type = reg.type,
+            .timestamp = timestamp
+        };
 
         switch ( reg.type )
         {
@@ -130,10 +131,12 @@ Fields toParsedFields( const SmallEndianRegisters& input, const Registers& regis
             case Type::Double:
                 field.value = *reinterpret_cast< const double* >( input[ i ].data() );
                 break;
+            default:
+                throw std::invalid_argument( "Unknown argument!" );
+                break;
         }
 
         output.emplace_back( std::move( field ) );
-        i++;
     }
 
     return output;
