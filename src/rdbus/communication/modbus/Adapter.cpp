@@ -26,7 +26,9 @@ auto Adapter::send( const Request& request, std::chrono::seconds timeout ) -> Re
 {
     connection.sendData( toRaw( request ) );
 
-    return Response( connection.getData( std::chrono::seconds( timeout ) ), true );
+    const auto& rawed = connection.getData( std::chrono::seconds( timeout ) );
+
+    return Response::fromRawCRC( rawed );
 }
 
 } // namespace communication::modbus
