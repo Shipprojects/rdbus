@@ -16,7 +16,7 @@ namespace tools
 // Modbus RTU protocol is encoded as big-endian, however, it only applies on it's metadata fields.
 // There is no endianness enforcement on it's actual data fields, leaving it up to the developer or
 // user to decide and implement. Data interpretation is implemented in this module and described
-// here with the help of function declarations put into correct order.
+// here with the help of function declarations put into correct calling order.
 //
 // Underlaying Modbus library is made for standard 16-bit Modbus, which is not fully compatible
 // with the required 32-bit Modbus. Additionally the Modbus library performs data interpretation
