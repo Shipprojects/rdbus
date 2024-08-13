@@ -2,7 +2,7 @@
 #include "RequestPlanner.hpp"
 #include "rdbus/Data.hpp"
 
-namespace communication::modbus
+namespace rdbus::communication::modbus
 {
 
 Communicator::Communicator( const config::Serial& settings )
@@ -22,4 +22,4 @@ std::list< rdbus::Data > Communicator::request( const config::Slave& slave )
     return {};
 }
 
-} // namespace communication::modbus
+} // namespace rdbus::communication::modbus

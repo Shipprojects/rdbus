@@ -6,7 +6,7 @@
 using namespace nlohmann;
 using namespace rdbus;
 
-namespace config
+namespace rdbus::config
 {
 
 static std::list< int > parseOrder( const std::string& order )
@@ -84,4 +84,4 @@ void from_json( const nlohmann::json& j, Register& x )
     x.address = address;
 }
 
-} // namespace config
+} // namespace rdbus::config

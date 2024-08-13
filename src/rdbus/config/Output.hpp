@@ -5,7 +5,7 @@
 #include <string>
 #include <utility>
 
-namespace config
+namespace rdbus::config
 {
 
 struct Output
@@ -28,4 +28,4 @@ struct Output
 
 void from_json( const nlohmann::json& j, Output& x );
 
-} // namespace config
+} // namespace rdbus::config

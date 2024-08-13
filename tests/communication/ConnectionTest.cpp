@@ -3,8 +3,8 @@
 #include "rdbus/config/Serial.hpp"
 #include <gtest/gtest.h>
 
-using namespace communication;
-using namespace config;
+using namespace rdbus::communication;
+using namespace rdbus::config;
 
 const Serial& getSettings()
 {

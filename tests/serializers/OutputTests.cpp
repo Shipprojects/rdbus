@@ -7,6 +7,7 @@
 
 const std::string testFilePath = TEST_DATA_DIR "/serializers/json_files/output/";
 using namespace nlohmann;
+using namespace rdbus;
 
 TEST( TestOutput, TestDeserializationFile )
 {

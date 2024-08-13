@@ -4,7 +4,7 @@
 #include <MB/modbusRequest.hpp>
 #include <list>
 
-namespace communication::modbus
+namespace rdbus::communication::modbus
 {
 
 struct RequestDescription
@@ -15,4 +15,4 @@ struct RequestDescription
 
 using RequestDescriptions = std::list< RequestDescription >;
 
-} // namespace communication::modbus
+} // namespace rdbus::communication::modbus

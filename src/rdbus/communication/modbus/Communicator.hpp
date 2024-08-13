@@ -5,7 +5,7 @@
 #include "rdbus/communication/Communicator.hpp"
 #include "rdbus/config/Serial.hpp"
 
-namespace communication::modbus
+namespace rdbus::communication::modbus
 {
 
 class Communicator : public communication::Communicator
@@ -19,4 +19,4 @@ private:
     Adapter adapter;
 };
 
-} // namespace communication::modbus
+} // namespace rdbus::communication::modbus

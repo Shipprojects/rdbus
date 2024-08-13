@@ -3,7 +3,8 @@
 #include "rdbus/config/Slave.hpp"
 #include <gtest/gtest.h>
 
-using namespace config;
+using namespace rdbus::config;
+using namespace rdbus;
 
 TEST( TestRequestPlanner, TestSubsequent )
 {

@@ -4,7 +4,7 @@
 #include <exception>
 #include <stdexcept>
 
-namespace communication::modbus::interpreter
+namespace rdbus::communication::modbus::interpreter
 {
 
 namespace tools
@@ -145,8 +145,8 @@ Fields toParsedFields( const SmallEndianRegisters& input, const Registers& regis
 } // namespace tools
 
 std::list< rdbus::Data::Field > parse( const MB::ModbusResponse& response,
-                                         const std::list< config::Register >& registers,
-                                         const rdbus::Data::Field::Timestamp& timestamp )
+                                       const std::list< config::Register >& registers,
+                                       const rdbus::Data::Field::Timestamp& timestamp )
 {
     using namespace tools;
 
@@ -159,4 +159,4 @@ std::list< rdbus::Data::Field > parse( const MB::ModbusResponse& response,
     return fields;
 }
 
-} // namespace communication::modbus::interpreter
+} // namespace rdbus::communication::modbus::interpreter

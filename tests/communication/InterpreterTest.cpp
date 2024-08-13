@@ -4,8 +4,8 @@
 #include <chrono>
 #include <gtest/gtest.h>
 
-using namespace config;
 using namespace rdbus;
+using namespace rdbus::config;
 using namespace communication::modbus::interpreter;
 
 TEST( TestInterpreter, TestToRaw16BitRegisters )

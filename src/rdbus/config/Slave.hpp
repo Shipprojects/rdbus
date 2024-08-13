@@ -6,7 +6,7 @@
 #include <nlohmann/json.hpp>
 #include <string>
 
-namespace config
+namespace rdbus::config
 {
 
 struct Slave
@@ -23,4 +23,4 @@ struct Slave
 
 void from_json( const nlohmann::json& j, Slave& x );
 
-} // namespace config
+} // namespace rdbus::config

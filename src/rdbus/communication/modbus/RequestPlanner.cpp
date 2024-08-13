@@ -4,7 +4,7 @@
 #include "rdbus/communication/modbus/RequestDescription.hpp"
 #include "rdbus/config/Register.hpp"
 
-namespace communication::modbus
+namespace rdbus::communication::modbus
 {
 
 using namespace config;
@@ -50,4 +50,4 @@ RequestDescriptions requestPlan( const Slave& slave )
     return requestDescriptions;
 }
 
-} // namespace communication::modbus
+} // namespace rdbus::communication::modbus

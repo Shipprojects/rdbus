@@ -5,7 +5,7 @@
 #include <MB/modbusResponse.hpp>
 #include <stdint.h>
 
-namespace communication::modbus::interpreter
+namespace rdbus::communication::modbus::interpreter
 {
 
 namespace tools
@@ -55,7 +55,7 @@ Fields toParsedFields( const SmallEndianRegisters&, const Registers&, const Time
 } // namespace tools
 
 std::list< rdbus::Data::Field > parse( const MB::ModbusResponse&,
-                                         const tools::Registers&,
-                                         const tools::Timestamp& );
+                                       const tools::Registers&,
+                                       const tools::Timestamp& );
 
-} // namespace communication::modbus::interpreter
+} // namespace rdbus::communication::modbus::interpreter
