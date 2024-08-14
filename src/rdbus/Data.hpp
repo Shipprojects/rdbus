@@ -2,6 +2,7 @@
 
 #include <chrono>
 #include <list>
+#include <nlohmann/json.hpp>
 #include <string>
 #include <variant>
 
@@ -35,5 +36,7 @@ struct Data
     std::list< Field > fields;
 };
 
+void to_json( nlohmann::json& j, const Data& x );
+void to_json( nlohmann::json& j, const Data::Field& x );
 
 } // namespace rdbus

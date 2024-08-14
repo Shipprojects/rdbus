@@ -1,6 +1,8 @@
+#include "rdbus/Data.hpp"
 #include "rdbus/communication/Communicator.hpp"
 #include "rdbus/communication/modbus/Communicator.hpp"
 #include "rdbus/config/Config.hpp"
+#include "rdbus/out/pipe/Pipe.hpp"
 #include <fstream>
 
 int main( int, char** )
@@ -11,16 +13,21 @@ int main( int, char** )
         return 1;
     }
 
-    const config::Config config = nlohmann::json::parse( jsonFile );
+    const rdbus::config::Config config = nlohmann::json::parse( jsonFile );
 
-    communication::modbus::Communicator communicator( config.serial );
+    rdbus::communication::modbus::Communicator communicator( config.serial );
 
-    communication::Communicator& com = communicator;
+    rdbus::communication::Communicator& com = communicator;
 
+    std::list< rdbus::Data > list;
     for ( const auto& slave : config.slaves )
     {
-        com.request( slave );
+        auto data = com.request( slave );
+        list.emplace_back( std::move( data ) );
     }
+
+    rdbus::out::pipe::Pipe pipe;
+    pipe.send( list );
 
     return 0;
 }
