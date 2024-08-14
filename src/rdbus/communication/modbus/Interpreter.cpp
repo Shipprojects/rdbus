@@ -113,6 +113,12 @@ Fields toParsedFields( const SmallEndianRegisters& input, const Registers& regis
             case Type::Uint32:
                 field.value = *reinterpret_cast< const uint32_t* >( input[ i ].data() );
                 break;
+            case Type::Int64:
+                field.value = *reinterpret_cast< const int64_t* >( input[ i ].data() );
+                break;
+            case Type::Uint64:
+                field.value = *reinterpret_cast< const uint64_t* >( input[ i ].data() );
+                break;
             case Type::Float:
                 field.value = *reinterpret_cast< const float* >( input[ i ].data() );
                 break;
