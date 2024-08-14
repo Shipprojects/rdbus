@@ -3,6 +3,7 @@
 #include "MB/modbusUtils.hpp"
 #include "rdbus/communication/modbus/RequestDescription.hpp"
 #include "rdbus/config/Register.hpp"
+#include <numeric>
 
 namespace rdbus::communication::modbus
 {
@@ -25,17 +26,20 @@ RequestDescriptions requestPlan( const Slave& slave )
     {
         group.push_back( *it );
 
-        // If next register is not directly adjacent to the current one or next
-        // register is the last register
-        // TODO: This does not allow to read 64bit registers
+        // If next register is the last register or next
+        // register is not adjacent to the current interpreted one
         if ( ( std::next( it ) == registers.end() ) ||
-             ( it->address + 1 != std::next( it )->address ) )
+             ( it->address + ( it->byteOrder.size() / sizeof( uint16_t ) ) != std::next( it )->address ) )
         {
+            const int rawRegisterCount = std::accumulate( group.begin(), group.end(), 0,
+                                                          []( int accumulator, const Register& next )
+                                                          { return next.byteOrder.size() / sizeof( uint16_t ) + accumulator; } );
+
             // TODO: Will probably need to find a way how to read from coils too, otherwise the only reading
             // that is possible now is from holding registers due to hardcoded function code
             auto request = MB::ModbusRequest( slave.address,
                                               MB::utils::MBFunctionCode::ReadAnalogOutputHoldingRegisters,
-                                              address, group.size() );
+                                              address, rawRegisterCount );
             requestDescriptions.push_back( { request, group } );
             group.clear();
 

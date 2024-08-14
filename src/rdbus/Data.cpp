@@ -22,6 +22,12 @@ void to_json( nlohmann::json& j, const Data::Field& x )
 
     switch ( x.type )
     {
+        case Type::Int16:
+            j[ "value" ] = std::get< int16_t >( x.value );
+            break;
+        case Type::Uint16:
+            j[ "value" ] = std::get< uint16_t >( x.value );
+            break;
         case Type::Int32:
             j[ "value" ] = std::get< int32_t >( x.value );
             break;

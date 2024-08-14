@@ -13,6 +13,8 @@ enum class Type
 {
     Float,
     Double,
+    Uint16,
+    Int16,
     Uint32,
     Int32,
     Blob
@@ -25,7 +27,7 @@ struct Data
     struct Field
     {
         std::string name;
-        std::variant< float, double, uint32_t, int32_t > value;
+        std::variant< float, double, uint32_t, int32_t, uint16_t, int16_t > value;
 
         Type type;
 
