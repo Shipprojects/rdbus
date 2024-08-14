@@ -18,8 +18,7 @@ enum class Type
     Uint32,
     Int32,
     Uint64,
-    Int64,
-    Blob
+    Int64
 };
 
 struct Data

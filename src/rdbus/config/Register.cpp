@@ -9,18 +9,77 @@ using namespace rdbus;
 namespace rdbus::config
 {
 
-static std::list< int > parseOrder( const std::string& order )
+static void throwIf( bool condition, const std::string& message )
 {
-    std::list< int > result;
+    if ( condition )
+    {
+        throw ParseException( message );
+    }
+}
 
-    for ( const char c : order )
+static std::pair< Type, std::list< int > > getWildType( const std::string& typeString, const std::string& orderString )
+{
+    throwIf( orderString.size() < sizeof( uint16_t ), "Data order " + orderString + " cannot be smaller than 2 bytes!" );
+    throwIf( orderString.size() > sizeof( uint64_t ), "Data order " + orderString + " cannot be bigger than 8 bytes!" );
+    throwIf( orderString.size() % 2, "Data order " + orderString + " does not contain even amount of characters!" );
+    // For case when there are 6 characters in data orer
+    throwIf( orderString.size() / 2 == 3, "Data order " + orderString + " is not a power of 2!" );
+    throwIf( typeString != "F" && typeString != "U" && typeString != "S", "Unknown data type " + typeString + "!" );
+    throwIf( typeString == "F" && orderString.size() < sizeof( float ), "Order of float cannot be less than 4 bytes!" );
+
+    std::list< int > order;
+    for ( const char c : orderString )
     {
         // Since valid characters are big letters, and
         // we start from 'A', subtract it's value
-        result.emplace_back( c - 'A' );
+        order.emplace_back( c - 'A' );
     }
 
-    return result;
+    Type type;
+    if ( typeString == "F" )
+    {
+        switch ( order.size() )
+        {
+            case 4:
+                type = Type::Float;
+                break;
+            case 8:
+                type = Type::Double;
+                break;
+        }
+    }
+    else if ( typeString == "U" )
+    {
+        switch ( order.size() )
+        {
+            case 2:
+                type = Type::Uint16;
+                break;
+            case 4:
+                type = Type::Uint32;
+                break;
+            case 8:
+                type = Type::Uint64;
+                break;
+        }
+    }
+    else if ( typeString == "S" )
+    {
+        switch ( order.size() )
+        {
+            case 2:
+                type = Type::Int16;
+                break;
+            case 4:
+                type = Type::Int32;
+                break;
+            case 8:
+                type = Type::Int64;
+                break;
+        }
+    }
+
+    return { type, order };
 }
 
 static std::pair< Type, std::list< int > > getStandardType( const std::string& type )
@@ -87,23 +146,21 @@ void from_json( const nlohmann::json& j, Register& x )
     parseKeyValue( j, "data_order", order );
 
     std::string type;
-    parseKeyValue( j, "data_type", type );
+    parseKeyValue( j, "data_type", type, "No 'data_type' field present in 'register' section!" );
 
-    if ( order.empty() && type.empty() )
+
+    // If wild data type
+    if ( type.size() == 1 )
     {
-        throw ParseException( "No 'data_type' or 'data_order' fields present in 'register' section!" );
+        const auto& [ dataType, dataOrder ] = getWildType( type, order );
+        x.type = dataType;
+        x.byteOrder = dataOrder;
     }
-
-    if ( !type.empty() )
+    else
     {
         const auto& [ dataType, dataOrder ] = getStandardType( type );
         x.type = dataType;
         x.byteOrder = dataOrder;
-    }
-    else if ( !order.empty() )
-    {
-        x.byteOrder = parseOrder( order );
-        x.type = rdbus::Type::Blob;
     }
 
     x.name = name;

@@ -6,11 +6,12 @@
         {
             "address": 40000,
             "data_order": "ABCD",
+            "data_type": "S",
             "name": "REGISTER_A"
         },
         {
             "address": 40004,
-            "data_order": "DBCA",
+            "data_type": "U64A",
             "name": "REGISTER_B"
         }
     ]
