@@ -1,6 +1,6 @@
 #include "Adapter.hpp"
 
-namespace communication::modbus
+namespace rdbus::communication::modbus
 {
 
 static std::vector< uint8_t > toRaw( const MB::ModbusRequest& request )
@@ -31,4 +31,4 @@ auto Adapter::send( const Request& request, std::chrono::seconds timeout ) -> Re
     return Response::fromRawCRC( rawed );
 }
 
-} // namespace communication::modbus
+} // namespace rdbus::communication::modbus

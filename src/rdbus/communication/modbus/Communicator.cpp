@@ -1,8 +1,9 @@
 #include "Communicator.hpp"
+#include "Interpreter.hpp"
 #include "RequestPlanner.hpp"
 #include "rdbus/Data.hpp"
 
-namespace communication::modbus
+namespace rdbus::communication::modbus
 {
 
 Communicator::Communicator( const config::Serial& settings )
@@ -10,16 +11,25 @@ Communicator::Communicator( const config::Serial& settings )
 {
 }
 
-std::list< rdbus::Output > Communicator::request( const config::Slave& slave )
+rdbus::Data Communicator::request( const config::Slave& slave )
 {
     const auto& requestDescriptions = requestPlan( slave );
 
+    rdbus::Data data;
+    data.deviceName = slave.name;
     for ( const auto& description : requestDescriptions )
     {
         const auto& response = adapter.send( description.request );
+
+        const auto& timestamp = std::chrono::system_clock::now();
+        const auto& fields = interpreter::parse( response, description.registers, timestamp );
+        for ( const auto& field : fields )
+        {
+            data.fields.emplace_back( std::move( field ) );
+        }
     }
 
-    return {};
+    return data;
 }
 
-} // namespace communication::modbus
+} // namespace rdbus::communication::modbus

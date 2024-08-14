@@ -5,7 +5,7 @@
 #include "rdbus/communication/Communicator.hpp"
 #include "rdbus/config/Serial.hpp"
 
-namespace communication::modbus
+namespace rdbus::communication::modbus
 {
 
 class Communicator : public communication::Communicator
@@ -13,10 +13,10 @@ class Communicator : public communication::Communicator
 public:
     Communicator( const config::Serial& settings );
 
-    std::list< rdbus::Output > request( const config::Slave& slave ) override;
+    rdbus::Data request( const config::Slave& slave ) override;
 
 private:
     Adapter adapter;
 };
 
-} // namespace communication::modbus
+} // namespace rdbus::communication::modbus

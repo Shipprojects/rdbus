@@ -6,7 +6,7 @@
 using namespace nlohmann;
 using namespace rdbus;
 
-namespace config
+namespace rdbus::config
 {
 
 static std::list< int > parseOrder( const std::string& order )
@@ -38,6 +38,10 @@ static std::pair< Type, std::list< int > > getStandardType( const std::string& t
         { "S32B", { Type::Int32, { 1, 0, 3, 2 } } },
         { "S32C", { Type::Int32, { 2, 3, 0, 1 } } },
         { "S32D", { Type::Int32, { 3, 2, 1, 0 } } },
+        { "U16A", { Type::Uint16, { 0, 1 } } },
+        { "U16B", { Type::Uint16, { 1, 0 } } },
+        { "S16A", { Type::Int16, { 0, 1 } } },
+        { "S16B", { Type::Int16, { 1, 0 } } },
     };
 
     const auto& it = typeMap.find( type );
@@ -84,4 +88,4 @@ void from_json( const nlohmann::json& j, Register& x )
     x.address = address;
 }
 
-} // namespace config
+} // namespace rdbus::config

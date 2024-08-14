@@ -4,7 +4,7 @@
 
 using namespace nlohmann;
 
-namespace config
+namespace rdbus::config
 {
 
 void from_json( const json& j, Output& x )
@@ -38,4 +38,4 @@ void from_json( const json& j, Output& x )
     }
 }
 
-} // namespace config
+} // namespace rdbus::config

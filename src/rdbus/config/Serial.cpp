@@ -4,7 +4,7 @@
 
 using namespace nlohmann;
 
-namespace config
+namespace rdbus::config
 {
 
 void from_json( const nlohmann::json& j, Serial& x )
@@ -37,4 +37,4 @@ void from_json( const nlohmann::json& j, Serial& x )
     x.stopBitsCount = stopBitsCount;
 }
 
-} // namespace config
+} // namespace rdbus::config

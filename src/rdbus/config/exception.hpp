@@ -3,7 +3,7 @@
 #include <stdexcept>
 #include <string>
 
-namespace config
+namespace rdbus::config
 {
 
 struct ParseException : public std::runtime_error
@@ -14,4 +14,4 @@ struct ParseException : public std::runtime_error
     }
 };
 
-} // namespace config
+} // namespace rdbus::config

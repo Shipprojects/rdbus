@@ -5,7 +5,7 @@
 #include <MB/modbusRequest.hpp>
 #include <MB/modbusResponse.hpp>
 
-namespace communication::modbus
+namespace rdbus::communication::modbus
 {
 
 class Adapter
@@ -22,4 +22,4 @@ private:
     Connection< OSWrapper > connection;
 };
 
-} // namespace communication::modbus
+} // namespace rdbus::communication::modbus

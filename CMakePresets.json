@@ -24,6 +24,17 @@
             "binaryDir": "${sourceDir}/build/Release"
         },
         {
+            "name": "Testing",
+            "displayName": "Testing",
+            "description": "Testing configuration",
+            "inherits": [ "Common" ],
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Testing",
+                "WITH_GMOCK": "ON"
+            },
+            "binaryDir": "${sourceDir}/build/Testing"
+        },
+        {
             "name": "Debug",
             "displayName": "Debug",
             "description": "Debug configuration",
@@ -50,6 +61,15 @@
             "name": "Release build",
             "configurePreset": "Release",
             "inherits": [ "Common" ]
+        },
+        {
+            "name": "Testing build",
+            "configurePreset": "Release",
+            "inherits": [ "Common" ],
+            "targets":[
+                "lib_rdbus",
+                "rdbus_tests"
+            ]
         },
         {
             "name": "Debug build",

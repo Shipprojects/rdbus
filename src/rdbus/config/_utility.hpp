@@ -3,6 +3,9 @@
 #include "exception.hpp"
 #include <nlohmann/json.hpp>
 
+namespace rdbus::config
+{
+
 template < class T >
 bool parseKeyValue( const nlohmann::json& j, const std::string& key, T& target )
 {
@@ -20,8 +23,10 @@ void parseKeyValue( const nlohmann::json& j, const std::string& key, T& target, 
 {
     if ( !j.contains( key ) )
     {
-        throw config::ParseException( exceptionMsg );
+        throw rdbus::config::ParseException( exceptionMsg );
     }
 
     parseKeyValue( j, key, target );
 }
+
+} // namespace rdbus::config

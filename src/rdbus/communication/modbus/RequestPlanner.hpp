@@ -4,7 +4,7 @@
 #include "rdbus/config/Slave.hpp"
 #include <MB/modbusRequest.hpp>
 
-namespace communication::modbus
+namespace rdbus::communication::modbus
 {
 
 // Returns a list of modbus requests to be executed sequentually.
@@ -14,4 +14,4 @@ namespace communication::modbus
 // reading happens from x address for n registers.
 RequestDescriptions requestPlan( const config::Slave& slave );
 
-} // namespace communication::modbus
+} // namespace rdbus::communication::modbus

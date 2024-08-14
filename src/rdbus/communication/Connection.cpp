@@ -3,7 +3,7 @@
 #include <termios.h>
 #include <unistd.h>
 
-namespace communication
+namespace rdbus::communication
 {
 
 int OSWrapper::open( const char* __file, int __oflag )

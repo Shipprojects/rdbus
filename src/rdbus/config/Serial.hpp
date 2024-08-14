@@ -3,7 +3,7 @@
 #include <nlohmann/json.hpp>
 #include <string>
 
-namespace config
+namespace rdbus::config
 {
 
 struct Serial
@@ -16,4 +16,4 @@ struct Serial
 
 void from_json( const nlohmann::json& j, Serial& x );
 
-} // namespace config
+} // namespace rdbus::config

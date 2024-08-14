@@ -11,7 +11,7 @@
 #include <termios.h>
 #include <vector>
 
-namespace communication
+namespace rdbus::communication
 {
 
 // A wrapper class around OS functions that call the same OS functions
