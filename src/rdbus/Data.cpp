@@ -13,12 +13,25 @@ struct ParseException : public std::runtime_error
     }
 };
 
+static std::string formattedTime( Data::Field::Timestamp timestamp )
+{
+    const auto millis = timestamp.time_since_epoch().count() / 1000000 % 1000;
+
+    const auto t = std::chrono::system_clock::to_time_t( timestamp );
+    const auto time = std::localtime( &t );
+    char buf[ 32 ] = {};
+    // Formats time string to 'YYYY-MM-DD/hh:mm:ss' note that '/' is a simple char
+    std::strftime( buf, sizeof( buf ), "%F/%T", time );
+    // Adds milliseconds in the end
+    sprintf( buf, "%s:%03d", buf, static_cast< int >( millis ) );
+
+    return std::string( buf );
+}
+
 void to_json( nlohmann::json& j, const Data::Field& x )
 {
     j[ "name" ] = x.name;
-
-    const auto time = std::chrono::system_clock::to_time_t( x.timestamp );
-    j[ "timestamp" ] = std::ctime( &time );
+    j[ "timestamp" ] = formattedTime( x.timestamp );
 
     switch ( x.type )
     {
