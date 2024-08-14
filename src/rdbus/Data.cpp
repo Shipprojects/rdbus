@@ -47,6 +47,12 @@ void to_json( nlohmann::json& j, const Data::Field& x )
         case Type::Uint32:
             j[ "value" ] = std::get< uint32_t >( x.value );
             break;
+        case Type::Int64:
+            j[ "value" ] = std::get< int64_t >( x.value );
+            break;
+        case Type::Uint64:
+            j[ "value" ] = std::get< uint64_t >( x.value );
+            break;
         case Type::Float:
             j[ "value" ] = std::get< float >( x.value );
             break;
