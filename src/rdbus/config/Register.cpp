@@ -1,7 +1,7 @@
 #include "Register.hpp"
-#include "_utility.hpp"
 #include "rdbus/Data.hpp"
 #include "rdbus/config/exception.hpp"
+#include "utility.hpp"
 
 using namespace nlohmann;
 using namespace rdbus;
@@ -137,16 +137,16 @@ static std::pair< Type, std::list< int > > getStandardType( const std::string& t
 void from_json( const nlohmann::json& j, Register& x )
 {
     std::string name;
-    parseKeyValue( j, "name", name, "No name field present in 'register' section!" );
+    tools::parseKeyValue( j, "name", name, "No name field present in 'register' section!" );
 
     int address = 0;
-    parseKeyValue( j, "address", address, "No address field present in 'register' section!" );
+    tools::parseKeyValue( j, "address", address, "No address field present in 'register' section!" );
 
     std::string order;
-    parseKeyValue( j, "data_order", order );
+    tools::parseKeyValue( j, "data_order", order );
 
     std::string type;
-    parseKeyValue( j, "data_type", type, "No 'data_type' field present in 'register' section!" );
+    tools::parseKeyValue( j, "data_type", type, "No 'data_type' field present in 'register' section!" );
 
 
     // If wild data type

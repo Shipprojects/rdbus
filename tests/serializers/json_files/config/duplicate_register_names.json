@@ -1,0 +1,35 @@
+{
+    "protocol": "modbus",
+
+    "output": {
+      "type": "stdout"
+    },
+
+    "serial": {
+      "baud_rate": 4800,
+      "parity": false,
+      "path": "/dev/ttyS0",
+      "stop_bits_count": 1
+    },
+
+    "slaves": [
+      {
+        "address": 1,
+        "name": "name",
+        "poll_time_ms": 150,
+        "registers": [
+          {
+          "address": 4,
+            "data_order": "ABCD",
+            "data_type": "S",
+            "name": "REGISTER_A"
+          },
+          {
+            "address": 8,
+            "data_type": "U64A",
+            "name": "REGISTER_A"
+          }
+        ]
+      }
+    ]
+  }

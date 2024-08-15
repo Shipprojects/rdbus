@@ -25,6 +25,9 @@ Args parseArguments( int argc, char** argv )
                             "The arguments that you pass on command line take precedence over the arguments "
                             "in config file." );
 
+    parser.add_epilog( "Note: rdbus runs with valid configuration only. Command line arguments do not replace the "
+                       "config file!" );
+
     parser.add_argument( "--config" )
     .help( "path to configuration JSON" )
     .default_value( ".rdbus.json" )
@@ -99,7 +102,6 @@ rdbus::config::Config initializeConfig( const Args& args )
     }
 
     const rdbus::config::Config& config = jsonConfig;
-    rdbus::config::validate( config );
 
     return config;
 }
@@ -111,13 +113,14 @@ rdbus::Manager::Tasks initializeTasks( const rdbus::config::Config& config )
     auto communicator = std::make_shared< rdbus::communication::modbus::Communicator >( config.serial );
     for ( const auto& slave : config.slaves )
     {
+        // 1 slave == 1 task
         tasks.emplace_back( std::make_unique< rdbus::tasks::Modbus >( slave, communicator ) );
     }
 
     return tasks;
 }
 
-rdbus::Manager::Output initializeOutput( const rdbus::config::Config& config )
+rdbus::Manager::Output initializeOutput( const rdbus::config::Config& )
 {
     auto output = std::make_unique< rdbus::out::pipe::Pipe >();
 

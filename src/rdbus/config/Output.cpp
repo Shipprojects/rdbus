@@ -1,6 +1,6 @@
 #include "Output.hpp"
-#include "_utility.hpp"
 #include "exception.hpp"
+#include "utility.hpp"
 
 using namespace nlohmann;
 
@@ -11,13 +11,13 @@ void from_json( const json& j, Output& x )
 {
     constexpr int invalidPort = -1;
     int port = invalidPort;
-    parseKeyValue( j, "port", port );
+    tools::parseKeyValue( j, "port", port );
 
     std::string ip;
-    parseKeyValue( j, "ip", ip );
+    tools::parseKeyValue( j, "ip", ip );
 
     std::string type;
-    parseKeyValue( j, "type", type, "Missing 'type' field in 'output' section!" );
+    tools::parseKeyValue( j, "type", type, "Missing 'type' field in 'output' section!" );
 
     if ( type != "stdout" && type != "TCP/IP" )
     {

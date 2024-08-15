@@ -3,7 +3,7 @@
 #include "exception.hpp"
 #include <nlohmann/json.hpp>
 
-namespace rdbus::config
+namespace rdbus::config::tools
 {
 
 template < class T >
@@ -28,5 +28,7 @@ void parseKeyValue( const nlohmann::json& j, const std::string& key, T& target, 
 
     parseKeyValue( j, key, target );
 }
+
+void throwIf( bool condition, const std::string& message );
 
 } // namespace rdbus::config
