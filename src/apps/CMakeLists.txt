@@ -10,7 +10,9 @@ add_executable(${TARGET_NAME}
 
 add_compile_options(${TARGET_NAME} ${COMPILE_OPTIONS})
 
-target_include_directories(${TARGET_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_SOURCE_DIR}/src)
+target_include_directories(${TARGET_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}
+                                                  ${CMAKE_SOURCE_DIR}/src
+                                                  ${CMAKE_BINARY_DIR}/misc)
 target_link_libraries(${TARGET_NAME} PRIVATE lib_rdbus Modbus)
 
 add_spdlog(${TARGET_NAME})
