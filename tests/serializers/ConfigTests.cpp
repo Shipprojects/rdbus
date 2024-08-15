@@ -1,4 +1,5 @@
 #include "rdbus/config/Config.hpp"
+#include "rdbus/config/Output.hpp"
 #include "rdbus/config/exception.hpp"
 #include "tests/utility.hpp"
 #include <gtest/gtest.h>
@@ -65,7 +66,7 @@ TEST( TestConfig, TestDeserializationValid )
     const config::Config config = jsonIn;
 
     EXPECT_EQ( config.protocol, "modbus" );
-    EXPECT_EQ( config.output.filePath, "/path/to/output" );
+    EXPECT_EQ( config.output.type, config::Output::Type::Stdout );
     EXPECT_EQ( config.serial.baudRate, 4800 );
     EXPECT_EQ( config.slaves.size(), 1 );
 }
