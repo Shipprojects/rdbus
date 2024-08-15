@@ -39,4 +39,8 @@ void from_json( const nlohmann::json& j, Config& x )
     x.slaves = slaves;
 }
 
+void validate( const Config& )
+{
+}
+
 } // namespace rdbus::config

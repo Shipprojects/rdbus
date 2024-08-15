@@ -5,7 +5,7 @@
 #include "rdbus/config/Config.hpp"
 
 Args parseArguments( int, char** );
-void initializeLogger();
+void initializeLogger( spdlog::level::level_enum );
 rdbus::config::Config initializeConfig( const Args& args );
 rdbus::Manager::Tasks initializeTasks( const rdbus::config::Config& );
 rdbus::Manager::Output initializeOutput( const rdbus::config::Config& );

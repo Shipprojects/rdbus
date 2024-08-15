@@ -3,11 +3,12 @@
 #include <atomic>
 #include <csignal>
 #include <iostream>
+#include <spdlog/spdlog.h>
 
 static volatile std::atomic< bool > keepRunning = true;
 void signalHandler( int signum )
 {
-    // SIGINT is Ctrl+C from terminal too
+    // Interrupt from keyboard, Control-C
     if ( signum == SIGINT )
     {
         keepRunning = false;
@@ -21,13 +22,15 @@ int main( int argc, char** argv )
     try
     {
         const auto& args = parseArguments( argc, argv );
-        // initializeLogger( args.logLevel );
+        initializeLogger( args.logLevel );
+        SPDLOG_INFO( "Starting" );
         const auto& config = initializeConfig( args );
 
         auto tasks = initializeTasks( config );
         auto output = initializeOutput( config );
 
         rdbus::Manager manager( std::move( tasks ), std::move( output ) );
+        SPDLOG_INFO( "Entering loop" );
         while ( keepRunning )
         {
             manager.run();
@@ -35,14 +38,16 @@ int main( int argc, char** argv )
     }
     catch ( const std::exception& e )
     {
-        std::cerr << e.what() << std::endl;
+        SPDLOG_CRITICAL( e.what() );
         return 1;
     }
     catch ( ... )
     {
         std::cerr << "Unknown exception occured!" << std::endl;
+        SPDLOG_CRITICAL( "Unknown exception occured!" );
         return 1;
     }
 
+    SPDLOG_INFO( "Exiting" );
     return 0;
 }

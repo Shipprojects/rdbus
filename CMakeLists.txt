@@ -5,7 +5,6 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 file(READ VERSION CURRENT_VERSION)
 project(rdbus VERSION ${CURRENT_VERSION})
 message(STATUS "${PROJECT_NAME} ${CURRENT_VERSION}")
-configure_file(version.hpp.in misc/version/version.hpp)
 
 include(CTest)
 include(ExternalLibs)

@@ -23,4 +23,6 @@ struct Config
 
 void from_json( const nlohmann::json& j, Config& x );
 
+void validate( const Config& );
+
 } // namespace rdbus::config

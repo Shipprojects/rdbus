@@ -4,11 +4,16 @@
 #include "rdbus/config/Config.hpp"
 #include "rdbus/out/pipe/Pipe.hpp"
 #include "rdbus/tasks/Modbus.hpp"
+#include "spdlog/common.h"
+#include "spdlog/sinks/stdout_sinks.h"
+#include "version.hpp"
 #include <argparse/argparse.hpp>
 #include <exception>
 #include <fstream>
+#include <spdlog/spdlog.h>
 #include <stdexcept>
-#include <version/version.hpp>
+
+using LogLevel = spdlog::level::level_enum;
 
 Args parseArguments( int argc, char** argv )
 {
@@ -34,7 +39,10 @@ Args parseArguments( int argc, char** argv )
     .flag()
     .store_into( args.forceStdout );
 
-    // args.add_argument( "--log-level", "-l" ).help( "Log level" );
+    parser.add_argument( "--log" )
+    .help( "set log level" )
+    .choices( "crit", "err", "warn", "info", "off" )
+    .default_value( "warn" );
 
     try
     {
@@ -47,23 +55,23 @@ Args parseArguments( int argc, char** argv )
         std::rethrow_exception( std::current_exception() );
     }
 
+    const std::map< std::string, LogLevel > stringToLevelMap = {
+        { "crit", LogLevel::critical },
+        { "err", LogLevel::err },
+        { "warn", LogLevel::warn },
+        { "info", LogLevel::info },
+        { "off", LogLevel::off },
+    };
+    args.logLevel = stringToLevelMap.at( parser.get( "--log" ) );
+
     return args;
 }
 
-void initializeLogger()
+void initializeLogger( LogLevel loglevel )
 {
-}
-
-static void validateConfig( const rdbus::config::Config& )
-{
-    // ADD VALIDATION OF CONFIG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    // ADD VALIDATION OF CONFIG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    // ADD VALIDATION OF CONFIG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    // ADD VALIDATION OF CONFIG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    // ADD VALIDATION OF CONFIG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    // ADD VALIDATION OF CONFIG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    // ADD VALIDATION OF CONFIG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    // ADD VALIDATION OF CONFIG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    auto logger = spdlog::stderr_logger_mt( "logger" );
+    spdlog::set_default_logger( logger );
+    spdlog::set_level( loglevel );
 }
 
 rdbus::config::Config initializeConfig( const Args& args )
@@ -90,7 +98,7 @@ rdbus::config::Config initializeConfig( const Args& args )
     }
 
     const rdbus::config::Config& config = jsonConfig;
-    validateConfig( config );
+    rdbus::config::validate( config );
 
     return config;
 }
