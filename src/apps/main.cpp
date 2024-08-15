@@ -1,33 +1,48 @@
-#include "rdbus/Data.hpp"
-#include "rdbus/communication/Communicator.hpp"
-#include "rdbus/communication/modbus/Communicator.hpp"
-#include "rdbus/config/Config.hpp"
-#include "rdbus/out/pipe/Pipe.hpp"
-#include <fstream>
+#include "initialize.hpp"
+#include "rdbus/Manager.hpp"
+#include <atomic>
+#include <csignal>
+#include <iostream>
 
-int main( int, char** )
+static volatile std::atomic< bool > keepRunning = true;
+void signalHandler( int signum )
 {
-    std::ifstream jsonFile( "config.json" );
-    if ( !jsonFile.good() )
+    // SIGINT is Ctrl+C from terminal too
+    if ( signum == SIGINT )
     {
+        keepRunning = false;
+    }
+}
+
+int main( int argc, char** argv )
+{
+    signal( SIGINT, &signalHandler );
+
+    try
+    {
+        const auto& args = parseArguments( argc, argv );
+        // initializeLogger( args.logLevel );
+        const auto& config = initializeConfig( args );
+
+        auto tasks = initializeTasks( config );
+        auto output = initializeOutput( config );
+
+        rdbus::Manager manager( std::move( tasks ), std::move( output ) );
+        while ( keepRunning )
+        {
+            manager.run();
+        }
+    }
+    catch ( const std::exception& e )
+    {
+        std::cerr << e.what() << std::endl;
         return 1;
     }
-
-    const rdbus::config::Config config = nlohmann::json::parse( jsonFile );
-
-    rdbus::communication::modbus::Communicator communicator( config.serial );
-
-    rdbus::communication::Communicator& com = communicator;
-
-    std::list< rdbus::Data > list;
-    for ( const auto& slave : config.slaves )
+    catch ( ... )
     {
-        auto data = com.request( slave );
-        list.emplace_back( std::move( data ) );
+        std::cerr << "Unknown exception occured!" << std::endl;
+        return 1;
     }
-
-    rdbus::out::pipe::Pipe pipe;
-    pipe.send( list );
 
     return 0;
 }
