@@ -2,7 +2,6 @@
 #include "rdbus/Manager.hpp"
 #include <atomic>
 #include <csignal>
-#include <iostream>
 #include <spdlog/spdlog.h>
 
 static volatile std::atomic< bool > keepRunning = true;
@@ -43,7 +42,6 @@ int main( int argc, char** argv )
     }
     catch ( ... )
     {
-        std::cerr << "Unknown exception occured!" << std::endl;
         SPDLOG_CRITICAL( "Unknown exception occured!" );
         return 1;
     }

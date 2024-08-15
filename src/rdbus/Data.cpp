@@ -20,8 +20,8 @@ static std::string formattedTime( Data::Field::Timestamp timestamp )
     const auto t = std::chrono::system_clock::to_time_t( timestamp );
     const auto time = std::localtime( &t );
     char buf[ 32 ] = {};
-    // Formats time string to 'YYYY-MM-DD/hh:mm:ss' note that '/' is a simple char
-    std::strftime( buf, sizeof( buf ), "%F/%T", time );
+    // Formats time string to 'YYYY-MM-DD hh:mm:ss'
+    std::strftime( buf, sizeof( buf ), "%F %T", time );
     // Adds milliseconds in the end
     sprintf( buf, "%s:%03d", buf, static_cast< int >( millis ) );
 
