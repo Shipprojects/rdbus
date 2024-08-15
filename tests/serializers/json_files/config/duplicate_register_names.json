@@ -25,7 +25,7 @@
             "name": "REGISTER_A"
           },
           {
-            "address": 8,
+            "address": 6,
             "data_type": "U64A",
             "name": "REGISTER_A"
           }

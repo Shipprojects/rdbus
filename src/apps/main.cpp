@@ -1,5 +1,6 @@
 #include "initialize.hpp"
 #include "rdbus/Manager.hpp"
+#include "rdbus/config/exception.hpp"
 #include <atomic>
 #include <csignal>
 #include <spdlog/spdlog.h>
@@ -35,9 +36,13 @@ int main( int argc, char** argv )
             manager.run();
         }
     }
+    catch ( const rdbus::config::ParseException& e )
+    {
+        SPDLOG_CRITICAL( "Config file parse exception - " + std::string( e.what() ) );
+    }
     catch ( const std::exception& e )
     {
-        SPDLOG_CRITICAL( e.what() );
+        SPDLOG_CRITICAL( "Exception - " + std::string( e.what() ) );
         return 1;
     }
     catch ( ... )

@@ -59,7 +59,7 @@ static void checkRegisterAddressSpacing( Slaves slaves )
 
         const auto& it = std::adjacent_find( slave.registers.begin(), slave.registers.end(),
                                              []( const Register& left, const Register& right )
-                                             { return left.address + left.byteOrder.size() - 1 >= right.address; } );
+                                             { return left.address + left.byteOrder.size() / sizeof( uint16_t ) > right.address; } );
 
         tools::throwIf( it != slave.registers.end(), "Adjacent registers found where addresses overlap each other!" );
     }
