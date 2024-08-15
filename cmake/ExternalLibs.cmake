@@ -44,3 +44,12 @@ function(add_gtest TARGET_NAME)
     FetchContent_MakeAvailable(googletest)
 endfunction()
 
+function(add_argparse TARGET_NAME)
+    include(FetchContent)
+    FetchContent_Declare(
+        argparse
+        GIT_REPOSITORY https://github.com/p-ranav/argparse.git
+    )
+    FetchContent_MakeAvailable(argparse)
+    target_include_directories ( ${TARGET_NAME} PUBLIC ${argparse_SOURCE_DIR}/include )
+endfunction()
