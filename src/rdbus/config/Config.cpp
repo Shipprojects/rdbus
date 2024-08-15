@@ -18,7 +18,9 @@ static void checkDuplicateSlaveAddresses( Slaves slaves )
 
     const auto& it = std::adjacent_find( slaves.begin(), slaves.end(),
                                          []( const Slave& left, const Slave& right )
-                                         { return left.address == right.address; } );
+                                         {
+                                             return left.address == right.address;
+                                         } );
 
     tools::throwIf( it != slaves.end(), "Duplicate slave addresses found!" );
 }
@@ -30,7 +32,9 @@ static void checkDuplicateSlaveNames( Slaves slaves )
 
     const auto& it = std::adjacent_find( slaves.begin(), slaves.end(),
                                          []( const Slave& left, const Slave& right )
-                                         { return left.name == right.name; } );
+                                         {
+                                             return left.name == right.name;
+                                         } );
 
     tools::throwIf( it != slaves.end(), "Duplicate slave names found!" );
 }
@@ -44,7 +48,9 @@ static void checkDuplicateRegisterNames( Slaves slaves )
 
         const auto& it = std::adjacent_find( slave.registers.begin(), slave.registers.end(),
                                              []( const Register& left, const Register& right )
-                                             { return left.name == right.name; } );
+                                             {
+                                                 return left.name == right.name;
+                                             } );
 
         tools::throwIf( it != slave.registers.end(), "Duplicate register names found in single slave!" );
     }
@@ -59,7 +65,10 @@ static void checkRegisterAddressSpacing( Slaves slaves )
 
         const auto& it = std::adjacent_find( slave.registers.begin(), slave.registers.end(),
                                              []( const Register& left, const Register& right )
-                                             { return left.address + left.byteOrder.size() / sizeof( uint16_t ) > right.address; } );
+                                             {
+                                                 // e.g. 3(address) + 4(register byte size)/2(modbus word size) > 4 (next address in config)
+                                                 return left.address + left.byteOrder.size() / sizeof( uint16_t ) > right.address;
+                                             } );
 
         tools::throwIf( it != slave.registers.end(), "Adjacent registers found where addresses overlap each other!" );
     }
