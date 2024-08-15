@@ -10,9 +10,11 @@ add_executable(${TARGET_NAME}
 
 add_compile_options(${TARGET_NAME} ${COMPILE_OPTIONS})
 
-target_include_directories(${TARGET_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_SOURCE_DIR}/src)
+configure_file(${CMAKE_SOURCE_DIR}/version.hpp.in ${CMAKE_CURRENT_SOURCE_DIR}/version.hpp)
+target_include_directories(${TARGET_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}
+                                                  ${CMAKE_SOURCE_DIR}/src)
 target_link_libraries(${TARGET_NAME} PRIVATE lib_rdbus Modbus)
 
-add_spdlog(${TARGET_NAME})
 add_json(${TARGET_NAME})
+add_argparse(${TARGET_NAME})
 add_spdlog(${TARGET_NAME})

@@ -1,33 +1,56 @@
-#include "rdbus/Data.hpp"
-#include "rdbus/communication/Communicator.hpp"
-#include "rdbus/communication/modbus/Communicator.hpp"
-#include "rdbus/config/Config.hpp"
-#include "rdbus/out/pipe/Pipe.hpp"
-#include <fstream>
+#include "initialize.hpp"
+#include "rdbus/Manager.hpp"
+#include "rdbus/config/exception.hpp"
+#include <atomic>
+#include <csignal>
+#include <spdlog/spdlog.h>
 
-int main( int, char** )
+static volatile std::atomic< bool > keepRunning = true;
+void signalHandler( int signum )
 {
-    std::ifstream jsonFile( "config.json" );
-    if ( !jsonFile.good() )
+    // Interrupt from keyboard, Control-C
+    if ( signum == SIGINT )
     {
+        keepRunning = false;
+    }
+}
+
+int main( int argc, char** argv )
+{
+    signal( SIGINT, &signalHandler );
+
+    try
+    {
+        const auto& args = parseArguments( argc, argv );
+        initializeLogger( args.logLevel );
+        SPDLOG_INFO( "Starting" );
+        const auto& config = initializeConfig( args );
+
+        auto tasks = initializeTasks( config );
+        auto output = initializeOutput( config );
+
+        rdbus::Manager manager( std::move( tasks ), std::move( output ) );
+        SPDLOG_INFO( "Entering loop" );
+        while ( keepRunning )
+        {
+            manager.run();
+        }
+    }
+    catch ( const rdbus::config::ParseException& e )
+    {
+        SPDLOG_CRITICAL( "Config file parse exception - " + std::string( e.what() ) );
+    }
+    catch ( const std::exception& e )
+    {
+        SPDLOG_CRITICAL( "Exception - " + std::string( e.what() ) );
+        return 1;
+    }
+    catch ( ... )
+    {
+        SPDLOG_CRITICAL( "Unknown exception occured!" );
         return 1;
     }
 
-    const rdbus::config::Config config = nlohmann::json::parse( jsonFile );
-
-    rdbus::communication::modbus::Communicator communicator( config.serial );
-
-    rdbus::communication::Communicator& com = communicator;
-
-    std::list< rdbus::Data > list;
-    for ( const auto& slave : config.slaves )
-    {
-        auto data = com.request( slave );
-        list.emplace_back( std::move( data ) );
-    }
-
-    rdbus::out::pipe::Pipe pipe;
-    pipe.send( list );
-
+    SPDLOG_INFO( "Exiting" );
     return 0;
 }

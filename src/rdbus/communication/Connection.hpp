@@ -5,6 +5,7 @@
 #include <fcntl.h>
 #include <iostream>
 #include <poll.h>
+#include <spdlog/spdlog.h>
 #include <stdexcept>
 #include <stdint.h>
 #include <sys/poll.h>
@@ -73,7 +74,7 @@ public:
 
     void sendData( const std::vector< uint8_t >& data )
     {
-        std::cout << "Sending data " << toHexString( data.data(), data.size() ) << '\n';
+        SPDLOG_INFO( "Sending data " + toHexString( data.data(), data.size() ) );
 
         // Ensure that nothing will intervene in our communication by discarding data that has been written but not transmitted
         os.tcflush( fileDescriptor, TCOFLUSH );
@@ -113,7 +114,7 @@ public:
         data.resize( size );
         data.shrink_to_fit();
 
-        std::cout << "Data received " + toHexString( data.data(), data.size() ) << '\n';
+        SPDLOG_INFO( "Data received " + toHexString( data.data(), data.size() ) );
 
         return data;
     }
@@ -222,4 +223,4 @@ private:
 };
 
 
-} // namespace communication
+} // namespace rdbus::communication

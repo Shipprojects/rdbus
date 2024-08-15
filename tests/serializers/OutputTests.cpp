@@ -9,29 +9,54 @@ const std::string testFilePath = TEST_DATA_DIR "/serializers/json_files/output/"
 using namespace nlohmann;
 using namespace rdbus;
 
-TEST( TestOutput, TestDeserializationFile )
+TEST( TestOutput, TestDeserializationValidTCPIP )
 {
-    const auto path = testFilePath + "file.json";
+    const auto path = testFilePath + "valid_tcpip.json";
 
     const auto jsonIn = getJsonFromPath( path );
     const config::Output output = jsonIn;
 
-    EXPECT_EQ( output.type, config::Output::File );
-    EXPECT_EQ( output.filePath.value(), "relative/path/to/file" );
-    EXPECT_FALSE( output.ipPortPair.has_value() );
+    ASSERT_TRUE( output.ip.has_value() );
+    ASSERT_TRUE( output.port.has_value() );
+    EXPECT_EQ( output.ip, "0.0.0.0" );
+    EXPECT_EQ( output.port, 6000 );
+    EXPECT_EQ( output.type, config::Output::TCP_IP );
 }
 
-TEST( TestOutput, TestDeserializationIP )
+TEST( TestOutput, TestDeserializationValidStdout )
 {
-    const auto path = testFilePath + "tcp_ip.json";
+    const auto path = testFilePath + "valid_stdout.json";
 
     const auto jsonIn = getJsonFromPath( path );
     const config::Output output = jsonIn;
 
-    EXPECT_EQ( output.type, config::Output::TCP_IP );
-    EXPECT_EQ( output.ipPortPair->first, "0.0.0.0" );
-    EXPECT_EQ( output.ipPortPair->second, 6000 );
-    EXPECT_FALSE( output.filePath.has_value() );
+    ASSERT_FALSE( output.ip.has_value() );
+    ASSERT_FALSE( output.port.has_value() );
+    EXPECT_EQ( output.type, config::Output::Stdout );
+}
+
+TEST( TestOutput, TestDeserializationNoPort )
+{
+    const auto path = testFilePath + "no_port.json";
+
+    const auto jsonIn = getJsonFromPath( path );
+
+    EXPECT_THROW( {
+        config::Output output = jsonIn;
+    },
+                  config::ParseException );
+}
+
+TEST( TestOutput, TestDeserializationNoIp )
+{
+    const auto path = testFilePath + "no_ip.json";
+
+    const auto jsonIn = getJsonFromPath( path );
+
+    EXPECT_THROW( {
+        config::Output output = jsonIn;
+    },
+                  config::ParseException );
 }
 
 TEST( TestOutput, TestDeserializationMixed )
@@ -39,6 +64,19 @@ TEST( TestOutput, TestDeserializationMixed )
     const auto path = testFilePath + "mixed.json";
 
     const auto jsonIn = getJsonFromPath( path );
+
+    EXPECT_THROW( {
+        config::Output output = jsonIn;
+    },
+                  config::ParseException );
+}
+
+TEST( TestOutput, TestDeserializationNoType )
+{
+    const auto path = testFilePath + "no_type.json";
+
+    const auto jsonIn = getJsonFromPath( path );
+
     EXPECT_THROW( {
         config::Output output = jsonIn;
     },

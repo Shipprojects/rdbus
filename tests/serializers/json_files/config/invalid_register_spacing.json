@@ -1,5 +1,5 @@
 {
-    "protocol": "something",
+    "protocol": "modbus",
 
     "output": {
       "type": "stdout"
@@ -19,13 +19,14 @@
         "poll_time_ms": 150,
         "registers": [
           {
-            "address": 40000,
+          "address": 4,
             "data_order": "ABCD",
+            "data_type": "S",
             "name": "REGISTER_A"
           },
           {
-            "address": 40004,
-            "data_order": "BADCFEHG",
+            "address": 5,
+            "data_type": "U64A",
             "name": "REGISTER_B"
           }
         ]

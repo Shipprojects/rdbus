@@ -2,7 +2,7 @@
     "protocol": "modbus",
 
     "output": {
-      "path": "/path/to/output"
+      "type": "stdout"
     },
 
     "serial": {
