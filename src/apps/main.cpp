@@ -1,9 +1,10 @@
 #include "initialize.hpp"
 #include "rdbus/Manager.hpp"
-#include "rdbus/config/exception.hpp"
 #include <atomic>
+#include <chrono>
 #include <csignal>
 #include <spdlog/spdlog.h>
+#include <thread>
 
 static volatile std::atomic< bool > keepRunning = true;
 void signalHandler( int signum )
@@ -34,15 +35,12 @@ int main( int argc, char** argv )
         while ( keepRunning )
         {
             manager.run();
+            std::this_thread::sleep_for( std::chrono::milliseconds( 10 ) );
         }
-    }
-    catch ( const rdbus::config::ParseException& e )
-    {
-        SPDLOG_CRITICAL( "Config file parse exception - " + std::string( e.what() ) );
     }
     catch ( const std::exception& e )
     {
-        SPDLOG_CRITICAL( "Exception - " + std::string( e.what() ) );
+        SPDLOG_CRITICAL( e.what() );
         return 1;
     }
     catch ( ... )

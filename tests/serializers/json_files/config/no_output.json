@@ -10,7 +10,7 @@
 
     "slaves": [
       {
-        "address": 1,
+        "id": 1,
         "name": "name",
         "poll_time_ms": 150,
         "registers": [

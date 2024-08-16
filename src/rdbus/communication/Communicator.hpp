@@ -1,11 +1,12 @@
 #pragma once
 
-#include "rdbus/config/Slave.hpp"
 #include "rdbus/Data.hpp"
+#include "rdbus/config/Slave.hpp"
 
 namespace rdbus::communication
 {
 
+// Placeholder for communication implementations for different protocols
 class Communicator
 {
 public:
@@ -14,4 +15,4 @@ public:
     virtual ~Communicator() = default;
 };
 
-} // namespace communication
+} // namespace rdbus::communication

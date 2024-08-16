@@ -37,7 +37,7 @@ RequestDescriptions requestPlan( const Slave& slave )
 
             // TODO: Will probably need to find a way how to read from coils too, otherwise the only reading
             // that is possible now is from holding registers due to hardcoded function code
-            auto request = MB::ModbusRequest( slave.address,
+            auto request = MB::ModbusRequest( slave.id,
                                               MB::utils::MBFunctionCode::ReadAnalogOutputHoldingRegisters,
                                               address, rawRegisterCount );
             requestDescriptions.push_back( { request, group } );

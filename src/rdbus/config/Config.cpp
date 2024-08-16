@@ -11,18 +11,18 @@ namespace rdbus::config
 
 using Slaves = Config::Slaves;
 
-static void checkDuplicateSlaveAddresses( Slaves slaves )
+static void checkDuplicateSlaveIDs( Slaves slaves )
 {
     slaves.sort( []( const Slave& left, const Slave& right )
-                 { return left.address < right.address; } );
+                 { return left.id < right.id; } );
 
     const auto& it = std::adjacent_find( slaves.begin(), slaves.end(),
                                          []( const Slave& left, const Slave& right )
                                          {
-                                             return left.address == right.address;
+                                             return left.id == right.id;
                                          } );
 
-    tools::throwIf( it != slaves.end(), "Duplicate slave addresses found!" );
+    tools::throwIf( it != slaves.end(), "Duplicate slave IDs found!" );
 }
 
 static void checkDuplicateSlaveNames( Slaves slaves )
@@ -101,7 +101,7 @@ void from_json( const nlohmann::json& j, Config& x )
 
     checkRegisterAddressSpacing( slaves );
     checkDuplicateRegisterNames( slaves );
-    checkDuplicateSlaveAddresses( slaves );
+    checkDuplicateSlaveIDs( slaves );
     checkDuplicateSlaveNames( slaves );
 
     x.output = output;

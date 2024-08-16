@@ -17,7 +17,7 @@
   "slaves": [
     {
       "name": "name",
-      "address": 1,
+      "id": 1,
       "registers": [
         {
           "name": "REGISTER_A",

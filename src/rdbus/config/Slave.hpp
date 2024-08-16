@@ -12,7 +12,7 @@ namespace rdbus::config
 struct Slave
 {
     std::string name;
-    int address = 0;
+    int id = 0;
 
     using Millis = std::chrono::milliseconds;
     Millis pollTimeMs = Millis( 0 );

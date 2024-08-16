@@ -3,6 +3,7 @@
 #include <chrono>
 #include <list>
 #include <nlohmann/json.hpp>
+#include <optional>
 #include <string>
 #include <variant>
 
@@ -21,6 +22,7 @@ enum class Type
     Int64
 };
 
+// For storing data from single device
 struct Data
 {
     std::string deviceName;
@@ -45,9 +47,23 @@ struct Data
     };
 
     std::list< Field > fields;
+
+    struct Error
+    {
+        enum Code
+        {
+            OS = 1,
+            Modbus
+        };
+
+        Code code;
+        std::string what;
+    };
+    std::optional< Error > error;
 };
 
 void to_json( nlohmann::json& j, const Data& x );
+void to_json( nlohmann::json& j, const Data::Error& x );
 void to_json( nlohmann::json& j, const Data::Field& x );
 
 } // namespace rdbus

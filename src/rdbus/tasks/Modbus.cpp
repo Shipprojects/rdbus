@@ -14,10 +14,10 @@ std::optional< Data > Modbus::run()
 {
     const auto now = std::chrono::steady_clock::now();
     const auto diff = now - lastRun;
-    const auto pauseMs = std::chrono::duration_cast< std::chrono::milliseconds >( diff );
+    const auto timeSinceLastExecution = std::chrono::duration_cast< std::chrono::milliseconds >( diff );
     std::optional< rdbus::Data > data;
 
-    if ( pauseMs >= slave.pollTimeMs )
+    if ( timeSinceLastExecution >= slave.pollTimeMs )
     {
         lastRun = now;
         data = com->request( slave );

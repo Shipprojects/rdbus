@@ -4,22 +4,25 @@
 #include "rdbus/config/Serial.hpp"
 #include <MB/modbusRequest.hpp>
 #include <MB/modbusResponse.hpp>
+#include "rdbus/communication/OSWrapper.hpp"
 
 namespace rdbus::communication::modbus
 {
 
+// A middleman that performs additional setup for each request/response
+// before sending/receiving data
 class Adapter
 {
 public:
-    Adapter( const config::Serial& settings );
+    Adapter( const config::Serial& settings, std::unique_ptr< OS > os );
 
     using Request = MB::ModbusRequest;
     using Response = MB::ModbusResponse;
     using seconds = std::chrono::seconds;
-    Response send( const Request&, seconds timeout = seconds( 10 ) );
+    Response send( const Request&, seconds requestTimeout = seconds( 10 ) );
 
 private:
-    Connection< OSWrapper > connection;
+    Connection connection;
 };
 
 } // namespace rdbus::communication::modbus
