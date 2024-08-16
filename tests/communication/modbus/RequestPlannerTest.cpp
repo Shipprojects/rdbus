@@ -48,20 +48,27 @@ TEST( TestRequestPlanner, TestSubsequent )
     auto requestDescriptions = communication::modbus::requestPlan( slave );
     ASSERT_EQ( requestDescriptions.size(), 2 );
 
-    const auto& description = *requestDescriptions.begin();
-    EXPECT_EQ( description.request.registerAddress(), 106 );
-    EXPECT_EQ( description.request.numberOfRegisters(), 3 );
+    {
+        const auto& description = requestDescriptions[ 0 ];
+        EXPECT_EQ( description.request.registerAddress(), 106 );
+        EXPECT_EQ( description.request.numberOfRegisters(), 3 );
+        auto reg = description.registers.begin();
+        ASSERT_EQ( description.registers.size(), 2 );
+        EXPECT_EQ( reg->name, "Register_C" );
+        reg++;
+        EXPECT_EQ( reg->name, "Register_D" );
+    }
 
-    auto reg = description.registers.begin();
-    ASSERT_EQ( description.registers.size(), 2 );
-
-    EXPECT_EQ( reg->name, "Register_C" );
-    reg++;
-    EXPECT_EQ( reg->name, "Register_D" );
-    reg++;
-    EXPECT_EQ( reg->name, "Register_A" );
-    reg++;
-    EXPECT_EQ( reg->name, "Register_B" );
+    {
+        const auto& description = requestDescriptions[ 1 ];
+        EXPECT_EQ( description.request.registerAddress(), 100 );
+        EXPECT_EQ( description.request.numberOfRegisters(), 6 );
+        auto reg = description.registers.begin();
+        ASSERT_EQ( description.registers.size(), 2 );
+        EXPECT_EQ( reg->name, "Register_A" );
+        reg++;
+        EXPECT_EQ( reg->name, "Register_B" );
+    }
 }
 
 TEST( TestRequestPlanner, TestWithBreaks )
@@ -159,7 +166,7 @@ TEST( TestRequestPlanner, TestSubsequentAndBreaks )
 
     auto requestDescriptions = communication::modbus::requestPlan( slave );
 
-    ASSERT_EQ( requestDescriptions.size(), 2 );
+    ASSERT_EQ( requestDescriptions.size(), 3 );
 
     auto it = requestDescriptions.begin();
     EXPECT_EQ( it->request.registerAddress(), 108 );

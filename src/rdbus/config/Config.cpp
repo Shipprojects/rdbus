@@ -42,8 +42,12 @@ static void checkDuplicateSlaveNames( Slaves slaves )
 
 static void checkDuplicateRegisterNames( Slaves slaves )
 {
-    const auto checker = []( Registers& registers )
+    for ( auto& slave : slaves )
     {
+        Slave::Registers registers;
+        registers.insert( registers.end(), slave.inputRegisters.begin(), slave.inputRegisters.end() );
+        registers.insert( registers.end(), slave.outputRegisters.begin(), slave.outputRegisters.end() );
+
         registers.sort( []( const Register& left, const Register& right )
                         { return left.name < right.name; } );
 
@@ -54,12 +58,6 @@ static void checkDuplicateRegisterNames( Slaves slaves )
                                              } );
 
         tools::throwIf( it != registers.end(), "Duplicate register names found in single slave!" );
-    };
-
-    for ( auto& slave : slaves )
-    {
-        checker( slave.inputRegisters );
-        checker( slave.outputRegisters );
     }
 }
 
@@ -68,7 +66,7 @@ static void checkRegisterAddressSpacing( Slaves slaves )
     const auto checker = []( Registers& registers )
     {
         registers.sort( []( const Register& left, const Register& right )
-                              { return left.address < right.address; } );
+                        { return left.address < right.address; } );
 
         const auto& it = std::adjacent_find( registers.begin(), registers.end(),
                                              []( const Register& left, const Register& right )
