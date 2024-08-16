@@ -46,9 +46,9 @@ TEST( TestConfig, TestDeserializationDuplicateRegisterNames )
                   config::ParseException );
 }
 
-TEST( TestConfig, TestDeserializationDuplicateSlaveAddresses )
+TEST( TestConfig, TestDeserializationDuplicateSlaveIDs )
 {
-    const auto path = testFilePath + "duplicate_slave_addresses.json";
+    const auto path = testFilePath + "duplicate_slave_IDs.json";
 
     const auto jsonIn = getJsonFromPath( path );
 

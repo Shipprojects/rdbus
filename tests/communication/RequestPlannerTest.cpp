@@ -9,7 +9,7 @@ using namespace rdbus;
 TEST( TestRequestPlanner, TestSubsequent )
 {
     Slave slave;
-    slave.address = 1;
+    slave.id = 1;
     slave.name = "slave";
     slave.pollTimeMs = std::chrono::milliseconds( 100 );
 
@@ -67,7 +67,7 @@ TEST( TestRequestPlanner, TestSubsequent )
 TEST( TestRequestPlanner, TestWithBreaks )
 {
     Slave slave;
-    slave.address = 2;
+    slave.id = 2;
     slave.name = "slave";
     slave.pollTimeMs = std::chrono::milliseconds( 100 );
 
@@ -120,7 +120,7 @@ TEST( TestRequestPlanner, TestWithBreaks )
 TEST( TestRequestPlanner, TestSubsequentAndBreaks )
 {
     Slave slave;
-    slave.address = 2;
+    slave.id = 2;
     slave.name = "slave";
     slave.pollTimeMs = std::chrono::milliseconds( 100 );
 

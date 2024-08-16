@@ -12,8 +12,8 @@ void from_json( const nlohmann::json& j, Slave& x )
     std::string name;
     tools::parseKeyValue( j, "name", name, "No slave name present!" );
 
-    int address = 0;
-    tools::parseKeyValue( j, "address", address, "No slave address present!" );
+    int id = 0;
+    tools::parseKeyValue( j, "id", id, "No slave id present!" );
 
     int pollTimeMs = 0;
     tools::parseKeyValue( j, "poll_time_ms", pollTimeMs, "No slave poll time present!" );
@@ -27,7 +27,7 @@ void from_json( const nlohmann::json& j, Slave& x )
     }
 
     x.name = name;
-    x.address = address;
+    x.id = id;
     x.pollTimeMs = Slave::Millis( pollTimeMs );
     x.registers = registers;
 }

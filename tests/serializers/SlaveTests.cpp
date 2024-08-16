@@ -21,9 +21,9 @@ TEST( TestSlave, TestDeserializationNoRegisters )
                   config::ParseException );
 }
 
-TEST( TestSlave, TestDeserializationNoAddress )
+TEST( TestSlave, TestDeserializationNoID )
 {
-    const auto path = testFilePath + "no_address.json";
+    const auto path = testFilePath + "no_ID.json";
 
     const auto jsonIn = getJsonFromPath( path );
 
@@ -53,7 +53,7 @@ TEST( TestSlave, TestDeserializationValid )
     const config::Slave slave = jsonIn;
 
     EXPECT_EQ( slave.name, "Sensor" );
-    EXPECT_EQ( slave.address, 1 );
+    EXPECT_EQ( slave.id, 1 );
     EXPECT_EQ( slave.pollTimeMs, config::Slave::Millis( 150 ) );
     EXPECT_EQ( slave.registers.size(), 2 );
 }

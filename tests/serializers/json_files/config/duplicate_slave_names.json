@@ -14,7 +14,7 @@
 
     "slaves": [
       {
-        "address": 1,
+        "id": 1,
         "name": "Slave1",
         "poll_time_ms": 150,
         "registers": [
@@ -26,7 +26,7 @@
         ]
       },
       {
-        "address": 2,
+        "id": 2,
         "name": "Slave1",
         "poll_time_ms": 300,
         "registers": [
