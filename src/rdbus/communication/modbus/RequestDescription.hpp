@@ -13,6 +13,6 @@ struct RequestDescription
     std::list< config::Register > registers;
 };
 
-using RequestDescriptions = std::list< RequestDescription >;
+using RequestDescriptions = std::vector< RequestDescription >;
 
 } // namespace rdbus::communication::modbus

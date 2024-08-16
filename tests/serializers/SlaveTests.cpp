@@ -55,5 +55,6 @@ TEST( TestSlave, TestDeserializationValid )
     EXPECT_EQ( slave.name, "Sensor" );
     EXPECT_EQ( slave.id, 1 );
     EXPECT_EQ( slave.pollTimeMs, config::Slave::Millis( 150 ) );
-    EXPECT_EQ( slave.registers.size(), 2 );
+    EXPECT_EQ( slave.outputRegisters.size(), 1 );
+    EXPECT_EQ( slave.inputRegisters.size(), 2 );
 }

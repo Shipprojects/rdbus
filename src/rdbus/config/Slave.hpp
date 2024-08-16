@@ -18,7 +18,8 @@ struct Slave
     Millis pollTimeMs = Millis( 0 );
 
     using Registers = std::list< Register >;
-    Registers registers;
+    Registers inputRegisters;
+    Registers outputRegisters;
 };
 
 void from_json( const nlohmann::json& j, Slave& x );

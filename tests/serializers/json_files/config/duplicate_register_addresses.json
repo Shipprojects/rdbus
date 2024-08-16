@@ -17,7 +17,7 @@
         "id": 1,
         "name": "name",
         "poll_time_ms": 150,
-        "registers": [
+        "analog_input_registers": [
           {
           "address": 150,
             "data_order": "ABCD",

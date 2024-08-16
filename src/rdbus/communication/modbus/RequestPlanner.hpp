@@ -7,10 +7,10 @@
 namespace rdbus::communication::modbus
 {
 
-// Returns a list of modbus requests to be executed sequentually.
-// Due to the possibility in configuration to specify registers that are not directly
-// adjacent to each other, we have to execute multiple read requests to read all
-// necessary values. This limitation comes from Modbus protocol itself, where
+// Returns a list of modbus requests to be executed sequentually. A single requests will
+// be split into many if there are different kind of registers that have to be read and/or
+// due to the possibility in configuration to specify registers that are not directly
+// adjacent to each other. This limitation comes from Modbus protocol itself, where
 // reading happens from x address for n registers.
 RequestDescriptions requestPlan( const config::Slave& slave );
 
