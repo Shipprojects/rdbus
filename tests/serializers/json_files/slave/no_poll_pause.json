@@ -1,7 +1,7 @@
 {
     "id": 1,
     "name": "Sensor",
-    "registers": [
+    "analog_output_registers": [
         {
             "address": 40000,
             "data_order": "ABCD"

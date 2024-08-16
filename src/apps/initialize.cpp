@@ -4,7 +4,7 @@
 #include "rdbus/communication/modbus/Communicator.hpp"
 #include "rdbus/config/Config.hpp"
 #include "rdbus/out/pipe/Pipe.hpp"
-#include "rdbus/tasks/Modbus.hpp"
+#include "rdbus/tasks/modbus/PollSlave.hpp"
 #include "spdlog/common.h"
 #include "spdlog/sinks/stdout_sinks.h"
 #include "version.hpp"
@@ -115,7 +115,7 @@ rdbus::Manager::Tasks initializeTasks( const rdbus::config::Config& config )
     for ( const auto& slave : config.slaves )
     {
         // 1 slave == 1 task
-        tasks.emplace_back( std::make_unique< rdbus::tasks::Modbus >( slave, communicator ) );
+        tasks.emplace_back( std::make_unique< rdbus::tasks::modbus::PollSlave >( slave, communicator ) );
     }
 
     return tasks;

@@ -18,10 +18,13 @@ void from_json( const nlohmann::json& j, Slave& x )
     int pollTimeMs = 0;
     tools::parseKeyValue( j, "poll_time_ms", pollTimeMs, "No slave poll time present!" );
 
-    Slave::Registers registers;
-    tools::parseKeyValue( j, "registers", registers, "No slave registers present!" );
+    Slave::Registers inputRegisters;
+    tools::parseKeyValue( j, "analog_input_registers", inputRegisters );
 
-    if ( registers.empty() )
+    Slave::Registers outputRegisters;
+    tools::parseKeyValue( j, "analog_output_registers", outputRegisters );
+
+    if ( inputRegisters.empty() && outputRegisters.empty() )
     {
         throw ParseException( "No slave registers present!" );
     }
@@ -29,7 +32,8 @@ void from_json( const nlohmann::json& j, Slave& x )
     x.name = name;
     x.id = id;
     x.pollTimeMs = Slave::Millis( pollTimeMs );
-    x.registers = registers;
+    x.inputRegisters = inputRegisters;
+    x.outputRegisters = outputRegisters;
 }
 
 } // namespace rdbus::config

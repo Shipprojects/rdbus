@@ -1,16 +1,16 @@
-#include "Modbus.hpp"
+#include "PollSlave.hpp"
 #include <chrono>
 
-namespace rdbus::tasks
+namespace rdbus::tasks::modbus
 {
 
-Modbus::Modbus( const config::Slave& slave, const Communicator& communicator )
+PollSlave::PollSlave( const config::Slave& slave, const Communicator& communicator )
 : slave( slave ),
   com( communicator )
 {
 }
 
-std::optional< Data > Modbus::run()
+std::optional< Data > PollSlave::run()
 {
     const auto now = std::chrono::steady_clock::now();
     const auto diff = now - lastRun;

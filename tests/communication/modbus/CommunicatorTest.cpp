@@ -31,7 +31,7 @@ static Slave getSlave()
         reg.byteOrder = { 0, 1, 2, 3 };
         reg.name = "Register_A";
         reg.type = rdbus::Type::Uint32;
-        slave.registers.emplace_back( std::move( reg ) );
+        slave.inputRegisters.emplace_back( std::move( reg ) );
     }
 
     {
@@ -40,7 +40,7 @@ static Slave getSlave()
         reg.byteOrder = { 0, 1, 2, 3, 4, 5, 6, 7 };
         reg.name = "Register_B";
         reg.type = rdbus::Type::Uint64;
-        slave.registers.emplace_back( std::move( reg ) );
+        slave.inputRegisters.emplace_back( std::move( reg ) );
     }
 
     return slave;

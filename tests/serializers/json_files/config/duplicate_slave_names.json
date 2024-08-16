@@ -17,7 +17,7 @@
         "id": 1,
         "name": "Slave1",
         "poll_time_ms": 150,
-        "registers": [
+        "analog_input_registers": [
           {
             "address": 8,
             "data_type": "U64A",
@@ -29,7 +29,7 @@
         "id": 2,
         "name": "Slave1",
         "poll_time_ms": 300,
-        "registers": [
+        "analog_input_registers": [
           {
           "address": 4,
             "data_order": "ABCD",

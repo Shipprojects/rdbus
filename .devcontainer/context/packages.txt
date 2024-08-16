@@ -1,6 +1,7 @@
 build-essential
 clang-format
 cmake
+gdb
 git
 gnupg2
 gnupg2

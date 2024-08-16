@@ -1,35 +1,37 @@
 {
-  "protocol": "modbus/nmea",
-
-  "serial": {
-    "path": "/dev/tty*",
-    "baud_rate": 4800,
-    "stop_bits_count": 1,
-    "parity": false
-  },
+  "protocol": "modbus",
 
   "output": {
-    "type": "db/file",
-    "ip:port": "0.0.0.0:5000",
-    "path": "/path/to/output"
+    "type": "stdout"
+  },
+
+  "serial": {
+    "baud_rate": 9600,
+    "parity": false,
+    "path": "/dev/ttyS1",
+    "stop_bits_count": 1
   },
 
   "slaves": [
     {
-      "name": "name",
       "id": 1,
+      "name": "Torque meter",
+      "poll_time_ms": 3000,
       "registers": [
         {
-          "name": "REGISTER_A",
-          "address": 40000,
-          "data_order": "ABCD",
-          "poll_time_ms": 150
+          "address": 130,
+          "data_type": "U32A",
+          "name": "Torque"
         },
         {
-          "name": "REGISTER_B",
-          "address": 40004,
-          "data_order": "BADCFEHG",
-          "poll_time_ms": 500
+          "address": 132,
+          "data_type": "U32A",
+          "name": "Shaft speed"
+        },
+        {
+          "address": 134,
+          "data_type": "F32A",
+          "name": "Power"
         }
       ]
     }

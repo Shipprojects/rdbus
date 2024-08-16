@@ -18,7 +18,7 @@ TEST( TestRequestPlanner, TestSubsequent )
         reg.address = 100;
         reg.byteOrder = { 0, 1, 2, 3 };
         reg.name = "Register_A";
-        slave.registers.emplace_back( std::move( reg ) );
+        slave.inputRegisters.emplace_back( std::move( reg ) );
     }
 
     {
@@ -26,7 +26,7 @@ TEST( TestRequestPlanner, TestSubsequent )
         reg.address = 102;
         reg.byteOrder = { 0, 1, 2, 3, 4, 5, 6, 7 };
         reg.name = "Register_B";
-        slave.registers.emplace_back( std::move( reg ) );
+        slave.inputRegisters.emplace_back( std::move( reg ) );
     }
 
     {
@@ -34,7 +34,7 @@ TEST( TestRequestPlanner, TestSubsequent )
         reg.address = 106;
         reg.byteOrder = { 0, 1 };
         reg.name = "Register_C";
-        slave.registers.emplace_back( std::move( reg ) );
+        slave.outputRegisters.emplace_back( std::move( reg ) );
     }
 
     {
@@ -42,26 +42,33 @@ TEST( TestRequestPlanner, TestSubsequent )
         reg.address = 107;
         reg.byteOrder = { 0, 1, 2, 3 };
         reg.name = "Register_D";
-        slave.registers.emplace_back( std::move( reg ) );
+        slave.outputRegisters.emplace_back( std::move( reg ) );
     }
 
     auto requestDescriptions = communication::modbus::requestPlan( slave );
-    ASSERT_EQ( requestDescriptions.size(), 1 );
+    ASSERT_EQ( requestDescriptions.size(), 2 );
 
-    const auto& description = *requestDescriptions.begin();
-    EXPECT_EQ( description.request.registerAddress(), 100 );
-    EXPECT_EQ( description.request.numberOfRegisters(), 9 );
+    {
+        const auto& description = requestDescriptions[ 0 ];
+        EXPECT_EQ( description.request.registerAddress(), 106 );
+        EXPECT_EQ( description.request.numberOfRegisters(), 3 );
+        auto reg = description.registers.begin();
+        ASSERT_EQ( description.registers.size(), 2 );
+        EXPECT_EQ( reg->name, "Register_C" );
+        reg++;
+        EXPECT_EQ( reg->name, "Register_D" );
+    }
 
-    auto reg = description.registers.begin();
-    ASSERT_EQ( description.registers.size(), 4 );
-
-    EXPECT_EQ( reg->name, "Register_A" );
-    reg++;
-    EXPECT_EQ( reg->name, "Register_B" );
-    reg++;
-    EXPECT_EQ( reg->name, "Register_C" );
-    reg++;
-    EXPECT_EQ( reg->name, "Register_D" );
+    {
+        const auto& description = requestDescriptions[ 1 ];
+        EXPECT_EQ( description.request.registerAddress(), 100 );
+        EXPECT_EQ( description.request.numberOfRegisters(), 6 );
+        auto reg = description.registers.begin();
+        ASSERT_EQ( description.registers.size(), 2 );
+        EXPECT_EQ( reg->name, "Register_A" );
+        reg++;
+        EXPECT_EQ( reg->name, "Register_B" );
+    }
 }
 
 TEST( TestRequestPlanner, TestWithBreaks )
@@ -76,7 +83,7 @@ TEST( TestRequestPlanner, TestWithBreaks )
         reg.address = 100;
         reg.byteOrder = { 0, 1, 2, 3 };
         reg.name = "Register_A";
-        slave.registers.emplace_back( std::move( reg ) );
+        slave.inputRegisters.emplace_back( std::move( reg ) );
     }
 
     {
@@ -84,7 +91,7 @@ TEST( TestRequestPlanner, TestWithBreaks )
         reg.address = 108;
         reg.byteOrder = { 0, 1, 2, 3, 4, 5, 6, 7 };
         reg.name = "Register_B";
-        slave.registers.emplace_back( std::move( reg ) );
+        slave.outputRegisters.emplace_back( std::move( reg ) );
     }
 
     {
@@ -92,23 +99,24 @@ TEST( TestRequestPlanner, TestWithBreaks )
         reg.address = 114;
         reg.byteOrder = { 0, 1, 2, 3 };
         reg.name = "Register_C";
-        slave.registers.emplace_back( std::move( reg ) );
+        slave.inputRegisters.emplace_back( std::move( reg ) );
     }
 
     auto requestDescriptions = communication::modbus::requestPlan( slave );
     ASSERT_EQ( requestDescriptions.size(), 3 );
 
     auto it = requestDescriptions.begin();
+    EXPECT_EQ( it->request.registerAddress(), 108 );
+    EXPECT_EQ( it->request.numberOfRegisters(), 4 );
+    ASSERT_EQ( it->registers.size(), 1 );
+    EXPECT_EQ( it->registers.begin()->name, "Register_B" );
+
+    it++;
     EXPECT_EQ( it->request.registerAddress(), 100 );
     EXPECT_EQ( it->request.numberOfRegisters(), 2 );
     ASSERT_EQ( it->registers.size(), 1 );
     EXPECT_EQ( it->registers.begin()->name, "Register_A" );
 
-    it++;
-    EXPECT_EQ( it->request.registerAddress(), 108 );
-    EXPECT_EQ( it->request.numberOfRegisters(), 4 );
-    ASSERT_EQ( it->registers.size(), 1 );
-    EXPECT_EQ( it->registers.begin()->name, "Register_B" );
 
     it++;
     EXPECT_EQ( it->request.registerAddress(), 114 );
@@ -129,7 +137,7 @@ TEST( TestRequestPlanner, TestSubsequentAndBreaks )
         reg.address = 100;
         reg.byteOrder = { 0, 1, 2, 3 };
         reg.name = "Register_A";
-        slave.registers.emplace_back( std::move( reg ) );
+        slave.inputRegisters.emplace_back( std::move( reg ) );
     }
 
     {
@@ -137,7 +145,7 @@ TEST( TestRequestPlanner, TestSubsequentAndBreaks )
         reg.address = 102;
         reg.byteOrder = { 0, 1 };
         reg.name = "Register_B";
-        slave.registers.emplace_back( std::move( reg ) );
+        slave.inputRegisters.emplace_back( std::move( reg ) );
     }
 
     {
@@ -145,7 +153,7 @@ TEST( TestRequestPlanner, TestSubsequentAndBreaks )
         reg.address = 104;
         reg.byteOrder = { 0, 1, 2, 3, 4, 5, 6, 7 };
         reg.name = "Register_C";
-        slave.registers.emplace_back( std::move( reg ) );
+        slave.inputRegisters.emplace_back( std::move( reg ) );
     }
 
     {
@@ -153,14 +161,20 @@ TEST( TestRequestPlanner, TestSubsequentAndBreaks )
         reg.address = 108;
         reg.byteOrder = { 0, 1, 2, 3 };
         reg.name = "Register_D";
-        slave.registers.emplace_back( std::move( reg ) );
+        slave.outputRegisters.emplace_back( std::move( reg ) );
     }
 
     auto requestDescriptions = communication::modbus::requestPlan( slave );
 
-    ASSERT_EQ( requestDescriptions.size(), 2 );
+    ASSERT_EQ( requestDescriptions.size(), 3 );
 
     auto it = requestDescriptions.begin();
+    EXPECT_EQ( it->request.registerAddress(), 108 );
+    EXPECT_EQ( it->request.numberOfRegisters(), 2 );
+    ASSERT_EQ( it->registers.size(), 1 );
+    EXPECT_EQ( it->registers.begin()->name, "Register_D" );
+
+    it++;
     EXPECT_EQ( it->request.registerAddress(), 100 );
     EXPECT_EQ( it->request.numberOfRegisters(), 3 );
     ASSERT_EQ( it->registers.size(), 2 );
@@ -169,8 +183,7 @@ TEST( TestRequestPlanner, TestSubsequentAndBreaks )
 
     it++;
     EXPECT_EQ( it->request.registerAddress(), 104 );
-    EXPECT_EQ( it->request.numberOfRegisters(), 6 );
-    ASSERT_EQ( it->registers.size(), 2 );
+    EXPECT_EQ( it->request.numberOfRegisters(), 4 );
+    ASSERT_EQ( it->registers.size(), 1 );
     EXPECT_EQ( it->registers.begin()->name, "Register_C" );
-    EXPECT_EQ( std::next( it->registers.begin() )->name, "Register_D" );
 }

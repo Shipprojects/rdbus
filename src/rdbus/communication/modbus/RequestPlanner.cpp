@@ -5,16 +5,16 @@
 #include "rdbus/config/Register.hpp"
 #include <numeric>
 
+using namespace rdbus::config;
+
 namespace rdbus::communication::modbus
 {
 
-using namespace config;
-RequestDescriptions requestPlan( const Slave& slave )
+static RequestDescriptions requestPlan( int slaveId, MB::utils::MBFunctionCode code, Slave::Registers registers )
 {
     RequestDescriptions requestDescriptions;
 
     // Sort registers for easier address grouping
-    auto registers = slave.registers;
     registers.sort( []( const Register& left, const Register& right )
                     { return left.address < right.address; } );
 
@@ -35,11 +35,8 @@ RequestDescriptions requestPlan( const Slave& slave )
                                                           []( int accumulator, const Register& next )
                                                           { return next.byteOrder.size() / sizeof( uint16_t ) + accumulator; } );
 
-            // TODO: Will probably need to find a way how to read from coils too, otherwise the only reading
-            // that is possible now is from holding registers due to hardcoded function code
-            auto request = MB::ModbusRequest( slave.id,
-                                              MB::utils::MBFunctionCode::ReadAnalogOutputHoldingRegisters,
-                                              address, rawRegisterCount );
+            // TODO: Will probably need to find a way how to read from coils too
+            auto request = MB::ModbusRequest( slaveId, code, address, rawRegisterCount );
             requestDescriptions.push_back( { request, group } );
             group.clear();
 
@@ -50,6 +47,19 @@ RequestDescriptions requestPlan( const Slave& slave )
             }
         }
     }
+
+    return requestDescriptions;
+}
+
+RequestDescriptions requestPlan( const Slave& slave )
+{
+    RequestDescriptions requestDescriptions;
+
+    auto descriptions1 = requestPlan( slave.id, MB::utils::MBFunctionCode::ReadAnalogOutputHoldingRegisters, slave.outputRegisters );
+    auto descriptions2 = requestPlan( slave.id, MB::utils::MBFunctionCode::ReadAnalogInputRegisters, slave.inputRegisters );
+
+    requestDescriptions.insert( requestDescriptions.end(), descriptions1.begin(), descriptions1.end() );
+    requestDescriptions.insert( requestDescriptions.end(), descriptions2.begin(), descriptions2.end() );
 
     return requestDescriptions;
 }
