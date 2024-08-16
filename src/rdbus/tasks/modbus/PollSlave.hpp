@@ -1,15 +1,15 @@
 #pragma once
 
-#include "Task.hpp"
+#include "rdbus/tasks/Task.hpp"
 #include "rdbus/communication/modbus/Communicator.hpp"
 #include "rdbus/config/Slave.hpp"
 #include <chrono>
 #include <memory>
 
-namespace rdbus::tasks
+namespace rdbus::tasks::modbus
 {
 
-class Modbus : public Task
+class PollSlave : public Task
 {
 private:
     const config::Slave slave;
@@ -18,7 +18,7 @@ private:
     std::chrono::time_point< std::chrono::steady_clock > lastRun;
 
 public:
-    Modbus( const config::Slave& slave, const Communicator& communicator );
+    PollSlave( const config::Slave& slave, const Communicator& communicator );
     std::optional< Data > run() override;
 };
 
