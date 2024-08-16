@@ -1,4 +1,5 @@
 #include "Adapter.hpp"
+#include "MB/modbusException.hpp"
 
 namespace rdbus::communication::modbus
 {
@@ -28,7 +29,16 @@ auto Adapter::send( const Request& request, std::chrono::seconds requestTimeout 
 
     const auto& rawed = connection.getData( requestTimeout );
 
-    return Response::fromRawCRC( rawed );
+    try
+    {
+        return Response::fromRawCRC( rawed );
+    }
+    // Original modbus exception in ModbusResponse is not created from raw data
+    // and thus contains less information. Create new exception from raw data here.
+    catch ( const MB::ModbusException& )
+    {
+        throw MB::ModbusException( rawed, true );
+    }
 }
 
 } // namespace rdbus::communication::modbus

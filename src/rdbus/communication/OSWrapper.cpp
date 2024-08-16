@@ -52,4 +52,14 @@ ssize_t OSWrapper::read( int __fd, void* __buf, size_t __nbytes )
     return ::read( __fd, __buf, __nbytes );
 }
 
-} // namespace rdbus::communication::tools
+int OSWrapper::cfsetospeed( struct termios* __termios_p, speed_t __speed )
+{
+    return ::cfsetospeed( __termios_p, __speed );
+}
+
+int OSWrapper::cfsetispeed( struct termios* __termios_p, speed_t __speed )
+{
+    return ::cfsetispeed( __termios_p, __speed );
+}
+
+} // namespace rdbus::communication

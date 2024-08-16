@@ -15,11 +15,6 @@
 namespace rdbus::communication
 {
 
-namespace tools
-{
-std::string toHexString( const uint8_t* data, int len );
-} // namespace tools
-
 // Interface with serial port
 class Connection
 {
@@ -35,7 +30,7 @@ public:
         Exception( const std::string& what );
     };
 
-    struct Timeout : public std::runtime_error
+    struct Timeout : public Exception
     {
         Timeout( const std::string& what );
     };

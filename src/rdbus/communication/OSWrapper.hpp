@@ -19,10 +19,12 @@ struct OS
     virtual ssize_t write( int __fd, const void* __buf, size_t __n ) = 0;
     virtual int poll( struct pollfd* __fds, nfds_t __nfds, int __timeout ) = 0;
     virtual ssize_t read( int __fd, void* __buf, size_t __nbytes ) = 0;
+    virtual int cfsetospeed( struct termios* __termios_p, speed_t __speed ) = 0;
+    virtual int cfsetispeed( struct termios* __termios_p, speed_t __speed ) = 0;
     virtual ~OS() = default;
 };
 
-// A wrapper class around OS functions that call the same OS functions
+// A wrapper class around OS functions that calls the same OS functions
 // for purposes of unit testing using mock class
 struct OSWrapper : public OS
 {
@@ -35,6 +37,8 @@ struct OSWrapper : public OS
     ssize_t write( int __fd, const void* __buf, size_t __n ) override;
     int poll( struct pollfd* __fds, nfds_t __nfds, int __timeout ) override;
     ssize_t read( int __fd, void* __buf, size_t __nbytes ) override;
+    int cfsetospeed( struct termios* __termios_p, speed_t __speed ) override;
+    int cfsetispeed( struct termios* __termios_p, speed_t __speed ) override;
 };
 
-} // namespace rdbus::communication::tools
+} // namespace rdbus::communication

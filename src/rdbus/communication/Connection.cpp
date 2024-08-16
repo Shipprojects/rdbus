@@ -7,21 +7,23 @@
 namespace rdbus::communication
 {
 
-namespace tools
-{
-std::string toHexString( const uint8_t* data, int len )
+static std::string toHexString( const uint8_t* data, int len )
 {
     std::stringstream ss;
     ss << std::hex;
 
-    for ( int i( 0 ); i < len; ++i )
+    for ( int i = 0; i < len; ++i )
     {
-        ss << std::setw( 2 ) << std::setfill( '0' ) << ( int )data[ i ];
+        ss << std::setw( 2 ) << std::setfill( '0' ) << static_cast< int >( data[ i ] );
     }
 
     return ss.str();
 }
-} // namespace tools
+
+static std::string getError()
+{
+    return strerror( errno ) + std::string( " " ) + std::to_string( errno );
+}
 
 Connection::Connection( const config::Serial& settings, std::unique_ptr< OS > os )
 : os( std::move( os ) )
@@ -37,19 +39,24 @@ Connection::Connection( const config::Serial& settings, std::unique_ptr< OS > os
     // Store current port parameters in termios_ structure
     if ( this->os->tcgetattr( fileDescriptor, &termios_ ) != 0 )
     {
-        throw Exception( "Error at tcgetattr - " + std::to_string( errno ) );
+        throw Exception( "Error at tcgetattr - " + getError() );
     }
 
     setupIO( settings );
 
     setBaudRate( settings.baudRate );
 
-    // Connect
-    this->os->tcflush( fileDescriptor, TCIFLUSH ); // Flush received data
+    // Flush dangling data
+    if ( this->os->tcflush( fileDescriptor, TCIFLUSH ) == -1 )
+    {
+        throw Exception( "Error at tcflush - " + getError() );
+    }
+
+    // Store termios_ setup
     if ( this->os->tcsetattr( fileDescriptor, TCSAFLUSH, &termios_ ) != 0 ) // Make termios_ changes take effect only after data has been transmitted
     {
         throw Exception( "Error {" + std::to_string( fileDescriptor ) +
-                         "} at tcsetattr - " + std::to_string( errno ) );
+                         "} at tcsetattr - " + getError() );
     }
 }
 
@@ -64,12 +71,19 @@ Connection::~Connection()
 
 void Connection::sendData( const std::vector< uint8_t >& data )
 {
-    SPDLOG_INFO( "Sending data " + tools::toHexString( data.data(), data.size() ) );
+    SPDLOG_INFO( "Sending data " + toHexString( data.data(), data.size() ) );
 
     // Ensure that nothing will intervene in our communication by discarding data that has been written but not transmitted
-    os->tcflush( fileDescriptor, TCOFLUSH );
+    if ( os->tcflush( fileDescriptor, TCOFLUSH ) )
+    {
+        throw Exception( "Error at tcflush - " + getError() );
+    }
+
     // Write
-    os->write( fileDescriptor, data.begin().base(), data.size() );
+    if ( os->write( fileDescriptor, data.begin().base(), data.size() ) == -1 )
+    {
+        throw Exception( "Failed to write - " + getError() );
+    }
 }
 
 std::vector< uint8_t > Connection::getData( std::chrono::seconds timeout )
@@ -80,21 +94,21 @@ std::vector< uint8_t > Connection::getData( std::chrono::seconds timeout )
     pollfd waitingFileDescriptor = { .fd = fileDescriptor, .events = POLLIN, .revents = POLLIN };
 
     // Wait for incoming data
-    if ( os->poll( &waitingFileDescriptor, 1, std::chrono::milliseconds( timeout ).count() ) <= 0 )
+    if ( os->poll( &waitingFileDescriptor, 1, std::chrono::milliseconds( timeout ).count() ) == 0 )
     {
         throw Timeout( "Device timeout!" );
     }
 
-    // Read while there is data available
-    constexpr int readTimeoutMs = 100;
     ssize_t size = 0;
+    constexpr int readTimeoutMs = 100;
+    // Read while there is data available
     do
     {
         const auto readBytes = os->read( fileDescriptor, data.data() + size, maxSize );
 
         if ( readBytes < 0 )
         {
-            throw Exception( "Device failure!" );
+            throw Exception( "Read failure! - " + getError() );
         }
 
         size += readBytes;
@@ -104,19 +118,19 @@ std::vector< uint8_t > Connection::getData( std::chrono::seconds timeout )
     data.resize( size );
     data.shrink_to_fit();
 
-    SPDLOG_INFO( "Data received " + tools::toHexString( data.data(), data.size() ) );
+    SPDLOG_INFO( "Data received " + toHexString( data.data(), data.size() ) );
 
     return data;
 }
 
 Connection::Exception::Exception( const std::string& what )
-: std::runtime_error( what )
+: std::runtime_error( "Connection exception - " + what )
 {
 }
 
 
 Connection::Timeout::Timeout( const std::string& what )
-: std::runtime_error( what )
+: Exception( "Timeout - " + what )
 {
 }
 
@@ -181,8 +195,8 @@ void Connection::setBaudRate( speed_t speed )
     }
 #undef setBaud
 
-    cfsetospeed( &termios_, speed );
-    cfsetispeed( &termios_, speed );
+    os->cfsetospeed( &termios_, speed );
+    os->cfsetispeed( &termios_, speed );
 }
 
 } // namespace rdbus::communication

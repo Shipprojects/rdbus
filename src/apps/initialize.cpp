@@ -73,7 +73,7 @@ Args parseArguments( int argc, char** argv )
 
 void initializeLogger( LogLevel loglevel )
 {
-    auto logger = spdlog::stderr_logger_mt( "logger" );
+    auto logger = spdlog::stderr_logger_st( "logger" );
     spdlog::set_default_logger( logger );
     spdlog::set_level( loglevel );
     spdlog::set_pattern( "[%Y-%m-%d %H:%M:%S:%e] [%l] %v" );
