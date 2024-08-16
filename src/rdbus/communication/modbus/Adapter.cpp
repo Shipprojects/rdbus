@@ -17,8 +17,8 @@ static std::vector< uint8_t > toRaw( const MB::ModbusRequest& request )
     return rawed;
 }
 
-Adapter::Adapter( const config::Serial& settings )
-: connection( settings )
+Adapter::Adapter( const config::Serial& settings, std::unique_ptr< OS > os )
+: connection( settings, std::move( os ) )
 {
 }
 

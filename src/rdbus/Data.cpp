@@ -58,10 +58,24 @@ void to_json( nlohmann::json& j, const Data::Field& x )
     }
 }
 
+void to_json( nlohmann::json& j, const Data::Error& x )
+{
+    j[ "code" ] = static_cast< int >( x.code );
+    j[ "what" ] = x.what;
+}
+
 void to_json( nlohmann::json& j, const Data& x )
 {
     j[ "device" ] = x.deviceName;
-    j[ "registers" ] = x.fields;
+
+    if ( x.error.has_value() )
+    {
+        j[ "error" ] = x.error.value();
+    }
+    else
+    {
+        j[ "registers" ] = x.fields;
+    }
 }
 
 } // namespace rdbus

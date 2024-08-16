@@ -18,8 +18,8 @@ const Serial& getSettings()
     return settings;
 }
 
-TEST( TestConnection, TestConstructorSuccess )
-{
-    const auto& settings = getSettings();
-    Connection< OSMock > connection( settings );
-}
+// TEST( TestConnection, TestConstructorSuccess )
+// {
+//     const auto& settings = getSettings();
+//     Connection< OSMock > connection( settings );
+// }

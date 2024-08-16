@@ -1,5 +1,6 @@
 #include "initialize.hpp"
 #include "Args.hpp"
+#include "rdbus/communication/OSWrapper.hpp"
 #include "rdbus/communication/modbus/Communicator.hpp"
 #include "rdbus/config/Config.hpp"
 #include "rdbus/out/pipe/Pipe.hpp"
@@ -110,7 +111,7 @@ rdbus::Manager::Tasks initializeTasks( const rdbus::config::Config& config )
 {
     rdbus::Manager::Tasks tasks;
 
-    auto communicator = std::make_shared< rdbus::communication::modbus::Communicator >( config.serial );
+    auto communicator = std::make_shared< rdbus::communication::modbus::Communicator >( config.serial, std::make_unique< rdbus::communication::OSWrapper >() );
     for ( const auto& slave : config.slaves )
     {
         // 1 slave == 1 task

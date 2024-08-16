@@ -6,7 +6,7 @@
 namespace rdbus::communication
 {
 
-// High level interface between user and device.
+// Placeholder for communication implementations for different protocols
 class Communicator
 {
 public:

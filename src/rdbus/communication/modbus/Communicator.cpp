@@ -6,8 +6,8 @@
 namespace rdbus::communication::modbus
 {
 
-Communicator::Communicator( const config::Serial& settings )
-: adapter( settings )
+Communicator::Communicator( const config::Serial& settings, std::unique_ptr< OS > os )
+: adapter( settings, std::move( os ) )
 {
 }
 

@@ -4,6 +4,7 @@
 #include "rdbus/config/Serial.hpp"
 #include <MB/modbusRequest.hpp>
 #include <MB/modbusResponse.hpp>
+#include "rdbus/communication/OSWrapper.hpp"
 
 namespace rdbus::communication::modbus
 {
@@ -13,7 +14,7 @@ namespace rdbus::communication::modbus
 class Adapter
 {
 public:
-    Adapter( const config::Serial& settings );
+    Adapter( const config::Serial& settings, std::unique_ptr< OS > os );
 
     using Request = MB::ModbusRequest;
     using Response = MB::ModbusResponse;
@@ -21,7 +22,7 @@ public:
     Response send( const Request&, seconds requestTimeout = seconds( 10 ) );
 
 private:
-    Connection< OSWrapper > connection;
+    Connection connection;
 };
 
 } // namespace rdbus::communication::modbus
