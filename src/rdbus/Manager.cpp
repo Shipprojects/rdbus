@@ -1,6 +1,4 @@
 #include "Manager.hpp"
-#include <chrono>
-#include <thread>
 
 namespace rdbus
 {
@@ -16,6 +14,10 @@ std::optional< Data > Manager::run( std::unique_ptr< tasks::Task >& task )
     return task->run();
 }
 
+void Manager::send( std::list< rdbus::Data > list )
+{
+    output->send( list );
+}
 
 void Manager::run()
 {
@@ -31,10 +33,8 @@ void Manager::run()
 
     if ( !list.empty() )
     {
-        output->send( list );
+        send( list );
     }
-
-    std::this_thread::sleep_for( std::chrono::milliseconds( 10 ) );
 }
 
 } // namespace rdbus

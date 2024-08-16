@@ -1,17 +1,10 @@
 #include "Data.hpp"
+#include "config/exception.hpp"
 #include <chrono>
 #include <nlohmann/json.hpp>
 
 namespace rdbus
 {
-
-struct ParseException : public std::runtime_error
-{
-    ParseException( const std::string& what )
-    : std::runtime_error( what )
-    {
-    }
-};
 
 static std::string formattedTime( Data::Field::Timestamp timestamp )
 {
@@ -60,7 +53,7 @@ void to_json( nlohmann::json& j, const Data::Field& x )
             j[ "value" ] = std::get< double >( x.value );
             break;
         default:
-            throw ParseException( "Unknown argument!" );
+            throw config::ParseException( "Unknown argument!" );
             break;
     }
 }

@@ -6,6 +6,22 @@
 namespace rdbus::communication
 {
 
+namespace tools
+{
+std::string toHexString( const uint8_t* data, int len )
+{
+    std::stringstream ss;
+    ss << std::hex;
+
+    for ( int i( 0 ); i < len; ++i )
+    {
+        ss << std::setw( 2 ) << std::setfill( '0' ) << ( int )data[ i ];
+    }
+
+    return ss.str();
+}
+} // namespace tools
+
 int OSWrapper::open( const char* __file, int __oflag )
 {
     return ::open( __file, __oflag );
@@ -51,4 +67,4 @@ ssize_t OSWrapper::read( int __fd, void* __buf, size_t __nbytes )
     return ::read( __fd, __buf, __nbytes );
 }
 
-} // namespace communication
+} // namespace rdbus::communication

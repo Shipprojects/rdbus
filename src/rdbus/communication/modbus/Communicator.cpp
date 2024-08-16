@@ -13,6 +13,8 @@ Communicator::Communicator( const config::Serial& settings )
 
 rdbus::Data Communicator::request( const config::Slave& slave )
 {
+    // Contains planned list of requests and a separate list of registers which
+    // match the order of requests
     const auto& requestDescriptions = requestPlan( slave );
 
     rdbus::Data data;
@@ -22,6 +24,7 @@ rdbus::Data Communicator::request( const config::Slave& slave )
         const auto& response = adapter.send( description.request );
 
         const auto& timestamp = std::chrono::system_clock::now();
+        // Parse response to data fields
         const auto& fields = interpreter::parse( response, description.registers, timestamp );
         for ( const auto& field : fields )
         {

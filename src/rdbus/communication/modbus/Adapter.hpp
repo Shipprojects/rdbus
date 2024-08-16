@@ -8,6 +8,8 @@
 namespace rdbus::communication::modbus
 {
 
+// A middleman that performs additional setup for each request/response
+// before sending/receiving data
 class Adapter
 {
 public:
@@ -16,7 +18,7 @@ public:
     using Request = MB::ModbusRequest;
     using Response = MB::ModbusResponse;
     using seconds = std::chrono::seconds;
-    Response send( const Request&, seconds timeout = seconds( 10 ) );
+    Response send( const Request&, seconds requestTimeout = seconds( 10 ) );
 
 private:
     Connection< OSWrapper > connection;

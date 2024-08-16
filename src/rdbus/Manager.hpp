@@ -22,6 +22,7 @@ private:
     Tasks tasks;
     Output output;
     std::optional< Data > run( std::unique_ptr< tasks::Task >& task );
+    void send( std::list< rdbus::Data > list );
 };
 
 } // namespace rdbus

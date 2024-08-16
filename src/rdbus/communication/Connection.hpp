@@ -15,6 +15,11 @@
 namespace rdbus::communication
 {
 
+namespace tools
+{
+std::string toHexString( const uint8_t* data, int len );
+} // namespace tools
+
 // A wrapper class around OS functions that call the same OS functions
 // for purposes of unit testing using mock class
 struct OSWrapper
@@ -74,7 +79,7 @@ public:
 
     void sendData( const std::vector< uint8_t >& data )
     {
-        SPDLOG_INFO( "Sending data " + toHexString( data.data(), data.size() ) );
+        SPDLOG_INFO( "Sending data " + tools::toHexString( data.data(), data.size() ) );
 
         // Ensure that nothing will intervene in our communication by discarding data that has been written but not transmitted
         os.tcflush( fileDescriptor, TCOFLUSH );
@@ -114,7 +119,7 @@ public:
         data.resize( size );
         data.shrink_to_fit();
 
-        SPDLOG_INFO( "Data received " + toHexString( data.data(), data.size() ) );
+        SPDLOG_INFO( "Data received " + tools::toHexString( data.data(), data.size() ) );
 
         return data;
     }
@@ -206,19 +211,6 @@ private:
 
         cfsetospeed( &termios_, speed );
         cfsetispeed( &termios_, speed );
-    }
-
-    std::string toHexString( const uint8_t* data, int len )
-    {
-        std::stringstream ss;
-        ss << std::hex;
-
-        for ( int i( 0 ); i < len; ++i )
-        {
-            ss << std::setw( 2 ) << std::setfill( '0' ) << ( int )data[ i ];
-        }
-
-        return ss.str();
     }
 };
 

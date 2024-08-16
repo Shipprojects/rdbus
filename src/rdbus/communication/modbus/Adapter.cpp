@@ -7,8 +7,8 @@ static std::vector< uint8_t > toRaw( const MB::ModbusRequest& request )
 {
     auto rawed = request.toRaw();
 
+    // Add 2 CRC bytes at the end of the request
     const uint16_t CRC = MB::utils::calculateCRC( rawed );
-
     const uint8_t firstByte = reinterpret_cast< const uint8_t* >( &CRC )[ 0 ];
     const uint8_t secondByte = reinterpret_cast< const uint8_t* >( &CRC )[ 1 ];
     rawed.push_back( firstByte );
@@ -22,11 +22,11 @@ Adapter::Adapter( const config::Serial& settings )
 {
 }
 
-auto Adapter::send( const Request& request, std::chrono::seconds timeout ) -> Response
+auto Adapter::send( const Request& request, std::chrono::seconds requestTimeout ) -> Response
 {
     connection.sendData( toRaw( request ) );
 
-    const auto& rawed = connection.getData( std::chrono::seconds( timeout ) );
+    const auto& rawed = connection.getData( requestTimeout );
 
     return Response::fromRawCRC( rawed );
 }
