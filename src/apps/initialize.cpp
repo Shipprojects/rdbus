@@ -3,6 +3,8 @@
 #include "rdbus/communication/OSWrapper.hpp"
 #include "rdbus/communication/modbus/Communicator.hpp"
 #include "rdbus/config/Config.hpp"
+#include "rdbus/config/Output.hpp"
+#include "rdbus/out/http/HTTP.hpp"
 #include "rdbus/out/pipe/Pipe.hpp"
 #include "rdbus/tasks/modbus/PollSlave.hpp"
 #include "spdlog/common.h"
@@ -73,7 +75,7 @@ Args parseArguments( int argc, char** argv )
 
 void initializeLogger( LogLevel loglevel )
 {
-    auto logger = spdlog::stderr_logger_st( "logger" );
+    auto logger = spdlog::stderr_logger_mt( "logger" );
     spdlog::set_default_logger( logger );
     spdlog::set_level( loglevel );
     spdlog::set_pattern( "[%Y-%m-%d %H:%M:%S:%e] [%l] %v" );
@@ -121,9 +123,19 @@ rdbus::Manager::Tasks initializeTasks( const rdbus::config::Config& config )
     return tasks;
 }
 
-rdbus::Manager::Output initializeOutput( const rdbus::config::Config& )
+rdbus::Manager::Output initializeOutput( const rdbus::config::Config& config )
 {
-    auto output = std::make_unique< rdbus::out::pipe::Pipe >();
+    if ( config.output.type == rdbus::config::Output::TCP_IP )
+    {
+        SPDLOG_INFO( "Starting TCP/IP server" );
+        return std::make_unique< rdbus::out::http::HTTP >( config.output );
+    }
+    else if ( config.output.type == rdbus::config::Output::Stdout )
+    {
+        SPDLOG_INFO( "Outputting to STDOUT" );
+        return std::make_unique< rdbus::out::pipe::Pipe >();
+    }
 
-    return output;
+    // Throw if we came here
+    throw std::runtime_error( "Unknown output type!" );
 }

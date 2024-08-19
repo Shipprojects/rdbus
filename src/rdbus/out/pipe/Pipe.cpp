@@ -6,10 +6,6 @@
 namespace rdbus::out::pipe
 {
 
-Pipe::Pipe()
-{
-}
-
 void Pipe::send( const rdbus::Data& data )
 {
     const nlohmann::json j = data;
