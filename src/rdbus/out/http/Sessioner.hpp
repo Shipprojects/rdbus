@@ -8,6 +8,7 @@
 namespace rdbus::out::http
 {
 
+// Manages HTTP sessions by storing a cookie of last access time. Expires after a while.
 class Sessioner
 {
 public:
@@ -16,6 +17,7 @@ public:
     // Creates a new session and returns session id
     int create( const TimePoint& newAccessTime = std::chrono::system_clock::now() );
 
+    // Clears expired cookies. Updates last access time for given id. Returns last access time.
     TimePoint getLastAccessTime( int id, const TimePoint& newAccessTime = std::chrono::system_clock::now() );
 
     struct Exception : public std::runtime_error
