@@ -2,12 +2,12 @@
   "protocol": "modbus",
 
   "output": {
-    "path": "something"
+    "type": "stdout"
   },
 
   "serial": {
     "baud_rate": 9600,
-    "parity": false,
+    "parity": "none",
     "path": "/dev/ttyS1",
     "stop_bits_count": 1
   },
@@ -20,33 +20,27 @@
       "registers": [
         {
           "address": 130,
+          "data_type": "U",
           "data_order": "ABCD",
           "name": "REGISTER_A"
         },
         {
-          "address": 134,
+          "address": 132,
+          "data_type": "U",
           "data_order": "ABCD",
           "name": "REGISTER_B"
         },
         {
-          "address": 138,
+          "address": 134,
+          "data_type": "S",
           "data_order": "ABCD",
           "name": "REGISTER_C"
         },
         {
-          "address": 142,
+          "address": 136,
+          "data_type": "S",
           "data_order": "ABCD",
           "name": "REGISTER_D"
-        },
-        {
-          "address": 146,
-          "data_order": "ABCD",
-          "name": "REGISTER_E"
-        },
-        {
-          "address": 150,
-          "data_order": "ABCD",
-          "name": "REGISTER_F"
         }
       ]
     }
