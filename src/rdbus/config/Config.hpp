@@ -2,7 +2,7 @@
 
 #include "Output.hpp"
 #include "Serial.hpp"
-#include "Slave.hpp"
+#include "modbus/Slave.hpp"
 #include <list>
 #include <nlohmann/json.hpp>
 #include <string>
@@ -14,7 +14,7 @@ struct Config
 {
     std::string protocol;
 
-    using Slaves = std::list< Slave >;
+    using Slaves = std::list< modbus::Slave >;
     Slaves slaves;
 
     Output output;

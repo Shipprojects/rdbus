@@ -1,11 +1,11 @@
 #include "rdbus/communication/modbus/Interpreter.hpp"
-#include "rdbus/config/Register.hpp"
+#include "rdbus/config/modbus/Register.hpp"
 #include <MB/modbusResponse.hpp>
 #include <chrono>
 #include <gtest/gtest.h>
 
 using namespace rdbus;
-using namespace rdbus::config;
+using namespace rdbus::config::modbus;
 using namespace communication::modbus::interpreter;
 
 TEST( TestInterpreter, TestToRaw16BitRegisters )
@@ -21,7 +21,7 @@ TEST( TestInterpreter, TestToRaw16BitRegisters )
 
 TEST( TestInterpreter, TestToRawMergedRegisters )
 {
-    std::list< config::Register > registers;
+    std::list< Register > registers;
     {
         Register reg;
         reg.address = 100;
@@ -61,7 +61,7 @@ TEST( TestInterpreter, TestToRawMergedRegisters )
 
 TEST( TestInterpreter, TestToUserInterpretation )
 {
-    std::list< config::Register > registers;
+    std::list< Register > registers;
     {
         Register reg;
         reg.address = 100;
@@ -116,7 +116,7 @@ TEST( TestInterpreter, TestToParsedFields )
     const std::vector< uint8_t > input = { 0x02, 0x03, 0x12, 0x8f, 0xb9, 0x05, 0x88, 0x3f, 0xca, 0xdb, 0xe5, 0x82, 0x74, 0x0d, 0xc2, 0x5d, 0x68, 0xe5, 0xff, 0x54, 0xbf };
     const auto& response = MB::ModbusResponse::fromRaw( input );
 
-    std::list< config::Register > registers;
+    std::list< Register > registers;
     {
         Register reg;
         reg.address = 100;

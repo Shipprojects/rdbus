@@ -1,9 +1,9 @@
 #include "rdbus/communication/modbus/RequestPlanner.hpp"
-#include "rdbus/config/Register.hpp"
-#include "rdbus/config/Slave.hpp"
+#include "rdbus/config/modbus/Register.hpp"
+#include "rdbus/config/modbus/Slave.hpp"
 #include <gtest/gtest.h>
 
-using namespace rdbus::config;
+using namespace rdbus::config::modbus;
 using namespace rdbus;
 
 TEST( TestRequestPlanner, TestSubsequent )

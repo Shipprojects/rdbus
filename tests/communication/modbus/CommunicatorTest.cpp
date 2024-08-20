@@ -1,16 +1,17 @@
 #include "rdbus/communication/modbus/Communicator.hpp"
 #include "communication/OSMock.hpp"
 #include "rdbus/Data.hpp"
-#include "rdbus/config/Register.hpp"
 #include "rdbus/config/Serial.hpp"
-#include "rdbus/config/Slave.hpp"
+#include "rdbus/config/modbus/Register.hpp"
+#include "rdbus/config/modbus/Slave.hpp"
 #include "gmock/gmock.h"
 #include <cstdint>
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
+using namespace rdbus::config::modbus;
 using namespace rdbus::config;
-using namespace rdbus::communication;
+using namespace rdbus;
 
 using Code = rdbus::Data::Error::Code;
 
@@ -66,9 +67,9 @@ TEST( TestCommunicator, TestInitOpenFail )
     EXPECT_CALL( *os, open( _, _ ) ).WillOnce( Return( -1 ) );
 
     EXPECT_THROW( {
-        modbus::Communicator com( getSerial(), std::move( os ) );
+        communication::modbus::Communicator com( getSerial(), std::move( os ) );
     },
-                  OS::Exception );
+                  communication::OS::Exception );
 }
 
 TEST( TestCommunicator, TestInitGetAtrrFail )
@@ -78,9 +79,9 @@ TEST( TestCommunicator, TestInitGetAtrrFail )
     EXPECT_CALL( *os, tcgetattr( _, _ ) ).WillOnce( Return( -1 ) );
 
     EXPECT_THROW( {
-        modbus::Communicator com( getSerial(), std::move( os ) );
+        communication::modbus::Communicator com( getSerial(), std::move( os ) );
     },
-                  OS::Exception );
+                  communication::OS::Exception );
 }
 
 TEST( TestCommunicator, TestInitFlushFail )
@@ -90,9 +91,9 @@ TEST( TestCommunicator, TestInitFlushFail )
     EXPECT_CALL( *os, tcflush( _, _ ) ).WillOnce( Return( -1 ) );
 
     EXPECT_THROW( {
-        modbus::Communicator com( getSerial(), std::move( os ) );
+        communication::modbus::Communicator com( getSerial(), std::move( os ) );
     },
-                  OS::Exception );
+                  communication::OS::Exception );
 }
 
 TEST( TestCommunicator, TestInitSetAttrFail )
@@ -102,9 +103,9 @@ TEST( TestCommunicator, TestInitSetAttrFail )
     EXPECT_CALL( *os, tcsetattr( _, _, _ ) ).WillOnce( Return( -1 ) );
 
     EXPECT_THROW( {
-        modbus::Communicator com( getSerial(), std::move( os ) );
+        communication::modbus::Communicator com( getSerial(), std::move( os ) );
     },
-                  OS::Exception );
+                  communication::OS::Exception );
 }
 
 TEST( TestCommunicator, TestFlushFail )
@@ -115,7 +116,7 @@ TEST( TestCommunicator, TestFlushFail )
     .WillOnce( Return( 0 ) ) // During initialization
     .WillOnce( Return( -1 ) ); // Before sending data
 
-    modbus::Communicator com( getSerial(), std::move( os ) );
+    communication::modbus::Communicator com( getSerial(), std::move( os ) );
 
     const auto data = com.request( getSlave() );
 
@@ -133,7 +134,7 @@ TEST( TestCommunicator, TestWriteFail )
     EXPECT_CALL( *os, write( _, _, _ ) )
     .WillOnce( Return( -1 ) );
 
-    modbus::Communicator com( getSerial(), std::move( os ) );
+    communication::modbus::Communicator com( getSerial(), std::move( os ) );
 
     const auto data = com.request( getSlave() );
 
@@ -151,7 +152,7 @@ TEST( TestCommunicator, TestInitialPollFail )
     EXPECT_CALL( *os, poll( _, _, _ ) )
     .WillOnce( Return( 0 ) );
 
-    modbus::Communicator com( getSerial(), std::move( os ) );
+    communication::modbus::Communicator com( getSerial(), std::move( os ) );
 
     const auto data = com.request( getSlave() );
 
@@ -172,7 +173,7 @@ TEST( TestCommunicator, TestReadFail )
     EXPECT_CALL( *os, read( _, _, _ ) )
     .WillOnce( Return( -1 ) );
 
-    modbus::Communicator com( getSerial(), std::move( os ) );
+    communication::modbus::Communicator com( getSerial(), std::move( os ) );
 
     const auto data = com.request( getSlave() );
 
@@ -199,7 +200,7 @@ TEST( TestCommunicator, TestMBIllegalFunction )
         std::memcpy( buf, rawResponse.data(), rawResponse.size() );
         return rawResponse.size(); } ) );
 
-    modbus::Communicator com( getSerial(), std::move( os ) );
+    communication::modbus::Communicator com( getSerial(), std::move( os ) );
 
     const auto data = com.request( getSlave() );
 
@@ -225,7 +226,7 @@ TEST( TestCommunicator, TestMBSlaveDeviceFailure )
         std::memcpy( buf, rawResponse.data(), rawResponse.size() );
         return rawResponse.size(); } ) );
 
-    modbus::Communicator com( getSerial(), std::move( os ) );
+    communication::modbus::Communicator com( getSerial(), std::move( os ) );
 
     const auto data = com.request( getSlave() );
 
@@ -252,7 +253,7 @@ TEST( TestCommunicator, TestValid )
         std::memcpy( buf, rawResponse.data(), rawResponse.size() );
         return rawResponse.size(); } ) );
 
-    modbus::Communicator com( getSerial(), std::move( os ) );
+    communication::modbus::Communicator com( getSerial(), std::move( os ) );
 
     const auto data = com.request( getSlave() );
 

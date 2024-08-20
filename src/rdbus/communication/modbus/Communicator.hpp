@@ -15,7 +15,7 @@ class Communicator : public communication::Communicator
 public:
     Communicator( const config::Serial& settings, std::unique_ptr< OS > os );
 
-    rdbus::Data request( const config::Slave& slave ) override;
+    rdbus::Data request( const config::modbus::Slave& slave ) override;
 
 private:
     Adapter adapter;

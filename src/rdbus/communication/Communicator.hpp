@@ -1,7 +1,7 @@
 #pragma once
 
 #include "rdbus/Data.hpp"
-#include "rdbus/config/Slave.hpp"
+#include "rdbus/config/modbus/Slave.hpp"
 
 namespace rdbus::communication
 {
@@ -10,7 +10,7 @@ namespace rdbus::communication
 class Communicator
 {
 public:
-    virtual rdbus::Data request( const rdbus::config::Slave& slave ) = 0;
+    virtual rdbus::Data request( const rdbus::config::modbus::Slave& slave ) = 0;
 
     virtual ~Communicator() = default;
 };

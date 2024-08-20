@@ -1,16 +1,17 @@
 #include "Config.hpp"
 #include "exception.hpp"
-#include "rdbus/config/Register.hpp"
+#include "modbus/Register.hpp"
 #include "utility.hpp"
 #include <nlohmann/json.hpp>
 
 using namespace nlohmann;
+using namespace rdbus::config::modbus;
 
 namespace rdbus::config
 {
 
 using Slaves = Config::Slaves;
-using Registers = Slave::Registers;
+using Registers = modbus::Slave::Registers;
 
 static void checkDuplicateSlaveIDs( Slaves slaves )
 {

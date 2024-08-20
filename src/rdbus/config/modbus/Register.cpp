@@ -1,12 +1,12 @@
 #include "Register.hpp"
 #include "rdbus/Data.hpp"
 #include "rdbus/config/exception.hpp"
-#include "utility.hpp"
+#include "rdbus/config/utility.hpp"
 
 using namespace nlohmann;
 using namespace rdbus;
 
-namespace rdbus::config
+namespace rdbus::config::modbus
 {
 
 static void throwIf( bool condition, const std::string& message )

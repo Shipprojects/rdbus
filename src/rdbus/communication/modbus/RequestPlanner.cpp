@@ -1,10 +1,11 @@
 #include "RequestPlanner.hpp"
 #include "MB/modbusRequest.hpp"
 #include "MB/modbusUtils.hpp"
-#include "rdbus/config/Register.hpp"
+#include "rdbus/config/modbus/Register.hpp"
 #include <numeric>
 
 using namespace rdbus::config;
+using namespace rdbus::config::modbus;
 
 namespace rdbus::communication::modbus
 {

@@ -1,5 +1,5 @@
-#include "rdbus/config/Slave.hpp"
 #include "rdbus/config/exception.hpp"
+#include "rdbus/config/modbus/Slave.hpp"
 #include "tests/utility.hpp"
 #include <gtest/gtest.h>
 #include <nlohmann/json.hpp>
@@ -7,6 +7,7 @@
 
 const std::string testFilePath = TEST_DATA_DIR "/serializers/json_files/slave/";
 using namespace nlohmann;
+using namespace rdbus::config::modbus;
 using namespace rdbus;
 
 TEST( TestSlave, TestDeserializationNoRegisters )
@@ -16,7 +17,7 @@ TEST( TestSlave, TestDeserializationNoRegisters )
     const auto jsonIn = getJsonFromPath( path );
 
     EXPECT_THROW( {
-        const config::Slave slave = jsonIn;
+        const Slave slave = jsonIn;
     },
                   config::ParseException );
 }
@@ -28,7 +29,7 @@ TEST( TestSlave, TestDeserializationNoID )
     const auto jsonIn = getJsonFromPath( path );
 
     EXPECT_THROW( {
-        const config::Slave slave = jsonIn;
+        const Slave slave = jsonIn;
     },
                   config::ParseException );
 }
@@ -40,7 +41,7 @@ TEST( TestSlave, TestDeserializationNoPollPause )
     const auto jsonIn = getJsonFromPath( path );
 
     EXPECT_THROW( {
-        config::Slave slave = jsonIn;
+        Slave slave = jsonIn;
     },
                   config::ParseException );
 }
@@ -50,11 +51,11 @@ TEST( TestSlave, TestDeserializationValid )
     const auto path = testFilePath + "valid.json";
 
     const auto jsonIn = getJsonFromPath( path );
-    const config::Slave slave = jsonIn;
+    const Slave slave = jsonIn;
 
     EXPECT_EQ( slave.name, "Sensor" );
     EXPECT_EQ( slave.id, 1 );
-    EXPECT_EQ( slave.pollTimeMs, config::Slave::Millis( 150 ) );
+    EXPECT_EQ( slave.pollTimeMs, Slave::Millis( 150 ) );
     EXPECT_EQ( slave.outputRegisters.size(), 1 );
     EXPECT_EQ( slave.inputRegisters.size(), 2 );
 }

@@ -4,7 +4,7 @@
 namespace rdbus::tasks::modbus
 {
 
-PollSlave::PollSlave( const config::Slave& slave, const Communicator& communicator )
+PollSlave::PollSlave( const config::modbus::Slave& slave, const Communicator& communicator )
 : slave( slave ),
   com( communicator )
 {

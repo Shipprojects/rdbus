@@ -139,7 +139,7 @@ Fields toParsedFields( const SmallEndianRegisters& input, const Registers& regis
 } // namespace tools
 
 std::list< rdbus::Data::Field > parse( const MB::ModbusResponse& response,
-                                       const std::list< config::Register >& registers,
+                                       const std::list< config::modbus::Register >& registers,
                                        const rdbus::Data::Field::Timestamp& timestamp )
 {
     using namespace tools;
