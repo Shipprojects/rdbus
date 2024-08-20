@@ -1,7 +1,6 @@
 #include "RequestPlanner.hpp"
 #include "MB/modbusRequest.hpp"
 #include "MB/modbusUtils.hpp"
-#include "rdbus/communication/modbus/RequestDescription.hpp"
 #include "rdbus/config/Register.hpp"
 #include <numeric>
 
