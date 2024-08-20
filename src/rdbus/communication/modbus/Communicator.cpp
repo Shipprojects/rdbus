@@ -42,7 +42,7 @@ rdbus::Data Communicator::request( const config::Slave& slave )
         data.error = rdbus::Data::Error{ .code = rdbus::Data::Error::Modbus,
                                          .what = e.what() };
     }
-    catch ( const Connection::Exception& e )
+    catch ( const OS::Exception& e )
     {
         SPDLOG_ERROR( e.what() );
         data.fields.clear();

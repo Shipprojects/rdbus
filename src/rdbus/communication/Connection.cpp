@@ -21,51 +21,31 @@ static std::string toHexString( const uint8_t* data, int len )
     return ss.str();
 }
 
-static std::string getError()
-{
-    return strerror( errno ) + std::string( " " ) + std::to_string( errno );
-}
-
 Connection::Connection( const config::Serial& settings, std::unique_ptr< OS > os )
 : os( std::move( os ) )
 {
     const auto& path = settings.path;
-    fileDescriptor = this->os->open( path.c_str(), O_RDWR | O_SYNC );
-
-    if ( fileDescriptor == -1 )
-    {
-        throw Exception( "Cannot open serial port " + path );
-    }
+    fileDescriptor = this->os.open( path.c_str(), O_RDWR | O_SYNC );
 
     // Store current port parameters in termios_ structure
-    if ( this->os->tcgetattr( fileDescriptor, &termios_ ) != 0 )
-    {
-        throw Exception( "Error at tcgetattr - " + getError() );
-    }
+    this->os.tcgetattr( fileDescriptor, &termios_ );
 
     setupIO( settings );
 
     setBaudRate( settings.baudRate );
 
     // Flush dangling data
-    if ( this->os->tcflush( fileDescriptor, TCIFLUSH ) == -1 )
-    {
-        throw Exception( "Error at tcflush - " + getError() );
-    }
+    this->os.tcflush( fileDescriptor, TCIFLUSH );
 
     // Store termios_ setup
-    if ( this->os->tcsetattr( fileDescriptor, TCSADRAIN, &termios_ ) != 0 ) // Make termios_ changes take effect only
-    {
-        throw Exception( "Error {" + std::to_string( fileDescriptor ) +
-                         "} at tcsetattr - " + getError() );
-    }
+    this->os.tcsetattr( fileDescriptor, TCSADRAIN, &termios_ );
 }
 
 Connection::~Connection()
 {
     if ( fileDescriptor >= 0 )
     {
-        os->close( fileDescriptor );
+        os.close( fileDescriptor );
     }
     fileDescriptor = -1;
 }
@@ -75,16 +55,10 @@ void Connection::sendData( const std::vector< uint8_t >& data )
     SPDLOG_INFO( "Sending data " + toHexString( data.data(), data.size() ) );
 
     // Ensure that nothing will intervene in our communication by discarding data that has been written but not transmitted
-    if ( os->tcflush( fileDescriptor, TCOFLUSH ) )
-    {
-        throw Exception( "Error at tcflush - " + getError() );
-    }
+    os.tcflush( fileDescriptor, TCOFLUSH );
 
     // Write
-    if ( os->write( fileDescriptor, data.begin().base(), data.size() ) == -1 )
-    {
-        throw Exception( "Failed to write - " + getError() );
-    }
+    os.write( fileDescriptor, data.begin().base(), data.size() );
 }
 
 std::vector< uint8_t > Connection::getData( std::chrono::seconds timeout )
@@ -95,9 +69,9 @@ std::vector< uint8_t > Connection::getData( std::chrono::seconds timeout )
     pollfd waitingFileDescriptor = { .fd = fileDescriptor, .events = POLLIN, .revents = POLLIN };
 
     // Wait for incoming data
-    if ( os->poll( &waitingFileDescriptor, 1, std::chrono::milliseconds( timeout ).count() ) == 0 )
+    if ( os.poll( &waitingFileDescriptor, 1, std::chrono::milliseconds( timeout ).count() ) == 0 )
     {
-        throw Timeout( "Device timeout!" );
+        throw OS::Timeout( "Device timeout!" );
     }
 
     ssize_t size = 0;
@@ -105,16 +79,9 @@ std::vector< uint8_t > Connection::getData( std::chrono::seconds timeout )
     // Read while there is data available
     do
     {
-        const auto readBytes = os->read( fileDescriptor, data.data() + size, maxSize );
-
-        if ( readBytes < 0 )
-        {
-            throw Exception( "Read failure! - " + getError() );
-        }
-
-        size += readBytes;
+        size += os.read( fileDescriptor, data.data() + size, maxSize );
     }
-    while ( os->poll( &waitingFileDescriptor, 1, readTimeoutMs ) > 0 );
+    while ( os.poll( &waitingFileDescriptor, 1, readTimeoutMs ) > 0 );
 
     data.resize( size );
     data.shrink_to_fit();
@@ -124,57 +91,41 @@ std::vector< uint8_t > Connection::getData( std::chrono::seconds timeout )
     return data;
 }
 
-Connection::Exception::Exception( const std::string& what )
-: std::runtime_error( "Connection exception - " + what )
-{
-}
-
-
-Connection::Timeout::Timeout( const std::string& what )
-: Exception( "Timeout - " + what )
-{
-}
-
 void Connection::setupIO( const config::Serial& settings )
 {
-    // Makes the port operate in raw mode
-    os->cfmakeraw( &termios_ );
+    // Sets up some default parameters
+    os.cfmakeraw( &termios_ );
 
     // Parity settings
     using Parity = config::Serial::Parity;
     switch ( settings.parity )
     {
         case Parity::Even:
-            // Enable parity generation on output and parity checking for input
-            termios_.c_iflag |= PARENB;
             // Disable odd parity to get even parity
-            termios_.c_iflag &= ~PARODD;
-            // Do not ignore parity errors
-            termios_.c_iflag &= ~IGNPAR;
-            // Enable input parity checking
-            termios_.c_iflag |= INPCK;
+            termios_.c_cflag &= ~PARODD;
             break;
         case Parity::Odd:
-            // Enable parity generation on output and parity checking for input
-            termios_.c_iflag |= PARENB;
             // Enable odd parity
-            termios_.c_iflag |= PARODD;
-            // Do not ignore parity errors
-            termios_.c_iflag &= ~IGNPAR;
-            // Enable input parity checking
-            termios_.c_iflag |= INPCK;
+            termios_.c_cflag |= PARODD;
             break;
         case Parity::None:
         default:
-            // Ignore parity errors
-            termios_.c_iflag |= IGNPAR;
-            // Disable input parity checking
-            termios_.c_iflag &= ~INPCK;
+            // Disable parity checking
+            termios_.c_cflag &= ~PARENB;
             break;
     }
 
-    // Do not prefix parity error characters
-    termios_.c_iflag &= ~PARMRK;
+    if ( settings.parity == Parity::Even || settings.parity == Parity::Odd )
+    {
+        // Enable parity generation on output
+        termios_.c_cflag |= PARENB;
+        // Do not ignore parity errors
+        termios_.c_iflag &= ~IGNPAR;
+        // Enable input parity checking
+        termios_.c_iflag |= INPCK;
+        // Do not prefix parity error bytes
+        termios_.c_iflag &= ~PARMRK;
+    }
 
     if ( settings.stopBitsCount == 2 )
     {
@@ -211,12 +162,12 @@ void Connection::setBaudRate( speed_t speed )
         setBaud( 115200 );
         setBaud( 230400 );
         default:
-            throw Exception( "Invalid baud rate!" );
+            throw OS::Exception( "Invalid baud rate!" );
     }
 #undef setBaud
 
-    os->cfsetospeed( &termios_, speed );
-    os->cfsetispeed( &termios_, speed );
+    os.cfsetospeed( &termios_, speed );
+    os.cfsetispeed( &termios_, speed );
 }
 
 } // namespace rdbus::communication

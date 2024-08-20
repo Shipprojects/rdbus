@@ -68,7 +68,7 @@ TEST( TestCommunicator, TestInitOpenFail )
     EXPECT_THROW( {
         modbus::Communicator com( getSerial(), std::move( os ) );
     },
-                  Connection::Exception );
+                  OS::Exception );
 }
 
 TEST( TestCommunicator, TestInitGetAtrrFail )
@@ -80,7 +80,7 @@ TEST( TestCommunicator, TestInitGetAtrrFail )
     EXPECT_THROW( {
         modbus::Communicator com( getSerial(), std::move( os ) );
     },
-                  Connection::Exception );
+                  OS::Exception );
 }
 
 TEST( TestCommunicator, TestInitFlushFail )
@@ -92,7 +92,7 @@ TEST( TestCommunicator, TestInitFlushFail )
     EXPECT_THROW( {
         modbus::Communicator com( getSerial(), std::move( os ) );
     },
-                  Connection::Exception );
+                  OS::Exception );
 }
 
 TEST( TestCommunicator, TestInitSetAttrFail )
@@ -104,7 +104,7 @@ TEST( TestCommunicator, TestInitSetAttrFail )
     EXPECT_THROW( {
         modbus::Communicator com( getSerial(), std::move( os ) );
     },
-                  Connection::Exception );
+                  OS::Exception );
 }
 
 TEST( TestCommunicator, TestFlushFail )

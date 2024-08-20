@@ -1,10 +1,10 @@
 #pragma once
 
 #include "rdbus/communication/Connection.hpp"
+#include "rdbus/communication/OSWrapper.hpp"
 #include "rdbus/config/Serial.hpp"
 #include <MB/modbusRequest.hpp>
 #include <MB/modbusResponse.hpp>
-#include "rdbus/communication/OSWrapper.hpp"
 
 namespace rdbus::communication::modbus
 {
@@ -19,7 +19,7 @@ public:
     using Request = MB::ModbusRequest;
     using Response = MB::ModbusResponse;
     using seconds = std::chrono::seconds;
-    Response send( const Request&, seconds requestTimeout = seconds( 10 ) );
+    Response send( const Request&, seconds requestTimeout = seconds( 5 ) );
 
 private:
     Connection connection;
