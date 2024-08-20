@@ -1,5 +1,6 @@
 #include "Connection.hpp"
 #include "rdbus/communication/OSWrapper.hpp"
+#include "rdbus/config/Serial.hpp"
 #include <cerrno>
 #include <termios.h>
 #include <unistd.h>
@@ -53,7 +54,7 @@ Connection::Connection( const config::Serial& settings, std::unique_ptr< OS > os
     }
 
     // Store termios_ setup
-    if ( this->os->tcsetattr( fileDescriptor, TCSAFLUSH, &termios_ ) != 0 ) // Make termios_ changes take effect only after data has been transmitted
+    if ( this->os->tcsetattr( fileDescriptor, TCSADRAIN, &termios_ ) != 0 ) // Make termios_ changes take effect only
     {
         throw Exception( "Error {" + std::to_string( fileDescriptor ) +
                          "} at tcsetattr - " + getError() );
@@ -140,25 +141,44 @@ void Connection::setupIO( const config::Serial& settings )
     os->cfmakeraw( &termios_ );
 
     // Parity settings
-    if ( settings.parity )
+    using Parity = config::Serial::Parity;
+    switch ( settings.parity )
     {
-        // Do not ignore parity errors
-        termios_.c_iflag &= ~IGNPAR;
-        // Enable input parity checking
-        termios_.c_iflag |= INPCK;
-    }
-    else
-    {
-        termios_.c_iflag |= IGNPAR;
-        termios_.c_iflag &= ~INPCK;
+        case Parity::Even:
+            // Enable parity generation on output and parity checking for input
+            termios_.c_iflag |= PARENB;
+            // Disable odd parity to get even parity
+            termios_.c_iflag &= ~PARODD;
+            // Do not ignore parity errors
+            termios_.c_iflag &= ~IGNPAR;
+            // Enable input parity checking
+            termios_.c_iflag |= INPCK;
+            break;
+        case Parity::Odd:
+            // Enable parity generation on output and parity checking for input
+            termios_.c_iflag |= PARENB;
+            // Enable odd parity
+            termios_.c_iflag |= PARODD;
+            // Do not ignore parity errors
+            termios_.c_iflag &= ~IGNPAR;
+            // Enable input parity checking
+            termios_.c_iflag |= INPCK;
+            break;
+        case Parity::None:
+        default:
+            // Ignore parity errors
+            termios_.c_iflag |= IGNPAR;
+            // Disable input parity checking
+            termios_.c_iflag &= ~INPCK;
+            break;
     }
 
     // Do not prefix parity error characters
     termios_.c_iflag &= ~PARMRK;
 
-    if ( settings.stopBitsCount > 1 )
+    if ( settings.stopBitsCount == 2 )
     {
-        // Set two stop bits, rather than one.
+        // Set two stop bits, rather than one
         termios_.c_cflag |= CSTOPB;
     }
 }

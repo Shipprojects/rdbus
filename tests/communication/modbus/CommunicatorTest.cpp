@@ -52,7 +52,7 @@ static const Serial& getSerial()
         .path = "/dev/path",
         .baudRate = 9600,
         .stopBitsCount = 2,
-        .parity = true
+        .parity = Serial::Parity::Even
     };
 
     return serial;

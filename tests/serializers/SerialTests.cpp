@@ -9,6 +9,18 @@ const std::string testFilePath = TEST_DATA_DIR "/serializers/json_files/serial/"
 using namespace nlohmann;
 using namespace rdbus;
 
+TEST( TestSerial, TestDeserializationInvalidParity )
+{
+    const auto path = testFilePath + "invalid_parity.json";
+
+    const auto jsonIn = getJsonFromPath( path );
+
+    EXPECT_THROW( {
+        const config::Serial serial = jsonIn;
+    },
+                  config::ParseException );
+}
+
 TEST( TestSerial, TestDeserializationInvalidPath )
 {
     const auto path = testFilePath + "invalid_path.json";
@@ -54,7 +66,7 @@ TEST( TestSerial, TestDeserializationValid )
     const config::Serial serial = jsonIn;
 
     EXPECT_EQ( serial.baudRate, 9600 );
-    EXPECT_EQ( serial.parity, true );
+    EXPECT_EQ( serial.parity, config::Serial::Parity::None );
     EXPECT_EQ( serial.path, "/dev/ttyS1" );
     EXPECT_EQ( serial.stopBitsCount, 2 );
 }
