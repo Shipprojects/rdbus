@@ -53,3 +53,14 @@ function(add_argparse TARGET_NAME)
     FetchContent_MakeAvailable(argparse)
     target_include_directories ( ${TARGET_NAME} PUBLIC ${argparse_SOURCE_DIR}/include )
 endfunction()
+
+function(add_http TARGET_NAME)
+    include(FetchContent)
+    FetchContent_Declare(
+        httplib
+        GIT_REPOSITORY https://github.com/yhirose/cpp-httplib.git
+    )
+    FetchContent_MakeAvailable(httplib)
+    target_include_directories ( ${TARGET_NAME} PUBLIC ${httplib_SOURCE_DIR} )
+endfunction()
+

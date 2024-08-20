@@ -3,7 +3,6 @@
 #include "MB/modbusException.hpp"
 #include "RequestPlanner.hpp"
 #include "rdbus/Data.hpp"
-#include "rdbus/communication/modbus/RequestDescription.hpp"
 
 namespace rdbus::communication::modbus
 {

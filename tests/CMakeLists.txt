@@ -15,6 +15,7 @@ add_compile_options(${TARGET_NAME} ${COMPILE_OPTIONS})
 
 add_json(${TARGET_NAME})
 add_modbus(${TARGET_NAME})
+add_http(${TARGET_NAME})
 
 configure_file(testDataDirectory.hpp.in  ${TEST_DATA_DIR_HEADER_PATH}/testDataDirectory.hpp)
 
