@@ -15,6 +15,7 @@
 namespace rdbus::out::http
 {
 
+// An HTTP server under the hood
 class HTTP : public Output
 {
 public:

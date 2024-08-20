@@ -28,8 +28,7 @@ Args parseArguments( int argc, char** argv )
                             "The arguments that you pass on command line take precedence over the arguments "
                             "in config file." );
 
-    parser.add_epilog( "Note: rdbus runs with valid configuration only. Command line arguments do not replace the "
-                       "config file!" );
+    parser.add_epilog( "Note: rdbus runs with valid configuration only!" );
 
     parser.add_argument( "--config" )
     .help( "path to configuration JSON" )
@@ -96,6 +95,8 @@ rdbus::config::Config initializeConfig( const Args& args )
     if ( args.forceStdout && jsonConfig.contains( "output" ) && jsonConfig.at( "output" ).contains( "type" ) )
     {
         jsonConfig[ "output" ][ "type" ] = "stdout";
+        jsonConfig[ "output" ].erase( "ip" );
+        jsonConfig[ "output" ].erase( "port" );
     }
 
     // Insert device path into json

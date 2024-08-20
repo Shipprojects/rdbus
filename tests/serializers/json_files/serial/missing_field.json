@@ -1,5 +1,5 @@
 {
     "path": "/dev/ttyS0",
     "stop_bits_count": 1,
-    "parity": true
+    "parity": "even"
 }

@@ -18,8 +18,8 @@ void from_json( const nlohmann::json& j, Serial& x )
     int stopBitsCount = 0;
     tools::parseKeyValue( j, "stop_bits_count", stopBitsCount, "No stop bits field present in 'serial' section!" );
 
-    int parity = false;
-    tools::parseKeyValue( j, "parity", parity, "No parity field present in 'serial' section!" );
+    std::string parityStr;
+    tools::parseKeyValue( j, "parity", parityStr, "No parity field present in 'serial' section!" );
 
     if ( !path.starts_with( '/' ) )
     {
@@ -29,6 +29,30 @@ void from_json( const nlohmann::json& j, Serial& x )
     if ( stopBitsCount > 2 )
     {
         throw ParseException( "There cannot be more than 2 stop bits!" );
+    }
+
+    if ( stopBitsCount < 1 )
+    {
+        throw ParseException( "There cannot be less than 1 stop bit!" );
+    }
+
+    Serial::Parity parity;
+    if ( parityStr == "none" )
+    {
+        parity = Serial::Parity::None;
+    }
+    else if ( parityStr == "even" )
+    {
+        parity = Serial::Parity::Even;
+    }
+    else if ( parityStr == "odd" )
+    {
+        parity = Serial::Parity::Odd;
+    }
+    else
+    {
+        parity = Serial::Parity::None;
+        throw ParseException( "Unknown parity '" + parityStr + "'!" );
     }
 
     x.baudRate = baudRate;

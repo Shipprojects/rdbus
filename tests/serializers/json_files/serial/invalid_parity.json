@@ -2,5 +2,5 @@
     "path": "/dev/ttyS1",
     "baud_rate": 9600,
     "stop_bits_count": 2,
-    "parity": "none"
+    "parity": "enabled"
 }

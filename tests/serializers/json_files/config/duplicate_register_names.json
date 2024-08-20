@@ -7,7 +7,7 @@
 
     "serial": {
       "baud_rate": 4800,
-      "parity": false,
+      "parity": "even",
       "path": "/dev/ttyS0",
       "stop_bits_count": 1
     },
