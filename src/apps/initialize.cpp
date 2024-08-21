@@ -2,11 +2,13 @@
 #include "Args.hpp"
 #include "rdbus/communication/OSWrapper.hpp"
 #include "rdbus/communication/modbus/Communicator.hpp"
+#include "rdbus/communication/nmea/Communicator.hpp"
 #include "rdbus/config/Config.hpp"
 #include "rdbus/config/Output.hpp"
 #include "rdbus/out/http/HTTP.hpp"
 #include "rdbus/out/pipe/Pipe.hpp"
 #include "rdbus/tasks/modbus/PollSlave.hpp"
+#include "rdbus/tasks/nmea/Listen.hpp"
 #include "spdlog/common.h"
 #include "spdlog/sinks/stdout_sinks.h"
 #include "version.hpp"
@@ -114,11 +116,19 @@ rdbus::Manager::Tasks initializeTasks( const rdbus::config::Config& config )
 {
     rdbus::Manager::Tasks tasks;
 
-    auto communicator = std::make_shared< rdbus::communication::modbus::Communicator >( config.serial, std::make_unique< rdbus::communication::OSWrapper >() );
-    for ( const auto& slave : config.modbus.slaves )
+    if ( config.protocol == "nmea" )
     {
-        // 1 slave == 1 task
-        tasks.emplace_back( std::make_unique< rdbus::tasks::modbus::PollSlave >( slave, communicator ) );
+        auto communicator = std::make_shared< rdbus::communication::nmea::Communicator >( config.serial, std::make_unique< rdbus::communication::OSWrapper >() );
+        tasks.emplace_back( std::make_unique< rdbus::tasks::nmea::Listen >( config.nmea, communicator ) );
+    }
+    else if ( config.protocol == "modbus" )
+    {
+        auto communicator = std::make_shared< rdbus::communication::modbus::Communicator >( config.serial, std::make_unique< rdbus::communication::OSWrapper >() );
+        for ( const auto& slave : config.modbus.slaves )
+        {
+            // 1 slave == 1 task
+            tasks.emplace_back( std::make_unique< rdbus::tasks::modbus::PollSlave >( slave, communicator ) );
+        }
     }
 
     return tasks;
