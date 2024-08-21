@@ -5,17 +5,10 @@
 
 using namespace nlohmann;
 using namespace rdbus;
+using namespace rdbus::config::tools;
 
 namespace rdbus::config::modbus
 {
-
-static void throwIf( bool condition, const std::string& message )
-{
-    if ( condition )
-    {
-        throw ParseException( message );
-    }
-}
 
 static std::pair< Type, std::list< int > > getWildType( const std::string& typeString, const std::string& orderString )
 {

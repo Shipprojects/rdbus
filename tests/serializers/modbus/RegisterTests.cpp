@@ -6,7 +6,7 @@
 #include <nlohmann/json.hpp>
 #include <testDataDirectory.hpp>
 
-const std::string testFilePath = TEST_DATA_DIR "/serializers/json_files/register/";
+const std::string testFilePath = TEST_DATA_DIR "/serializers/json_files/modbus/register/";
 using namespace nlohmann;
 using namespace rdbus::config::modbus;
 using namespace rdbus;
