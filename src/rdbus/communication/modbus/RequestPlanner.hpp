@@ -1,6 +1,6 @@
 #pragma once
 
-#include "rdbus/config/Slave.hpp"
+#include "rdbus/config/modbus/Slave.hpp"
 #include <MB/modbusRequest.hpp>
 
 namespace rdbus::communication::modbus
@@ -9,7 +9,7 @@ namespace rdbus::communication::modbus
 struct RequestDescription
 {
     MB::ModbusRequest request;
-    std::list< config::Register > registers;
+    std::list< config::modbus::Register > registers;
 };
 
 using RequestDescriptions = std::vector< RequestDescription >;
@@ -19,6 +19,6 @@ using RequestDescriptions = std::vector< RequestDescription >;
 // due to the possibility in configuration to specify registers that are not directly
 // adjacent to each other. This limitation comes from Modbus protocol itself, where
 // reading happens from x address for n registers.
-RequestDescriptions requestPlan( const config::Slave& slave );
+RequestDescriptions requestPlan( const config::modbus::Slave& slave );
 
 } // namespace rdbus::communication::modbus

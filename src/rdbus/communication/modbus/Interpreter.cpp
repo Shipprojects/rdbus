@@ -126,7 +126,7 @@ Fields toParsedFields( const SmallEndianRegisters& input, const Registers& regis
                 field.value = *reinterpret_cast< const double* >( input[ i ].data() );
                 break;
             default:
-                throw std::invalid_argument( "Unknown argument!" );
+                throw std::invalid_argument( "Unsupported type " + std::to_string( static_cast< int >( reg.type ) ) + "!" );
                 break;
         }
 
@@ -139,7 +139,7 @@ Fields toParsedFields( const SmallEndianRegisters& input, const Registers& regis
 } // namespace tools
 
 std::list< rdbus::Data::Field > parse( const MB::ModbusResponse& response,
-                                       const std::list< config::Register >& registers,
+                                       const std::list< config::modbus::Register >& registers,
                                        const rdbus::Data::Field::Timestamp& timestamp )
 {
     using namespace tools;

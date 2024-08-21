@@ -12,7 +12,7 @@ Communicator::Communicator( const config::Serial& settings, std::unique_ptr< OS 
 {
 }
 
-rdbus::Data Communicator::request( const config::Slave& slave )
+rdbus::Data Communicator::request( const config::modbus::Slave& slave )
 {
     // Contains planned list of requests and a separate list of registers which
     // match the order of requests

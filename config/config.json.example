@@ -2,12 +2,14 @@
   "protocol": "modbus",
 
   "output": {
-    "type": "stdout"
+    "type": "TCP/IP",
+    "ip": "0.0.0.0",
+    "port": 5000
   },
 
   "serial": {
     "baud_rate": 9600,
-    "parity": false,
+    "parity": "none",
     "path": "/dev/ttyS1",
     "stop_bits_count": 1
   },

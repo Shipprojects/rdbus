@@ -1,13 +1,14 @@
 #include "rdbus/Data.hpp"
-#include "rdbus/config/Register.hpp"
 #include "rdbus/config/exception.hpp"
+#include "rdbus/config/modbus/Register.hpp"
 #include "tests/utility.hpp"
 #include <gtest/gtest.h>
 #include <nlohmann/json.hpp>
 #include <testDataDirectory.hpp>
 
-const std::string testFilePath = TEST_DATA_DIR "/serializers/json_files/register/";
+const std::string testFilePath = TEST_DATA_DIR "/serializers/json_files/modbus/register/";
 using namespace nlohmann;
+using namespace rdbus::config::modbus;
 using namespace rdbus;
 
 TEST( TestRegister, TestDeserializationF64 )
@@ -15,7 +16,7 @@ TEST( TestRegister, TestDeserializationF64 )
     const auto path = testFilePath + "F64.json";
 
     const auto jsonIn = getJsonFromPath( path );
-    const config::Register reg = jsonIn;
+    const Register reg = jsonIn;
 
     const decltype( reg.byteOrder ) need = { 0, 2, 1, 3, 4, 5, 6, 7 };
     EXPECT_EQ( reg.byteOrder, need );
@@ -27,7 +28,7 @@ TEST( TestRegister, TestDeserializationS32 )
     const auto path = testFilePath + "S32.json";
 
     const auto jsonIn = getJsonFromPath( path );
-    const config::Register reg = jsonIn;
+    const Register reg = jsonIn;
 
     const decltype( reg.byteOrder ) need = { 2, 3, 0, 1 };
     EXPECT_EQ( reg.byteOrder, need );
@@ -39,7 +40,7 @@ TEST( TestRegister, TestDeserializationU16 )
     const auto path = testFilePath + "U16.json";
 
     const auto jsonIn = getJsonFromPath( path );
-    const config::Register reg = jsonIn;
+    const Register reg = jsonIn;
 
     const decltype( reg.byteOrder ) need = { 0, 1 };
     EXPECT_EQ( reg.byteOrder, need );
@@ -51,7 +52,7 @@ TEST( TestRegister, TestDeserializationF32 )
     const auto path = testFilePath + "F32.json";
 
     const auto jsonIn = getJsonFromPath( path );
-    const config::Register reg = jsonIn;
+    const Register reg = jsonIn;
 
     const decltype( reg.byteOrder ) need = { 0, 2, 1, 3 };
     EXPECT_EQ( reg.byteOrder, need );
@@ -65,7 +66,7 @@ TEST( TestRegister, TestDeserializationF64Invalid )
     const auto jsonIn = getJsonFromPath( path );
 
     EXPECT_THROW( {
-        config::Register reg = jsonIn;
+        Register reg = jsonIn;
     },
                   config::ParseException );
 }
@@ -75,7 +76,7 @@ TEST( TestRegister, TestDeserializationF64A )
     const auto path = testFilePath + "F64A.json";
 
     const auto jsonIn = getJsonFromPath( path );
-    const config::Register reg = jsonIn;
+    const Register reg = jsonIn;
 
     EXPECT_EQ( reg.name, "A" );
     EXPECT_EQ( reg.address, 1 );
@@ -90,7 +91,7 @@ TEST( TestRegister, TestDeserializationU64B )
     const auto path = testFilePath + "U64B.json";
 
     const auto jsonIn = getJsonFromPath( path );
-    const config::Register reg = jsonIn;
+    const Register reg = jsonIn;
 
     EXPECT_EQ( reg.name, "B" );
     EXPECT_EQ( reg.address, 2 );
@@ -105,7 +106,7 @@ TEST( TestRegister, TestDeserializationS16A )
     const auto path = testFilePath + "S16A.json";
 
     const auto jsonIn = getJsonFromPath( path );
-    const config::Register reg = jsonIn;
+    const Register reg = jsonIn;
 
     EXPECT_EQ( reg.name, "C" );
     EXPECT_EQ( reg.address, 3 );
@@ -120,7 +121,7 @@ TEST( TestRegister, TestDeserializationF32B )
     const auto path = testFilePath + "F32B.json";
 
     const auto jsonIn = getJsonFromPath( path );
-    const config::Register reg = jsonIn;
+    const Register reg = jsonIn;
 
     EXPECT_EQ( reg.name, "REGISTER_A" );
     EXPECT_EQ( reg.address, 92 );
@@ -135,7 +136,7 @@ TEST( TestRegister, TestDeserializationS32C )
     const auto path = testFilePath + "S32C.json";
 
     const auto jsonIn = getJsonFromPath( path );
-    const config::Register reg = jsonIn;
+    const Register reg = jsonIn;
 
     EXPECT_EQ( reg.name, "REGISTER_A" );
     EXPECT_EQ( reg.address, 7 );
@@ -150,7 +151,7 @@ TEST( TestRegister, TestDeserializationU32A )
     const auto path = testFilePath + "U32A.json";
 
     const auto jsonIn = getJsonFromPath( path );
-    const config::Register reg = jsonIn;
+    const Register reg = jsonIn;
 
     EXPECT_EQ( reg.name, "REGISTER_A" );
     EXPECT_EQ( reg.address, 5 );
@@ -167,7 +168,7 @@ TEST( TestRegister, TestDeserializationNoTypeNoOrder )
     const auto jsonIn = getJsonFromPath( path );
 
     EXPECT_THROW( {
-        config::Register reg = jsonIn;
+        Register reg = jsonIn;
     },
                   config::ParseException );
 }
@@ -179,7 +180,7 @@ TEST( TestRegister, TestDeserializationNoDataType )
     const auto jsonIn = getJsonFromPath( path );
 
     EXPECT_THROW( {
-        config::Register reg = jsonIn;
+        Register reg = jsonIn;
     },
                   config::ParseException );
 }
@@ -190,7 +191,7 @@ TEST( TestRegister, TestDeserializationNoAddress )
 
     const auto jsonIn = getJsonFromPath( path );
     EXPECT_THROW( {
-        config::Register reg = jsonIn;
+        Register reg = jsonIn;
     },
                   config::ParseException );
 }
@@ -202,7 +203,7 @@ TEST( TestRegister, TestDeserializationSmallEndian )
     const auto jsonIn = getJsonFromPath( path );
 
     EXPECT_THROW( {
-        config::Register reg = jsonIn;
+        Register reg = jsonIn;
     },
                   config::ParseException );
 }

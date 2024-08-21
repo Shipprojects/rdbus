@@ -1,10 +1,10 @@
 #include "Slave.hpp"
-#include "exception.hpp"
-#include "utility.hpp"
+#include "rdbus/config/exception.hpp"
+#include "rdbus/config/utility.hpp"
 
 using namespace nlohmann;
 
-namespace rdbus::config
+namespace rdbus::config::modbus
 {
 
 void from_json( const nlohmann::json& j, Slave& x )

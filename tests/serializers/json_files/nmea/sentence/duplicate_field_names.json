@@ -1,0 +1,13 @@
+{
+    "id": "TIM",
+    "fields": [
+        {
+            "name": "Time Difference A",
+            "data_type": "F"
+        },
+        {
+            "name": "Time Difference A",
+            "data_type": "F"
+        }
+    ]
+}

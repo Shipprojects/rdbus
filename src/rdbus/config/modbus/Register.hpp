@@ -5,7 +5,7 @@
 #include <nlohmann/json.hpp>
 #include <string>
 
-namespace rdbus::config
+namespace rdbus::config::modbus
 {
 
 struct Register

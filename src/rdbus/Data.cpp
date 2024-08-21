@@ -53,7 +53,7 @@ void to_json( nlohmann::json& j, const Data::Field& x )
             j[ "value" ] = std::get< double >( x.value );
             break;
         default:
-            throw config::ParseException( "Unknown argument!" );
+            throw config::ParseException( "Unknown argument " + std::to_string( static_cast< int >( x.type ) ) + "!" );
             break;
     }
 }

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "rdbus/Data.hpp"
-#include "rdbus/config/Register.hpp"
+#include "rdbus/config/modbus/Register.hpp"
 #include <MB/modbusResponse.hpp>
 #include <stdint.h>
 
@@ -31,7 +31,7 @@ using RawUint16List = std::vector< std::array< uint8_t, sizeof( uint16_t ) > >;
 RawUint16List toRaw16BitRegisters( const std::vector< MB::ModbusCell >& );
 
 using RawedBytesList = std::vector< std::vector< uint8_t > >;
-using Registers = std::list< config::Register >;
+using Registers = std::list< config::modbus::Register >;
 // The second step is to merge some 16-bit registers into user defined groups according to the
 // passed description of registers.
 using RawMergedList = RawedBytesList;
