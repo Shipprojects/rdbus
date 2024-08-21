@@ -12,6 +12,7 @@ namespace rdbus
 
 enum class Type
 {
+    String,
     Float,
     Double,
     Uint16,

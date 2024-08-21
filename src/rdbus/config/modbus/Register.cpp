@@ -77,6 +77,9 @@ static std::pair< Type, std::list< int > > getWildType( const std::string& typeS
 
 static std::pair< Type, std::list< int > > getStandardType( const std::string& type )
 {
+    // All those various data types with user defined sizes are required in Modbus part
+    // of rdbus, because we later rely on those sizes to read correct amount of bytes
+    // into fields.
     static std::map< std::string, std::pair< Type, std::list< int > > > typeMap = {
 
         // 64-bit float (double) --------------------------------
@@ -104,8 +107,8 @@ static std::pair< Type, std::list< int > > getStandardType( const std::string& t
         { "U16B", { Type::Uint16, { 1, 0 } } },
 
         // 64-bit signed integer --------------------------------
-        { "S64A", { Type::Uint64, { 0, 1, 2, 3, 4, 5, 6, 7 } } },
-        { "S64B", { Type::Uint64, { 7, 6, 5, 4, 3, 2, 1, 0 } } },
+        { "S64A", { Type::Int64, { 0, 1, 2, 3, 4, 5, 6, 7 } } },
+        { "S64B", { Type::Int64, { 7, 6, 5, 4, 3, 2, 1, 0 } } },
 
         // 32-bit signed integer
         { "S32A", { Type::Int32, { 0, 1, 2, 3 } } },
@@ -160,4 +163,4 @@ void from_json( const nlohmann::json& j, Register& x )
     x.address = address;
 }
 
-} // namespace rdbus::config
+} // namespace rdbus::config::modbus

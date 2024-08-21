@@ -126,7 +126,7 @@ Fields toParsedFields( const SmallEndianRegisters& input, const Registers& regis
                 field.value = *reinterpret_cast< const double* >( input[ i ].data() );
                 break;
             default:
-                throw std::invalid_argument( "Unknown argument!" );
+                throw std::invalid_argument( "Unsupported type " + std::to_string( static_cast< int >( reg.type ) ) + "!" );
                 break;
         }
 
