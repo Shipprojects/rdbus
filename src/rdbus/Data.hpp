@@ -31,7 +31,8 @@ struct Data
     struct Field
     {
         std::string name;
-        std::variant< float,
+        std::variant< std::string,
+                      float,
                       double,
                       uint64_t,
                       int64_t,
