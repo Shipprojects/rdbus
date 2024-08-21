@@ -115,7 +115,7 @@ rdbus::Manager::Tasks initializeTasks( const rdbus::config::Config& config )
     rdbus::Manager::Tasks tasks;
 
     auto communicator = std::make_shared< rdbus::communication::modbus::Communicator >( config.serial, std::make_unique< rdbus::communication::OSWrapper >() );
-    for ( const auto& slave : config.slaves )
+    for ( const auto& slave : config.modbus.slaves )
     {
         // 1 slave == 1 task
         tasks.emplace_back( std::make_unique< rdbus::tasks::modbus::PollSlave >( slave, communicator ) );

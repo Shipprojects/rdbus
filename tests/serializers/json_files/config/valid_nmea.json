@@ -1,0 +1,46 @@
+{
+    "protocol": "nmea",
+
+    "output": {
+      "type": "stdout"
+    },
+
+    "serial": {
+      "baud_rate": 4800,
+      "parity": "even",
+      "path": "/dev/ttyS0",
+      "stop_bits_count": 1
+    },
+
+    "checksum": true,
+    "talker_id": "SS",
+
+    "sentences":[
+        {
+            "id": "TIM",
+            "fields": [
+                {
+                    "name": "Time Difference A",
+                    "data_type": "F"
+                },
+                {
+                    "name": "Time Difference B",
+                    "data_type": "F"
+                }
+            ]
+        },
+        {
+            "id": "RPM",
+            "fields": [
+                {
+                    "name": "Source",
+                    "data_type": "STR"
+                },
+                {
+                    "name": "Engine",
+                    "data_type": "U"
+                }
+            ]
+        }
+    ]
+  }

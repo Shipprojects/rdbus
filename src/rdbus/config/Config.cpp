@@ -1,17 +1,34 @@
 #include "Config.hpp"
 #include "exception.hpp"
+#include "modbus/Modbus.hpp"
 #include "modbus/Register.hpp"
 #include "utility.hpp"
 #include <nlohmann/json.hpp>
 
 using namespace nlohmann;
 using namespace rdbus::config::modbus;
+using namespace rdbus::config::nmea;
 
 namespace rdbus::config
 {
 
-using Slaves = Config::Slaves;
-using Registers = modbus::Slave::Registers;
+using Slaves = Modbus::Slaves;
+using Registers = Slave::Registers;
+using Sentences = NMEA::Sentences;
+
+static void checkDuplicateSentenceIDs( Sentences sentences )
+{
+    sentences.sort( []( const Sentence& left, const Sentence& right )
+                    { return left.id < right.id; } );
+
+    const auto& it = std::adjacent_find( sentences.begin(), sentences.end(),
+                                         []( const Sentence& left, const Sentence& right )
+                                         {
+                                             return left.id == right.id;
+                                         } );
+
+    tools::throwIf( it != sentences.end(), "Duplicate sentence IDs found!" );
+}
 
 static void checkDuplicateSlaveIDs( Slaves slaves )
 {
@@ -86,17 +103,8 @@ static void checkRegisterAddressSpacing( Slaves slaves )
     }
 }
 
-void from_json( const nlohmann::json& j, Config& x )
+static void parseModbus( const nlohmann::json& j, Config& x )
 {
-    std::string protocol;
-    tools::parseKeyValue( j, "protocol", protocol, "No protocol name present!" );
-
-    Output output;
-    tools::parseKeyValue( j, "output", output, "No output section present!" );
-
-    Serial serial;
-    tools::parseKeyValue( j, "serial", serial, "No serial section present!" );
-
     Slaves slaves;
     tools::parseKeyValue( j, "slaves", slaves, "No slaves present!" );
 
@@ -105,21 +113,59 @@ void from_json( const nlohmann::json& j, Config& x )
         throw ParseException( "No slaves present!" );
     }
 
-    const std::list< std::string > availableProtocols = { "modbus", "nmea" };
-    if ( std::find( availableProtocols.begin(), availableProtocols.end(), protocol ) == availableProtocols.end() )
-    {
-        throw ParseException( "Unsupported protocol selected!" );
-    }
-
     checkRegisterAddressSpacing( slaves );
     checkDuplicateRegisterNames( slaves );
     checkDuplicateSlaveIDs( slaves );
     checkDuplicateSlaveNames( slaves );
 
+    x.modbus.slaves = slaves;
+}
+
+static void parseNMEA( const nlohmann::json& j, Config& x )
+{
+    std::string talkerId;
+    tools::parseKeyValue( j, "talker_id", talkerId, "No 'talker_id' field present!" );
+
+    bool withChecksum = false;
+    tools::parseKeyValue( j, "checksum", withChecksum, "No 'checksum' field present!" );
+
+    nmea::NMEA::Sentences sentences;
+    tools::parseKeyValue( j, "sentences", sentences, "No 'sentences' section present!" );
+
+    checkDuplicateSentenceIDs( sentences );
+
+    x.nmea.sentences = sentences;
+    x.nmea.talkerId = talkerId;
+    x.nmea.withChecksum = withChecksum;
+}
+
+void from_json( const nlohmann::json& j, Config& x )
+{
+    std::string protocol;
+    tools::parseKeyValue( j, "protocol", protocol, "No protocol name present!" );
+
+    Output output;
+    tools::parseKeyValue( j, "output", output, "No 'output' section present!" );
+
+    Serial serial;
+    tools::parseKeyValue( j, "serial", serial, "No 'serial' section present!" );
+
+    if ( protocol == "modbus" )
+    {
+        parseModbus( j, x );
+    }
+    else if ( protocol == "nmea" )
+    {
+        parseNMEA( j, x );
+    }
+    else
+    {
+        throw ParseException( "Unsupported protocol " + protocol + "!" );
+    }
+
     x.output = output;
     x.protocol = protocol;
     x.serial = serial;
-    x.slaves = slaves;
 }
 
 } // namespace rdbus::config

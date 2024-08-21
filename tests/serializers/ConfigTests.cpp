@@ -118,9 +118,9 @@ TEST( TestConfig, TestDeserializationNoSlaves )
                   config::ParseException );
 }
 
-TEST( TestConfig, TestDeserializationValid )
+TEST( TestConfig, TestDeserializationValidModbus )
 {
-    const auto path = testFilePath + "valid.json";
+    const auto path = testFilePath + "valid_modbus.json";
 
     const auto jsonIn = getJsonFromPath( path );
     const config::Config config = jsonIn;
@@ -128,5 +128,56 @@ TEST( TestConfig, TestDeserializationValid )
     EXPECT_EQ( config.protocol, "modbus" );
     EXPECT_EQ( config.output.type, config::Output::Type::Stdout );
     EXPECT_EQ( config.serial.baudRate, 4800 );
-    EXPECT_EQ( config.slaves.size(), 1 );
+    EXPECT_EQ( config.modbus.slaves.size(), 1 );
+}
+
+TEST( TestConfig, TestDeserializationValidNMEA )
+{
+    const auto path = testFilePath + "valid_nmea.json";
+
+    const auto jsonIn = getJsonFromPath( path );
+    const config::Config config = jsonIn;
+
+    EXPECT_EQ( config.protocol, "nmea" );
+    EXPECT_EQ( config.output.type, config::Output::Type::Stdout );
+    EXPECT_EQ( config.serial.baudRate, 4800 );
+    EXPECT_EQ( config.nmea.sentences.size(), 2 );
+    EXPECT_TRUE( config.nmea.withChecksum );
+    EXPECT_EQ( config.nmea.talkerId, "SS" );
+}
+
+TEST( TestConfig, TestDeserializationNoChecksum )
+{
+    const auto path = testFilePath + "no_checksum.json";
+
+    const auto jsonIn = getJsonFromPath( path );
+
+    EXPECT_THROW( {
+        config::Config config = jsonIn;
+    },
+                  config::ParseException );
+}
+
+TEST( TestConfig, TestDeserializationDuplicateSentenceIDs )
+{
+    const auto path = testFilePath + "duplicate_sentence_IDs.json";
+
+    const auto jsonIn = getJsonFromPath( path );
+
+    EXPECT_THROW( {
+        config::Config config = jsonIn;
+    },
+                  config::ParseException );
+}
+
+TEST( TestConfig, TestDeserializationNoTalkerID )
+{
+    const auto path = testFilePath + "no_talker_id.json";
+
+    const auto jsonIn = getJsonFromPath( path );
+
+    EXPECT_THROW( {
+        config::Config config = jsonIn;
+    },
+                  config::ParseException );
 }

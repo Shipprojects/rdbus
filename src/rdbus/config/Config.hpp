@@ -2,8 +2,8 @@
 
 #include "Output.hpp"
 #include "Serial.hpp"
-#include "modbus/Slave.hpp"
-#include <list>
+#include "modbus/Modbus.hpp"
+#include "nmea/NMEA.hpp"
 #include <nlohmann/json.hpp>
 #include <string>
 
@@ -14,8 +14,8 @@ struct Config
 {
     std::string protocol;
 
-    using Slaves = std::list< modbus::Slave >;
-    Slaves slaves;
+    modbus::Modbus modbus;
+    nmea::NMEA nmea;
 
     Output output;
     Serial serial;
