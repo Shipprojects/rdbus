@@ -14,35 +14,35 @@
       "fields": [
         {
           "name": "degress true",
-          "data_type": "F"
+          "data_type": "FLOAT"
         },
         {
           "name": "true",
-          "data_type": "STR"
+          "data_type": "STRING"
         },
         {
           "name": "degrees Magnetic",
-          "data_type": "F"
+          "data_type": "FLOAT"
         },
         {
           "name": "magnetic",
-          "data_type": "STR"
+          "data_type": "STRING"
         },
         {
           "name": "STW_knotsh",
-          "data_type": "F"
+          "data_type": "FLOAT"
         },
         {
           "name": "knots",
-          "data_type": "STR"
+          "data_type": "STRING"
         },
         {
           "name": "STW_kmh",
-          "data_type": "F"
+          "data_type": "FLOAT"
         },
         {
           "name": "Kilometers",
-          "data_type": "STR"
+          "data_type": "STRING"
         }
       ]
     },
@@ -51,27 +51,27 @@
       "fields": [
         {
           "name": "Longitudinal water speed",
-          "data_type": "F"
+          "data_type": "FLOAT"
         },
         {
           "name": "Transverse water speed",
-          "data_type": "F"
+          "data_type": "FLOAT"
         },
         {
           "name": "Water data valid",
-          "data_type": "STR"
+          "data_type": "STRING"
         },
         {
           "name": "Longitudinal ground speed",
-          "data_type": "F"
+          "data_type": "FLOAT"
         },
         {
           "name": "Transverse ground speed",
-          "data_type": "F"
+          "data_type": "FLOAT"
         },
         {
           "name": "Ground data valid",
-          "data_type": "STR"
+          "data_type": "STRING"
         }
       ]
     }

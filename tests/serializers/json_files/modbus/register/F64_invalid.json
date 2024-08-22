@@ -1,5 +1,5 @@
 {
     "name": "REG",
     "address": 36,
-    "data_type": "F"
+    "data_type": "FLOAT"
 }

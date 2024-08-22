@@ -20,25 +20,25 @@
       "registers": [
         {
           "address": 130,
-          "data_type": "U",
+          "data_type": "UINT",
           "data_order": "ABCD",
           "name": "REGISTER_A"
         },
         {
           "address": 132,
-          "data_type": "U",
+          "data_type": "UINT",
           "data_order": "ABCD",
           "name": "REGISTER_B"
         },
         {
           "address": 134,
-          "data_type": "S",
+          "data_type": "INT",
           "data_order": "ABCD",
           "name": "REGISTER_C"
         },
         {
           "address": 136,
-          "data_type": "S",
+          "data_type": "INT",
           "data_order": "ABCD",
           "name": "REGISTER_D"
         }

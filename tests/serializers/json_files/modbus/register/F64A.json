@@ -1,5 +1,5 @@
 {
     "name": "A",
     "address": 1,
-    "data_type": "F64A"
+    "data_type": "FLOAT_64A"
 }

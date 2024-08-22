@@ -1,6 +1,6 @@
 {
     "name": "REG",
     "address": 36,
-    "data_type": "S",
+    "data_type": "INT",
     "data_order" : "CDAB"
 }

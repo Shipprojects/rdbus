@@ -1,5 +1,5 @@
 {
     "name": "C",
     "address": 3,
-    "data_type": "S16A"
+    "data_type": "INT_16A"
 }

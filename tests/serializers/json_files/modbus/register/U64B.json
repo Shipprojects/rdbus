@@ -1,5 +1,5 @@
 {
     "name": "B",
     "address": 2,
-    "data_type": "U64B"
+    "data_type": "UINT_64B"
 }

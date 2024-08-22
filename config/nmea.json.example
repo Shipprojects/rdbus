@@ -23,7 +23,7 @@
             "data_fields": [
                 {
                     "name": "UTC Time",
-                    "data_type": "U32"
+                    "data_type": "UINT"
                 },
                 {
                     "name": "Status",
@@ -31,7 +31,7 @@
                 },
                 {
                     "name": "Lattitude",
-                    "data_type": "S32"
+                    "data_type": "INT"
                 }
             ]
         },
