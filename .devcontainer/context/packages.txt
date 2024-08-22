@@ -1,10 +1,12 @@
 build-essential
 clang-format
 cmake
+curl
 gdb
 git
 gnupg2
 gnupg2
 openssh-server
+socat
 software-properties-common
 wget

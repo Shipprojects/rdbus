@@ -52,6 +52,12 @@ void to_json( nlohmann::json& j, const Data::Field& x )
         case Type::Double:
             j[ "value" ] = std::get< double >( x.value );
             break;
+        case Type::String:
+            j[ "value" ] = std::get< std::string >( x.value );
+            break;
+        case Type::None:
+            j[ "value" ] = nullptr;
+            break;
         default:
             throw config::ParseException( "Unknown argument " + std::to_string( static_cast< int >( x.type ) ) + "!" );
             break;
