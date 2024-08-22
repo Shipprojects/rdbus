@@ -1,0 +1,79 @@
+{
+  "protocol": "nmea",
+  "serial": {
+    "baud_rate": 4800,
+    "parity": "none",
+    "path": "/dev/pts/1",
+    "stop_bits_count": 1
+  },
+  "checksum": false,
+  "talker_id": "VD",
+  "sentences": [
+    {
+      "id": "VHW",
+      "fields": [
+        {
+          "name": "degress true",
+          "data_type": "F"
+        },
+        {
+          "name": "true",
+          "data_type": "STR"
+        },
+        {
+          "name": "degrees Magnetic",
+          "data_type": "F"
+        },
+        {
+          "name": "magnetic",
+          "data_type": "STR"
+        },
+        {
+          "name": "STW_knotsh",
+          "data_type": "F"
+        },
+        {
+          "name": "knots",
+          "data_type": "STR"
+        },
+        {
+          "name": "STW_kmh",
+          "data_type": "F"
+        },
+        {
+          "name": "Kilometers",
+          "data_type": "STR"
+        }
+      ]
+    },
+    {
+      "id": "VBW",
+      "fields": [
+        {
+          "name": "Longitudinal water speed",
+          "data_type": "F"
+        },
+        {
+          "name": "Transverse water speed",
+          "data_type": "F"
+        },
+        {
+          "name": "Water data valid",
+          "data_type": "STR"
+        },
+        {
+          "name": "Longitudinal ground speed",
+          "data_type": "F"
+        },
+        {
+          "name": "Transverse ground speed",
+          "data_type": "F"
+        },
+        {
+          "name": "Ground data valid",
+          "data_type": "STR"
+        }
+      ]
+    }
+  ]
+}

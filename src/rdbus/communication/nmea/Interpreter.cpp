@@ -43,17 +43,18 @@ std::list< rdbus::Data::Field > parse( const Response& response,
     for ( const auto& sentenceField : sentence.fields )
     {
         const int i = output.size();
-        // Do not store empty fields
-        if ( response.getFields()[ i ].empty() )
-        {
-            continue;
-        }
 
         rdbus::Data::Field field = {
             .name = sentenceField.name,
             .type = sentenceField.type,
             .timestamp = timestamp
         };
+
+        // Indicate that field is empty
+        if ( response.getFields()[ i ].empty() )
+        {
+            field.type = rdbus::Type::None;
+        }
 
         switch ( field.type )
         {
@@ -68,6 +69,8 @@ std::list< rdbus::Data::Field > parse( const Response& response,
                 break;
             case Type::String:
                 field.value = response.getFields()[ i ];
+                break;
+            case Type::None:
                 break;
             default:
                 throw std::invalid_argument( "Unsupported type " + std::to_string( static_cast< int >( field.type ) ) + "!" );
