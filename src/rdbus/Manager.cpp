@@ -3,10 +3,16 @@
 namespace rdbus
 {
 
-Manager::Manager( Tasks tasks, Output output )
-: tasks( std::move( tasks ) ),
-  output( std::move( output ) )
+Manager::Manager( const std::string& name, Tasks tasks, Output output )
+: name( name ),
+  tasks( std::move( tasks ) ),
+  output( output )
 {
+}
+
+const std::string& Manager::getName() const
+{
+    return name;
 }
 
 std::optional< Data > Manager::run( std::unique_ptr< tasks::Task >& task )

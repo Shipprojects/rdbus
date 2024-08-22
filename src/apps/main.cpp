@@ -17,6 +17,42 @@ void signalHandler( int signum )
     }
 }
 
+void joinThreads( std::list< std::thread >& threads )
+{
+    // Wait for threads to finish
+    for ( auto& thread : threads )
+    {
+        thread.join();
+    }
+}
+
+void yield()
+{
+    while ( keepRunning )
+    {
+        // Do not do anything with this thread, let OS schedule execution
+        // of other threads here
+        std::this_thread::yield();
+    }
+}
+
+void startThreads( std::list< std::thread >& threads, std::list< rdbus::Manager >& managers )
+{
+    for ( auto& manager : managers )
+    {
+        threads.emplace_back(
+        [ & ]()
+        {
+            SPDLOG_INFO( "Starting manager of " + manager.getName() );
+            while ( keepRunning )
+            {
+                manager.run();
+                std::this_thread::sleep_for( std::chrono::milliseconds( 10 ) );
+            }
+        } );
+    }
+}
+
 int main( int argc, char** argv )
 {
     signal( SIGINT, &signalHandler );
@@ -26,18 +62,17 @@ int main( int argc, char** argv )
         const auto& args = parseArguments( argc, argv );
         initializeLogger( args.logLevel );
         SPDLOG_INFO( "Starting" );
-        const auto& config = rdbus::initializeConfig( args.configDir );
+        const auto& configs = rdbus::initializeConfigs( args.configDir );
 
-        auto tasks = rdbus::initializeTasks( *config.begin() );
         auto output = rdbus::initializeOutput( args.output );
+        auto managers = rdbus::initializeManagers( configs, output );
 
-        rdbus::Manager manager( std::move( tasks ), std::move( output ) );
-        SPDLOG_INFO( "Entering loop" );
-        while ( keepRunning )
-        {
-            manager.run();
-            std::this_thread::sleep_for( std::chrono::milliseconds( 10 ) );
-        }
+        std::list< std::thread > threads;
+        startThreads( threads, managers );
+
+        yield();
+
+        joinThreads( threads );
     }
     catch ( const std::exception& e )
     {
@@ -46,7 +81,7 @@ int main( int argc, char** argv )
     }
     catch ( ... )
     {
-        SPDLOG_CRITICAL( "Unknown exception occured!" );
+        SPDLOG_CRITICAL( "Unknown exception occurred!" );
         return 1;
     }
 
