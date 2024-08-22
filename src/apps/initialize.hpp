@@ -5,4 +5,3 @@
 
 Args parseArguments( int, char** );
 void initializeLogger( spdlog::level::level_enum );
-rdbus::config::Config initializeConfig( const Args& args );
