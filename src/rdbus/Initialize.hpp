@@ -2,6 +2,7 @@
 
 #include "Manager.hpp"
 #include "config/Config.hpp"
+#include "config/Output.hpp"
 #include <list>
 
 namespace rdbus

@@ -82,18 +82,6 @@ TEST( TestConfig, TestDeserializationInvalidProtocol )
                   config::ParseException );
 }
 
-TEST( TestConfig, TestDeserializationNoOutput )
-{
-    const auto path = testFilePath + "no_output.json";
-
-    const auto jsonIn = getJsonFromPath( path );
-
-    EXPECT_THROW( {
-        const config::Config config = jsonIn;
-    },
-                  config::ParseException );
-}
-
 TEST( TestConfig, TestDeserializationNoSerial )
 {
     const auto path = testFilePath + "no_serial.json";
@@ -126,7 +114,6 @@ TEST( TestConfig, TestDeserializationValidModbus )
     const config::Config config = jsonIn;
 
     EXPECT_EQ( config.protocol, "modbus" );
-    EXPECT_EQ( config.output.type, config::Output::Type::Stdout );
     EXPECT_EQ( config.serial.baudRate, 4800 );
     EXPECT_EQ( config.modbus.slaves.size(), 1 );
 }
@@ -139,7 +126,6 @@ TEST( TestConfig, TestDeserializationValidNMEA )
     const config::Config config = jsonIn;
 
     EXPECT_EQ( config.protocol, "nmea" );
-    EXPECT_EQ( config.output.type, config::Output::Type::Stdout );
     EXPECT_EQ( config.serial.baudRate, 4800 );
     EXPECT_EQ( config.nmea.sentences.size(), 2 );
     EXPECT_TRUE( config.nmea.withChecksum );

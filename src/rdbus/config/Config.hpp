@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Output.hpp"
 #include "Serial.hpp"
 #include "modbus/Modbus.hpp"
 #include "nmea/NMEA.hpp"
@@ -17,7 +16,6 @@ struct Config
     modbus::Modbus modbus;
     nmea::NMEA nmea;
 
-    Output output;
     Serial serial;
 };
 

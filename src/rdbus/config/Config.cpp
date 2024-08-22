@@ -144,9 +144,6 @@ void from_json( const nlohmann::json& j, Config& x )
     std::string protocol;
     tools::parseKeyValue( j, "protocol", protocol, "No protocol name present!" );
 
-    Output output;
-    tools::parseKeyValue( j, "output", output, "No 'output' section present!" );
-
     Serial serial;
     tools::parseKeyValue( j, "serial", serial, "No 'serial' section present!" );
 
@@ -163,7 +160,6 @@ void from_json( const nlohmann::json& j, Config& x )
         throw ParseException( "Unsupported protocol " + protocol + "!" );
     }
 
-    x.output = output;
     x.protocol = protocol;
     x.serial = serial;
 }
