@@ -1,14 +1,6 @@
 #include "initialize.hpp"
 #include "Args.hpp"
-#include "rdbus/communication/OSWrapper.hpp"
-#include "rdbus/communication/modbus/Communicator.hpp"
-#include "rdbus/communication/nmea/Communicator.hpp"
 #include "rdbus/config/Config.hpp"
-#include "rdbus/config/Output.hpp"
-#include "rdbus/out/http/HTTP.hpp"
-#include "rdbus/out/pipe/Pipe.hpp"
-#include "rdbus/tasks/modbus/PollSlave.hpp"
-#include "rdbus/tasks/nmea/Listen.hpp"
 #include "spdlog/common.h"
 #include "spdlog/sinks/stdout_sinks.h"
 #include "version.hpp"
@@ -110,43 +102,4 @@ rdbus::config::Config initializeConfig( const Args& args )
     const rdbus::config::Config& config = jsonConfig;
 
     return config;
-}
-
-rdbus::Manager::Tasks initializeTasks( const rdbus::config::Config& config )
-{
-    rdbus::Manager::Tasks tasks;
-
-    if ( config.protocol == "nmea" )
-    {
-        auto communicator = std::make_shared< rdbus::communication::nmea::Communicator >( config.serial, std::make_unique< rdbus::communication::OSWrapper >() );
-        tasks.emplace_back( std::make_unique< rdbus::tasks::nmea::Listen >( config.nmea, communicator ) );
-    }
-    else if ( config.protocol == "modbus" )
-    {
-        auto communicator = std::make_shared< rdbus::communication::modbus::Communicator >( config.serial, std::make_unique< rdbus::communication::OSWrapper >() );
-        for ( const auto& slave : config.modbus.slaves )
-        {
-            // 1 slave == 1 task
-            tasks.emplace_back( std::make_unique< rdbus::tasks::modbus::PollSlave >( slave, communicator ) );
-        }
-    }
-
-    return tasks;
-}
-
-rdbus::Manager::Output initializeOutput( const rdbus::config::Config& config )
-{
-    if ( config.output.type == rdbus::config::Output::TCP_IP )
-    {
-        SPDLOG_INFO( "Starting TCP/IP server" );
-        return std::make_unique< rdbus::out::http::HTTP >( config.output );
-    }
-    else if ( config.output.type == rdbus::config::Output::Stdout )
-    {
-        SPDLOG_INFO( "Outputting to STDOUT" );
-        return std::make_unique< rdbus::out::pipe::Pipe >();
-    }
-
-    // Throw if we came here
-    throw std::runtime_error( "Unknown output type!" );
 }
