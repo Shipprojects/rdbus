@@ -12,13 +12,15 @@ namespace rdbus
 class Manager
 {
 public:
-    using Output = std::unique_ptr< out::Output >;
+    using Output = std::shared_ptr< out::Output >;
     using Tasks = std::list< std::unique_ptr< tasks::Task > >;
-    Manager( Tasks tasks, Output output );
+    Manager( const std::string& name, Tasks tasks, Output output );
 
     void run();
+    const std::string& getName() const;
 
 private:
+    std::string name;
     Tasks tasks;
     Output output;
     std::optional< Data > run( std::unique_ptr< tasks::Task >& task );

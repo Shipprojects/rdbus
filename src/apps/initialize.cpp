@@ -99,5 +99,6 @@ void initializeLogger( LogLevel loglevel )
     auto logger = spdlog::stderr_logger_mt( "logger" );
     spdlog::set_default_logger( logger );
     spdlog::set_level( loglevel );
-    spdlog::set_pattern( "[%Y-%m-%d %H:%M:%S:%e] [%l] %v" );
+    // Print [date time] [log-level] [thread-id] log
+    spdlog::set_pattern( "[%Y-%m-%d %H:%M:%S:%e] [%l] [%t] %v" );
 }

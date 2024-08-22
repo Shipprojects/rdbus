@@ -14,7 +14,7 @@
 namespace rdbus
 {
 
-std::list< config::Config > initializeConfig( const std::string& configDir )
+std::list< config::Config > initializeConfigs( const std::string& configDir )
 {
     std::list< nlohmann::json > jsonList;
 
@@ -49,19 +49,19 @@ Manager::Output initializeOutput( const config::Output& output )
     if ( output.type == config::Output::TCP_IP )
     {
         SPDLOG_INFO( "Outputting using TCP/IP server" );
-        return std::make_unique< out::http::HTTP >( output );
+        return std::make_shared< out::http::HTTP >( output );
     }
     else if ( output.type == config::Output::Stdout )
     {
         SPDLOG_INFO( "Outputting to STDOUT" );
-        return std::make_unique< out::pipe::Pipe >();
+        return std::make_shared< out::pipe::Pipe >();
     }
 
     // Throw if we came here
     throw std::runtime_error( "Unknown output type!" );
 }
 
-Manager::Tasks initializeTasks( const config::Config& config )
+static Manager::Tasks initializeTasks( const config::Config& config )
 {
     Manager::Tasks tasks;
 
@@ -82,5 +82,17 @@ Manager::Tasks initializeTasks( const config::Config& config )
 
     return tasks;
 }
+
+std::list< rdbus::Manager > initializeManagers( const std::list< rdbus::config::Config >& configs, std::shared_ptr< out::Output > output )
+{
+    std::list< rdbus::Manager > managers;
+    for ( const auto& config : configs )
+    {
+        managers.emplace_back( config.serial.path, initializeTasks( config ), output );
+    }
+
+    return managers;
+}
+
 
 } // namespace rdbus
