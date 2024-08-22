@@ -17,8 +17,8 @@ static std::pair< Type, std::list< int > > getWildType( const std::string& typeS
     throwIf( orderString.size() % 2, "Data order " + orderString + " does not contain even amount of characters!" );
     // For case when there are 6 characters in data orer
     throwIf( orderString.size() / 2 == 3, "Data order " + orderString + " is not a power of 2!" );
-    throwIf( typeString != "F" && typeString != "U" && typeString != "S", "Unknown data type " + typeString + "!" );
-    throwIf( typeString == "F" && orderString.size() < sizeof( float ), "Order of float cannot be less than 4 bytes!" );
+    throwIf( typeString != "FLOAT" && typeString != "UINT" && typeString != "INT", "Unknown data type " + typeString + "!" );
+    throwIf( typeString == "FLOAT" && orderString.size() < sizeof( float ), "Order of float cannot be less than 4 bytes!" );
 
     std::list< int > order;
     for ( const char c : orderString )
@@ -29,7 +29,7 @@ static std::pair< Type, std::list< int > > getWildType( const std::string& typeS
     }
 
     Type type;
-    if ( typeString == "F" )
+    if ( typeString == "FLOAT" )
     {
         switch ( order.size() )
         {
@@ -41,7 +41,7 @@ static std::pair< Type, std::list< int > > getWildType( const std::string& typeS
                 break;
         }
     }
-    else if ( typeString == "U" )
+    else if ( typeString == "UINT" )
     {
         switch ( order.size() )
         {
@@ -56,7 +56,7 @@ static std::pair< Type, std::list< int > > getWildType( const std::string& typeS
                 break;
         }
     }
-    else if ( typeString == "S" )
+    else if ( typeString == "INT" )
     {
         switch ( order.size() )
         {
@@ -83,42 +83,42 @@ static std::pair< Type, std::list< int > > getStandardType( const std::string& t
     static std::map< std::string, std::pair< Type, std::list< int > > > typeMap = {
 
         // 64-bit float (double) --------------------------------
-        { "F64A", { Type::Double, { 0, 1, 2, 3, 4, 5, 6, 7 } } },
-        { "F64B", { Type::Double, { 7, 6, 5, 4, 3, 2, 1, 0 } } },
+        { "FLOAT_64A", { Type::Double, { 0, 1, 2, 3, 4, 5, 6, 7 } } },
+        { "FLOAT_64B", { Type::Double, { 7, 6, 5, 4, 3, 2, 1, 0 } } },
 
         // 32-bit float
-        { "F32A", { Type::Float, { 0, 1, 2, 3 } } },
-        { "F32B", { Type::Float, { 1, 0, 3, 2 } } },
-        { "F32C", { Type::Float, { 2, 3, 0, 1 } } },
-        { "F32D", { Type::Float, { 3, 2, 1, 0 } } },
+        { "FLOAT_32A", { Type::Float, { 0, 1, 2, 3 } } },
+        { "FLOAT_32B", { Type::Float, { 1, 0, 3, 2 } } },
+        { "FLOAT_32C", { Type::Float, { 2, 3, 0, 1 } } },
+        { "FLOAT_32D", { Type::Float, { 3, 2, 1, 0 } } },
 
         // 64-bit unsigned integer ------------------------------
-        { "U64A", { Type::Uint64, { 0, 1, 2, 3, 4, 5, 6, 7 } } },
-        { "U64B", { Type::Uint64, { 7, 6, 5, 4, 3, 2, 1, 0 } } },
+        { "UINT_64A", { Type::Uint64, { 0, 1, 2, 3, 4, 5, 6, 7 } } },
+        { "UINT_64B", { Type::Uint64, { 7, 6, 5, 4, 3, 2, 1, 0 } } },
 
         // 32-bit unsigned integer
-        { "U32A", { Type::Uint32, { 0, 1, 2, 3 } } },
-        { "U32B", { Type::Uint32, { 1, 0, 3, 2 } } },
-        { "U32C", { Type::Uint32, { 2, 3, 0, 1 } } },
-        { "U32D", { Type::Uint32, { 3, 2, 1, 0 } } },
+        { "UINT_32A", { Type::Uint32, { 0, 1, 2, 3 } } },
+        { "UINT_32B", { Type::Uint32, { 1, 0, 3, 2 } } },
+        { "UINT_32C", { Type::Uint32, { 2, 3, 0, 1 } } },
+        { "UINT_32D", { Type::Uint32, { 3, 2, 1, 0 } } },
 
         // 16-bit unsigned integer
-        { "U16A", { Type::Uint16, { 0, 1 } } },
-        { "U16B", { Type::Uint16, { 1, 0 } } },
+        { "UINT_16A", { Type::Uint16, { 0, 1 } } },
+        { "UINT_16B", { Type::Uint16, { 1, 0 } } },
 
         // 64-bit signed integer --------------------------------
-        { "S64A", { Type::Int64, { 0, 1, 2, 3, 4, 5, 6, 7 } } },
-        { "S64B", { Type::Int64, { 7, 6, 5, 4, 3, 2, 1, 0 } } },
+        { "INT_64A", { Type::Int64, { 0, 1, 2, 3, 4, 5, 6, 7 } } },
+        { "INT_64B", { Type::Int64, { 7, 6, 5, 4, 3, 2, 1, 0 } } },
 
         // 32-bit signed integer
-        { "S32A", { Type::Int32, { 0, 1, 2, 3 } } },
-        { "S32B", { Type::Int32, { 1, 0, 3, 2 } } },
-        { "S32C", { Type::Int32, { 2, 3, 0, 1 } } },
-        { "S32D", { Type::Int32, { 3, 2, 1, 0 } } },
+        { "INT_32A", { Type::Int32, { 0, 1, 2, 3 } } },
+        { "INT_32B", { Type::Int32, { 1, 0, 3, 2 } } },
+        { "INT_32C", { Type::Int32, { 2, 3, 0, 1 } } },
+        { "INT_32D", { Type::Int32, { 3, 2, 1, 0 } } },
 
         // 16-bit signed integer
-        { "S16A", { Type::Int16, { 0, 1 } } },
-        { "S16B", { Type::Int16, { 1, 0 } } },
+        { "INT_16A", { Type::Int16, { 0, 1 } } },
+        { "INT_16B", { Type::Int16, { 1, 0 } } },
     };
 
     const auto& it = typeMap.find( type );
@@ -146,7 +146,7 @@ void from_json( const nlohmann::json& j, Register& x )
 
 
     // If wild data type
-    if ( type.size() == 1 )
+    if ( type == "FLOAT" || type == "UINT" || type == "INT" )
     {
         const auto& [ dataType, dataOrder ] = getWildType( type, order );
         x.type = dataType;

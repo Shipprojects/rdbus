@@ -22,17 +22,17 @@
       "registers": [
         {
           "address": 130,
-          "data_type": "U32A",
+          "data_type": "UINT_32A",
           "name": "Torque"
         },
         {
           "address": 132,
-          "data_type": "U32A",
+          "data_type": "UINT_32A",
           "name": "Shaft speed"
         },
         {
           "address": 134,
-          "data_type": "F32A",
+          "data_type": "FLOAT_32A",
           "name": "Power"
         }
       ]

@@ -11,10 +11,10 @@ static Type getStandardType( const std::string& type )
     // because we will always know when the field starts and ends using ',' delimiters,
     // so we can safely read data into more general data type fields.
     static std::map< std::string, Type > typeMap = {
-        { "F", Type::Double },
-        { "U", Type::Uint64 },
-        { "S", Type::Int64 },
-        { "STR", Type::String }
+        { "FLOAT", Type::Double },
+        { "UINT", Type::Uint64 },
+        { "INT", Type::Int64 },
+        { "STRING", Type::String }
     };
 
     const auto& it = typeMap.find( type );

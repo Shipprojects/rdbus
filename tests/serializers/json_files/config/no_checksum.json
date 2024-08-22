@@ -16,11 +16,11 @@
             "fields": [
                 {
                     "name": "Time Difference A",
-                    "data_type": "F"
+                    "data_type": "FLOAT"
                 },
                 {
                     "name": "Time Difference B",
-                    "data_type": "F"
+                    "data_type": "FLOAT"
                 }
             ]
         },
@@ -33,7 +33,7 @@
                 },
                 {
                     "name": "Engine",
-                    "data_type": "U"
+                    "data_type": "UINT"
                 }
             ]
         }

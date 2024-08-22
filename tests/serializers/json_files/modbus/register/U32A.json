@@ -1,5 +1,5 @@
 {
     "name": "REGISTER_A",
     "address": 5,
-    "data_type": "U32A"
+    "data_type": "UINT_32A"
 }

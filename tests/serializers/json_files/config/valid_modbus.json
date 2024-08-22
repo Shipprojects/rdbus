@@ -17,12 +17,12 @@
           {
           "address": 40000,
             "data_order": "ABCD",
-            "data_type": "S",
+            "data_type": "INT",
             "name": "REGISTER_A"
           },
           {
             "address": 40004,
-            "data_type": "U64A",
+            "data_type": "UINT_64A",
             "name": "REGISTER_B"
           }
         ]

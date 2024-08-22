@@ -1,4 +1,4 @@
 {
     "name": "Speed Over Ground, Knots",
-    "data_type": "F32"
+    "data_type": "FLOAT_32"
 }
