@@ -1,10 +1,6 @@
 {
     "protocol": "something",
 
-    "output": {
-      "type": "stdout"
-    },
-
     "serial": {
       "baud_rate": 4800,
       "parity": "even",

@@ -1,24 +1,15 @@
 #include "initialize.hpp"
 #include "Args.hpp"
-#include "rdbus/communication/OSWrapper.hpp"
-#include "rdbus/communication/modbus/Communicator.hpp"
-#include "rdbus/communication/nmea/Communicator.hpp"
-#include "rdbus/config/Config.hpp"
-#include "rdbus/config/Output.hpp"
-#include "rdbus/out/http/HTTP.hpp"
-#include "rdbus/out/pipe/Pipe.hpp"
-#include "rdbus/tasks/modbus/PollSlave.hpp"
-#include "rdbus/tasks/nmea/Listen.hpp"
 #include "spdlog/common.h"
 #include "spdlog/sinks/stdout_sinks.h"
 #include "version.hpp"
 #include <argparse/argparse.hpp>
 #include <exception>
-#include <fstream>
 #include <spdlog/spdlog.h>
-#include <stdexcept>
 
 using LogLevel = spdlog::level::level_enum;
+
+static rdbus::config::Output toOutputConfig( bool toStdout, const std::string& ipPort );
 
 Args parseArguments( int argc, char** argv )
 {
@@ -32,19 +23,23 @@ Args parseArguments( int argc, char** argv )
 
     parser.add_epilog( "Note: rdbus runs with valid configuration only!" );
 
-    parser.add_argument( "--config" )
-    .help( "path to configuration JSON" )
-    .default_value( ".rdbus.json" )
-    .store_into( args.configPath );
+    parser.add_argument( "--config-dir" )
+    .help( "path to directory containing *.rdbus.json configuration files" )
+    .default_value( "." )
+    .store_into( args.configDir );
 
-    parser.add_argument( "--device" )
-    .help( "path to serial port" )
-    .store_into( args.devPath );
+    auto& outputGroup = parser.add_mutually_exclusive_group( true );
 
-    parser.add_argument( "--stdout", "-s" )
-    .help( "force output to stdout" )
+    bool toStdout = false;
+    outputGroup.add_argument( "--stdout", "-s" )
+    .help( "output to stdout" )
     .flag()
-    .store_into( args.forceStdout );
+    .store_into( toStdout );
+
+    std::string ipPort;
+    outputGroup.add_argument( "--ip" )
+    .help( "'ip:port' of HTTP server for output" )
+    .store_into( ipPort );
 
     parser.add_argument( "--log" )
     .help( "set log level" )
@@ -71,7 +66,32 @@ Args parseArguments( int argc, char** argv )
     };
     args.logLevel = stringToLevelMap.at( parser.get( "--log" ) );
 
+    args.output = toOutputConfig( toStdout, ipPort );
+
     return args;
+}
+
+rdbus::config::Output toOutputConfig( bool toStdout, const std::string& ipPort )
+{
+    nlohmann::json jsonConfig;
+
+    // Since all required checks for output settings are inside of config::Output
+    // deserializer, then it is easier to build a JSON and parse it afterwards
+    if ( toStdout )
+    {
+        jsonConfig[ "type" ] = "stdout";
+    }
+    else
+    {
+        const auto& ip = ipPort.substr( 0, ipPort.find( ':' ) );
+        const auto& port = ipPort.substr( ipPort.find( ':' ) + 1 );
+
+        jsonConfig[ "type" ] = "TCP/IP";
+        jsonConfig[ "ip" ] = ip;
+        jsonConfig[ "port" ] = std::stoi( port );
+    }
+
+    return jsonConfig;
 }
 
 void initializeLogger( LogLevel loglevel )
@@ -80,73 +100,4 @@ void initializeLogger( LogLevel loglevel )
     spdlog::set_default_logger( logger );
     spdlog::set_level( loglevel );
     spdlog::set_pattern( "[%Y-%m-%d %H:%M:%S:%e] [%l] %v" );
-}
-
-rdbus::config::Config initializeConfig( const Args& args )
-{
-    std::ifstream file( args.configPath );
-    if ( !file.good() )
-    {
-        throw std::runtime_error( "Failed to open config file at " + args.configPath + "!" );
-    }
-
-    // Preprocess json with command line arguments
-    auto jsonConfig = nlohmann::json::parse( file );
-
-    // Insert stdout output into json
-    if ( args.forceStdout && jsonConfig.contains( "output" ) && jsonConfig.at( "output" ).contains( "type" ) )
-    {
-        jsonConfig[ "output" ][ "type" ] = "stdout";
-        jsonConfig[ "output" ].erase( "ip" );
-        jsonConfig[ "output" ].erase( "port" );
-    }
-
-    // Insert device path into json
-    if ( !args.devPath.empty() && jsonConfig.contains( "serial" ) && jsonConfig.at( "serial" ).contains( "path" ) )
-    {
-        jsonConfig[ "serial" ][ "path" ] = args.devPath;
-    }
-
-    const rdbus::config::Config& config = jsonConfig;
-
-    return config;
-}
-
-rdbus::Manager::Tasks initializeTasks( const rdbus::config::Config& config )
-{
-    rdbus::Manager::Tasks tasks;
-
-    if ( config.protocol == "nmea" )
-    {
-        auto communicator = std::make_shared< rdbus::communication::nmea::Communicator >( config.serial, std::make_unique< rdbus::communication::OSWrapper >() );
-        tasks.emplace_back( std::make_unique< rdbus::tasks::nmea::Listen >( config.nmea, communicator ) );
-    }
-    else if ( config.protocol == "modbus" )
-    {
-        auto communicator = std::make_shared< rdbus::communication::modbus::Communicator >( config.serial, std::make_unique< rdbus::communication::OSWrapper >() );
-        for ( const auto& slave : config.modbus.slaves )
-        {
-            // 1 slave == 1 task
-            tasks.emplace_back( std::make_unique< rdbus::tasks::modbus::PollSlave >( slave, communicator ) );
-        }
-    }
-
-    return tasks;
-}
-
-rdbus::Manager::Output initializeOutput( const rdbus::config::Config& config )
-{
-    if ( config.output.type == rdbus::config::Output::TCP_IP )
-    {
-        SPDLOG_INFO( "Starting TCP/IP server" );
-        return std::make_unique< rdbus::out::http::HTTP >( config.output );
-    }
-    else if ( config.output.type == rdbus::config::Output::Stdout )
-    {
-        SPDLOG_INFO( "Outputting to STDOUT" );
-        return std::make_unique< rdbus::out::pipe::Pipe >();
-    }
-
-    // Throw if we came here
-    throw std::runtime_error( "Unknown output type!" );
 }

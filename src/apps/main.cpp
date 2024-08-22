@@ -1,4 +1,5 @@
 #include "initialize.hpp"
+#include "rdbus/Initialize.hpp"
 #include "rdbus/Manager.hpp"
 #include <atomic>
 #include <chrono>
@@ -25,10 +26,10 @@ int main( int argc, char** argv )
         const auto& args = parseArguments( argc, argv );
         initializeLogger( args.logLevel );
         SPDLOG_INFO( "Starting" );
-        const auto& config = initializeConfig( args );
+        const auto& config = rdbus::initializeConfig( args.configDir );
 
-        auto tasks = initializeTasks( config );
-        auto output = initializeOutput( config );
+        auto tasks = rdbus::initializeTasks( *config.begin() );
+        auto output = rdbus::initializeOutput( args.output );
 
         rdbus::Manager manager( std::move( tasks ), std::move( output ) );
         SPDLOG_INFO( "Entering loop" );
