@@ -36,7 +36,10 @@ std::list< rdbus::Data::Field > parse( const Response& response,
 
     const auto& sentence = findSentence( sentences, response.getSentenceID() );
 
-    assert( sentence.fields.size() == response.getFields().size() );
+    if ( sentence.fields.size() != response.getFields().size() )
+    {
+        throw std::runtime_error( "NMEA parse error - incoming sentence does not match sentence in config!" );
+    }
 
     Fields output;
 
