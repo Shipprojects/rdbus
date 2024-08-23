@@ -80,7 +80,7 @@ void to_json( nlohmann::json& j, const Data& x )
     }
     else
     {
-        j[ "registers" ] = x.fields;
+        j[ "fields" ] = x.fields;
     }
 }
 

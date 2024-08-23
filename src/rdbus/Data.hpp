@@ -56,7 +56,8 @@ struct Data
         enum Code
         {
             OS = 1,
-            Modbus
+            Modbus,
+            NMEA
         };
 
         Code code;
