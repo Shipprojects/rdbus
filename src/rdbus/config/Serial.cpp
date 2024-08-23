@@ -1,6 +1,7 @@
 #include "Serial.hpp"
 #include "exception.hpp"
 #include "utility.hpp"
+#include <chrono>
 
 using namespace nlohmann;
 
@@ -21,20 +22,15 @@ void from_json( const nlohmann::json& j, Serial& x )
     std::string parityStr;
     tools::parseKeyValue( j, "parity", parityStr, "No parity field present in 'serial' section!" );
 
-    if ( !path.starts_with( '/' ) )
-    {
-        throw ParseException( "Absolute path required for serial device!" );
-    }
+    int responseTimeout = 0;
+    tools::parseKeyValue( j, "response_timeout_ms", responseTimeout, "No response_timeout_ms field present in 'serial' section!" );
 
-    if ( stopBitsCount > 2 )
-    {
-        throw ParseException( "There cannot be more than 2 stop bits!" );
-    }
+    int lineTimeout = 0;
+    tools::parseKeyValue( j, "line_timeout_ms", lineTimeout, "No line_timeout_ms field present in 'serial' section!" );
 
-    if ( stopBitsCount < 1 )
-    {
-        throw ParseException( "There cannot be less than 1 stop bit!" );
-    }
+    tools::throwIf( !path.starts_with( '/' ), "Absolute path required for serial device!" );
+    tools::throwIf( stopBitsCount > 2, "There cannot be more than 2 stop bits!" );
+    tools::throwIf( stopBitsCount < 1, "There cannot be less than 1 stop bit!" );
 
     Serial::Parity parity;
     if ( parityStr == "none" )
@@ -58,6 +54,8 @@ void from_json( const nlohmann::json& j, Serial& x )
     x.path = path;
     x.parity = parity;
     x.stopBitsCount = stopBitsCount;
+    x.responseTimeout = std::chrono::milliseconds( responseTimeout );
+    x.lineTimeout = std::chrono::milliseconds( lineTimeout );
 }
 
 } // namespace rdbus::config

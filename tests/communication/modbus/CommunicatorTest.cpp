@@ -5,6 +5,7 @@
 #include "rdbus/config/modbus/Register.hpp"
 #include "rdbus/config/modbus/Slave.hpp"
 #include "gmock/gmock.h"
+#include <chrono>
 #include <cstdint>
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
@@ -53,6 +54,8 @@ static const Serial& getSerial()
         .path = "/dev/path",
         .baudRate = 9600,
         .stopBitsCount = 2,
+        .responseTimeout = std::chrono::milliseconds( 500 ),
+        .lineTimeout = std::chrono::milliseconds( 10 ),
         .parity = Serial::Parity::Even
     };
 

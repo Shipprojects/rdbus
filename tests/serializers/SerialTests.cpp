@@ -57,6 +57,30 @@ TEST( TestSerial, TestDeserializationTooManyStopBits )
                   config::ParseException );
 }
 
+TEST( TestSerial, TestDeserializationNoResponseTimeout )
+{
+    const auto path = testFilePath + "no_response_timeout.json";
+
+    const auto jsonIn = getJsonFromPath( path );
+
+    EXPECT_THROW( {
+        const config::Serial serial = jsonIn;
+    },
+                  config::ParseException );
+}
+
+TEST( TestSerial, TestDeserializationNoLineTimeout )
+{
+    const auto path = testFilePath + "no_line_timeout.json";
+
+    const auto jsonIn = getJsonFromPath( path );
+
+    EXPECT_THROW( {
+        const config::Serial serial = jsonIn;
+    },
+                  config::ParseException );
+}
+
 TEST( TestSerial, TestDeserializationValid )
 {
     const auto path = testFilePath + "valid.json";
@@ -69,4 +93,6 @@ TEST( TestSerial, TestDeserializationValid )
     EXPECT_EQ( serial.parity, config::Serial::Parity::None );
     EXPECT_EQ( serial.path, "/dev/ttyS1" );
     EXPECT_EQ( serial.stopBitsCount, 2 );
+    EXPECT_EQ( serial.lineTimeout.count(), 10 );
+    EXPECT_EQ( serial.responseTimeout.count(), 500 );
 }

@@ -22,7 +22,9 @@ static std::string toHexString( const uint8_t* data, int len )
 }
 
 Connection::Connection( const config::Serial& settings, std::unique_ptr< OS > os )
-: os( std::move( os ) )
+: os( std::move( os ) ),
+  responseTimeout( settings.responseTimeout ),
+  lineTimeout( settings.lineTimeout )
 {
     const auto& path = settings.path;
     fileDescriptor = this->os.open( path.c_str(), O_RDWR | O_SYNC );
@@ -61,27 +63,27 @@ void Connection::sendData( const std::vector< uint8_t >& data )
     os.write( fileDescriptor, data.begin().base(), data.size() );
 }
 
-std::vector< uint8_t > Connection::getData( std::chrono::seconds timeout )
+std::vector< uint8_t > Connection::getData()
 {
+    // Arbitrary large max size
     constexpr int maxSize = 1024;
     std::vector< uint8_t > data( maxSize );
 
     pollfd waitingFileDescriptor = { .fd = fileDescriptor, .events = POLLIN, .revents = POLLIN };
 
     // Wait for incoming data
-    if ( os.poll( &waitingFileDescriptor, 1, std::chrono::milliseconds( timeout ).count() ) == 0 )
+    if ( os.poll( &waitingFileDescriptor, 1, responseTimeout.count() ) == 0 )
     {
         throw OS::Timeout( "Device timeout!" );
     }
 
     ssize_t size = 0;
-    constexpr int readTimeoutMs = 100;
     // Read while there is data available
     do
     {
         size += os.read( fileDescriptor, data.data() + size, maxSize );
     }
-    while ( os.poll( &waitingFileDescriptor, 1, readTimeoutMs ) > 0 );
+    while ( os.poll( &waitingFileDescriptor, 1, lineTimeout.count() ) > 0 );
 
     data.resize( size );
     data.shrink_to_fit();

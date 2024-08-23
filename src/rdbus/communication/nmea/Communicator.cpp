@@ -16,7 +16,7 @@ std::optional< rdbus::Data > Communicator::receive( const NMEA& settings )
     std::optional< rdbus::Data > data;
     try
     {
-        const auto& rawed = connection.getData( std::chrono::seconds( 5 ) );
+        const auto& rawed = connection.getData();
         const Response response( rawed, settings.withChecksum );
 
         const auto& timestamp = std::chrono::system_clock::now();

@@ -3,10 +3,10 @@
 #include "rdbus/communication/OSWrapper.hpp"
 #include "rdbus/config/Serial.hpp"
 #include <chrono>
+#include <cstdint>
 #include <fcntl.h>
 #include <poll.h>
 #include <spdlog/spdlog.h>
-#include <cstdint>
 #include <sys/poll.h>
 #include <termios.h>
 #include <vector>
@@ -22,12 +22,15 @@ public:
     ~Connection();
 
     void sendData( const std::vector< uint8_t >& data );
-    std::vector< uint8_t > getData( std::chrono::seconds timeout );
+    std::vector< uint8_t > getData();
 
 private:
     termios termios_;
     int fileDescriptor;
     OSExtended os;
+
+    const std::chrono::milliseconds responseTimeout;
+    const std::chrono::milliseconds lineTimeout;
 
     void setupIO( const config::Serial& settings );
     void setBaudRate( speed_t speed );
