@@ -1,8 +1,7 @@
 {
     "path": "/dev/tty*",
     "baud_rate": 4800,
-    "stop_bits_count": 3,
+    "stop_bits_count": 2,
     "parity": "odd",
-    "response_timeout_ms": 500,
     "line_timeout_ms": 10
 }

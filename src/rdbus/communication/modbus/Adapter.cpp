@@ -23,11 +23,11 @@ Adapter::Adapter( const config::Serial& settings, std::unique_ptr< OS > os )
 {
 }
 
-auto Adapter::send( const Request& request, std::chrono::seconds requestTimeout ) -> Response
+auto Adapter::send( const Request& request ) -> Response
 {
     connection.sendData( toRaw( request ) );
 
-    const auto& rawed = connection.getData( requestTimeout );
+    const auto& rawed = connection.getData();
 
     try
     {

@@ -2,5 +2,7 @@
     "path": "/dev/ttyS1",
     "baud_rate": 9600,
     "stop_bits_count": 2,
-    "parity": "none"
+    "parity": "none",
+    "response_timeout_ms": 500,
+    "line_timeout_ms": 10
 }

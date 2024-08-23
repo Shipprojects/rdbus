@@ -1,5 +1,6 @@
 #pragma once
 
+#include <chrono>
 #include <nlohmann/json.hpp>
 #include <string>
 
@@ -11,6 +12,8 @@ struct Serial
     std::string path;
     int baudRate = 0;
     int stopBitsCount = 0;
+    std::chrono::milliseconds responseTimeout;
+    std::chrono::milliseconds lineTimeout;
 
     enum class Parity
     {

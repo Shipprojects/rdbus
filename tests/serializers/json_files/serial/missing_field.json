@@ -1,5 +1,7 @@
 {
     "path": "/dev/ttyS0",
     "stop_bits_count": 1,
-    "parity": "even"
+    "parity": "even",
+    "response_timeout_ms": 500,
+    "line_timeout_ms": 10
 }

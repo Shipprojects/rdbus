@@ -276,18 +276,22 @@ Each config file is meant to operate with one serial port. In each config file t
         "baud_rate": 4800,
         "parity": "none",
         "path": "/dev/ttyS2",
-        "stop_bits_count": 1
+        "stop_bits_count": 1,
+        "response_timeout_ms": 500,
+        "line_timeout_ms": 10,
     },
 ...
 }
 ```
 
-| Field name          | Description                                                     |
-|---------------------|-----------------------------------------------------------------|
-| `"baud_rate"`       | Baud rate of serial port.                                       |
-| `"parity"`          | Parity bit setting. Can be either `"none"`, `"even"` or `"odd"` |
-| `"path"`            | Path to the device file of serial port i.e.`"/dev/*"`.          |
-| `"stop_bits_count"` | Either `1` or `2`.                                              |
+| Field name              | Description                                                     |
+|-------------------------|-----------------------------------------------------------------|
+| `"baud_rate"`           | Baud rate of serial port.                                       |
+| `"parity"`              | Parity bit setting. Can be either `"none"`, `"even"` or `"odd"` |
+| `"path"`                | Path to the device file of serial port i.e.`"/dev/*"`.          |
+| `"stop_bits_count"`     | Either `1` or `2`.                                              |
+| `"response_timeout_ms"` | Max time to wait for data to arrive.                            |
+| `"line_timeout_ms"`     | Max time to wait for each data segment (8 bytes).               |
 
 ## Output
 

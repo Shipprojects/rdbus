@@ -19,7 +19,7 @@ public:
     using Request = MB::ModbusRequest;
     using Response = MB::ModbusResponse;
     using seconds = std::chrono::seconds;
-    Response send( const Request&, seconds requestTimeout = seconds( 5 ) );
+    Response send( const Request& );
 
 private:
     Connection connection;
