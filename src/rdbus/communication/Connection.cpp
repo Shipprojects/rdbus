@@ -134,6 +134,10 @@ void Connection::setupIO( const config::Serial& settings )
         // Set two stop bits, rather than one
         termios_.c_cflag |= CSTOPB;
     }
+
+    // Force read() to return any amount of data after 1 second
+    termios_.c_cc[ VTIME ] = 10;
+    termios_.c_cc[ VMIN ] = 0;
 }
 
 void Connection::setBaudRate( speed_t speed )
