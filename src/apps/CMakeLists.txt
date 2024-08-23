@@ -8,12 +8,12 @@ add_executable(${TARGET_NAME}
     ${SOURCE_FILES}
 )
 
-add_compile_options(${TARGET_NAME} ${COMPILE_OPTIONS})
+add_compile_options(${COMPILE_OPTIONS})
 
 configure_file(${CMAKE_SOURCE_DIR}/version.hpp.in ${CMAKE_CURRENT_SOURCE_DIR}/version.hpp)
 target_include_directories(${TARGET_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}
                                                   ${CMAKE_SOURCE_DIR}/src)
-target_link_libraries(${TARGET_NAME} PRIVATE lib_rdbus Modbus)
+target_link_libraries(${TARGET_NAME} PRIVATE lib_rdbus spdlog::spdlog)
 
 add_json(${TARGET_NAME})
 add_argparse(${TARGET_NAME})

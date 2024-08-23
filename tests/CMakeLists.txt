@@ -11,7 +11,7 @@ add_executable(${TARGET_NAME}
     ${SOURCE_FILES}
 )
 
-add_compile_options(${TARGET_NAME} ${COMPILE_OPTIONS})
+add_compile_options(${COMPILE_OPTIONS})
 
 add_json(${TARGET_NAME})
 add_modbus(${TARGET_NAME})
