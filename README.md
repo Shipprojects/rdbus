@@ -1,6 +1,25 @@
 # ReadBus (rdbus)
 
-Introduction...
+Readbus (`rdbus`) is a program designed for serial data reading, data interpretation, and output. The program is designed to run on Little Endian processors regardless of cross-compilation capabilities. `rdbus` is a standalone executable and does not require any additional runtime libraries besides the system ones. It can read from multiple serial ports simultaneously.
+
+# Table of contents
+
+- [ReadBus (rdbus)](#readbus-rdbus)
+- [Table of contents](#table-of-contents)
+- [API](#api)
+   * [Command line](#command-line)
+   * [Configuration files](#configuration-files)
+      + [Modbus](#modbus)
+      + [NMEA](#nmea)
+      + [Protocol](#protocol)
+      + [Serial](#serial)
+   * [Output](#output)
+      + [HTTP server](#http-server)
+      + [Stdout](#stdout)
+   * [Stopping the progam](#stopping-the-progam)
+- [Docker environment](#docker-environment)
+- [Building](#building)
+- [Versioning](#versioning)
 
 # API
 
@@ -15,7 +34,7 @@ to see command line arguments.
 
 ## Configuration files
 
-The root of `rdbus` are `*.rdbus.json` configuration files. On startup, `rdbus` searches for them in the current directory. You can also specify a different directory through the command line. Currently `rdbus` supports two input protocols - NMEA 0183 and Modbus RTU. The configuration for both protocols differs.
+The root of `rdbus` are `*.rdbus.json` configuration files. On startup, `rdbus` searches for them in current directory. You can also specify a different directory through the command line. Currently `rdbus` supports two input protocols - NMEA 0183 and Modbus RTU. The configuration for both protocols differs.
 
 ### Modbus
 
@@ -60,7 +79,9 @@ Example configuration for Modbus:
     ]
 }
 ```
-The Modbus specific part is `"slaves"`. Also note that `"protocol": "modbus"`. You can learn more about Modbus commands and responses [here](https://www.simplymodbus.ca/FAQ.htm#Command). In the `"slaves"` section, you must specify each Modbus slave that you want to read from.
+The Modbus specific part is `"slaves"`. Also note that `"protocol": "modbus"`. You can learn more about Modbus commands and responses [here](https://www.simplymodbus.ca/FAQ.htm#Command).
+
+In `"slaves"` section, you must specify each Modbus slave that you want to read from.
 
 | Field name                  | Description                                                                       |
 |-----------------------------|-----------------------------------------------------------------------------------|
@@ -76,12 +97,14 @@ Now you must specify each register that you want to read. You can skip those reg
 |----------------|------------------------------------------------------------------------------------------------------------------------|
 | `"address"`    | Address of register. Note that a register consists of 2 bytes, but each consecutive address holds a separate register. I.e., registers 0 and 1 together take up 4 bytes|
 | `"data_type"`  | Data type of register(-s).                                                                                             |
-| `"data_order"` | (Required with wild `data_type`-s only) data order of wild data types.                                                 |
+| `"data_order"` | Data order of wild data types (required with wild `"data_type"`-s only).                                                 |
 | `"name"`       | The name of register. Used for field identification in `rdbus` data output.                                            |
 
 #### Data order
 
-The data order describes where each of the bytes is stored in the Modbus register/-s. It is described using up to 8 alphabetic letters - _ABCDEFGH_, where _A_ represents the most significant byte and _H_ the least significant. E.g., the combination:
+There are two kinds of data types - _standard_ and _wild_. The only difference between them is that the former is already hardcoded in `rdbus` and does not require additional `"data_order"` field - just select the necessary `"data_type"`.
+
+The data order describes where each of the bytes is stored in Modbus register/-s. It is described using up to 8 alphabetic letters - _ABCDEFGH_, where _A_ represents the most significant byte and _H_ the least significant. E.g., the combination:
 ```json
 "data_type": "UINT",
 "data_order": "CDAB",
@@ -209,7 +232,7 @@ Example configuration for NMEA:
     ]
 }
 ```
-The NMEA specific part is `"checksum"`, `"talker_id"` and `"sentences"`. Also note that `"protocol": "nmea"`. In the case of NMEA, you will only have one device connected to a serial port.
+The NMEA specific part is `"checksum"`, `"talker_id"` and `"sentences"`. Also note that `"protocol": "nmea"`. In case of NMEA, you will only have one device connected to a serial port.
 
 | Field name    | Description                                                                                 |
 |---------------|---------------------------------------------------------------------------------------------|
@@ -235,7 +258,7 @@ Allowed values for `"data_type"` are `"INT"`, `"UINT"`, `"FLOAT"`, `"STRING"`.
 
 ### Protocol
 
-As was seen in previous examples, at the top of the json file we have a `"protocol"` field.
+As was seen in previous examples, at the top of the json file we have the `"protocol"` field.
 ```json
 {
     "protocol": "modbus",
@@ -342,7 +365,7 @@ Structure of an `"error"`:
 
 | Field name | Description                                                                                                                                       |
 |------------|---------------------------------------------------------------------------------------------------------------------------------------------------|
-| `"code"`   | If `1` - OS exception (e.g. could not read from port). If `2` - Modbus error (e.g. invalid message). If `3` - NMEA error (e.g. invalid checksum). |
+| `"code"`   | `1` - OS exception (e.g. could not read from port). `2` - Modbus error (e.g. invalid message). `3` - NMEA error (e.g. invalid checksum). |
 | `"what"`   | Description of an error.
 
 ### HTTP server
@@ -352,7 +375,7 @@ If you have passed `--ip` parameter to `rdbus` it starts an HTTP server on given
 $ curl --verbose http://0.0.0.0:5000/read?pretty
 ```
 
-#### /read request
+#### `/read` request
 
 The `/read` request asks `rdbus` for all it's buffered data.
 
@@ -360,9 +383,9 @@ The `/read` request asks `rdbus` for all it's buffered data.
 |------------|--------------------------|
 | `"pretty"` | Output indented json.    |
 
-The server buffers all data read from serial ports up to a hardcoded limit of 500 KB, after reaching it, the buffer will start to clean up the oldest elements. Note that the server stores data in binary format, which takes up much less space than the JSON that it outputs, meaning that the 500 KB of internally buffered data means several MB of JSON output.
+The server buffers all data read from serial ports up to a hardcoded limit of 500 KB, after reaching it, the buffer will start to delete the oldest elements. Note that the server stores data in binary format, which takes up much less space than the JSON that it outputs, meaning that the 500 KB of internally buffered data means several MB of JSON output.
 
-You will probably want to read all buffered data only once, when you perform the first request, after which you will be interested only in reading new data. To achieve this, `rdbus` uses cookies. When you send a `/read` request without a cookie, the server will start a session for you, which expires after 5 minutes and gets extended each time you `/read`. For example:
+You will probably want to read all buffered data only once - when you perform the first request, after which you will be interested only in reading new data. To achieve this, `rdbus` uses cookies. When you send a `/read` request without a cookie, the server will start a session for you which expires after 5 minutes and gets extended each time you `/read`. For example:
 ```bash
 $ curl --verbose http://0.0.0.0:5000/read?pretty
 *   Trying 0.0.0.0:5000...
@@ -452,11 +475,11 @@ $ curl -v --cookie "id=1" http://0.0.0.0:5000/read?pretty
 * Connection #0 to host 0.0.0.0 left intact
 ]
 ```
-As you can see, there is a `Set-Cookie: 1` field present in the first response header. If you send this cookie back on the next request in the format `id=<id>` then you will receive only the new data that you have not read yet.
+As you can see, there is a `Set-Cookie: 1` field present in first response header. If you send this cookie back on the next request in format `id=<id>` then you will receive only the new data that you have not read yet.
 
 ### Stdout
 
-In the case of stdout output, each time the data is read, it will be immediately outputted to `stdout`. For example:
+In case of stdout output, each time the data is read, it will be immediately outputted to `stdout`. For example:
 ```bash
 $ ./rdbus --stdout --log info
 [2024-08-23 12:48:38:971] [info] [239494] Starting
@@ -518,4 +541,44 @@ The program exits when it receives a `SIGINT`. You can either do it from the com
 $ kill -s SIGINT <rdbus_process_id>
 ```
 
-`0` return code means no errors, and `1` means that something went wrong during execution.
+`0` return code means no errors. `1` means that something went wrong during execution.
+
+# Docker environment
+
+There is a Docker image available with everything you need to develop and build `rdbus`. Follow [this guide](https://docs.docker.com/engine/install/ubuntu/) to install Docker and [this guide](https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user) to finalize your Docker setup. For development you will also need Visual Studio Code with `ms-vscode-remote.remote-containers` extension installed.
+
+To open the development environment you have to open the `rdbus` project root directory in `vscode` and run `>Dev Containers: Reopen in Container`. Wait for the image to build for the first time and then wait until all extensions get automatically installed. Now you are ready to go.
+
+This README file does not go into further details on how to develop the program or use the environment. Just know that this setup has all the necessary tools installed and automatically configured.
+
+# Building
+
+There are 2 main targets that you can build - `rdbus` and `rdbus_tests`. The latter is a unit testing executable that is tied to the environment. Before building, you have to perform CMake configure once:
+```bash
+$ cmake --preset Release
+```
+
+Now if you want to build everything:
+```bash
+$ cmake --build --preset Release
+```
+
+If you want to build specific executables:
+```bash
+$ cmake --build --preset Release --target rdbus
+```
+or
+```bash
+$ cmake --build --preset Release --target rdbus_tests
+```
+
+The binaries are located in `build/Release/src/apps/` and `build/Release/tests/` respectively.
+
+# Versioning
+
+The versioning of this project adheres to [Semantic Versioning 2.0.0](https://semver.org/) specification. In summary:
+> Given a version number MAJOR.MINOR.PATCH, increment the:
+>
+>     MAJOR version when you make incompatible API changes
+>     MINOR version when you add functionality in a backward compatible manner
+>     PATCH version when you make backward compatible bug fixes
