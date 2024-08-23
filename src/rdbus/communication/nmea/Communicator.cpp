@@ -30,7 +30,7 @@ std::optional< rdbus::Data > Communicator::receive( const NMEA& settings )
     {
         SPDLOG_ERROR( e.what() );
         data = rdbus::Data();
-        data->error = rdbus::Data::Error{ .code = rdbus::Data::Error::Modbus,
+        data->error = rdbus::Data::Error{ .code = rdbus::Data::Error::NMEA,
                                           .what = e.what() };
     }
     catch ( const OS::Timeout& e )
