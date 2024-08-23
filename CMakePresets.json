@@ -47,12 +47,12 @@
             "jobs": 20
         },
         {
-            "name": "Release build",
+            "name": "Release",
             "configurePreset": "Release",
             "inherits": [ "Common" ]
         },
         {
-            "name": "Debug build",
+            "name": "Debug",
             "configurePreset": "Debug",
             "inherits": [ "Common" ]
 
