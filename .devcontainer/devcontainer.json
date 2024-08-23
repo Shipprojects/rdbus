@@ -14,7 +14,7 @@
 				"ms-vscode.cmake-tools",
 				"ms-python.python",
 				"ms-python.vscode-pylance",
-				"shardulm94.trailing-spaces",
+				"shardulm94.trailing-spaces"
 			]
 		}
 	},

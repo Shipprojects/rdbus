@@ -35,7 +35,6 @@ static RequestDescriptions requestPlan( int slaveId, MB::utils::MBFunctionCode c
                                                           []( int accumulator, const Register& next )
                                                           { return next.byteOrder.size() / sizeof( uint16_t ) + accumulator; } );
 
-            // TODO: Will probably need to find a way how to read from coils too
             auto request = MB::ModbusRequest( slaveId, code, address, rawRegisterCount );
             requestDescriptions.push_back( { request, group } );
             group.clear();

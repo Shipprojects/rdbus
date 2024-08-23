@@ -8,11 +8,11 @@ add_library(${TARGET_NAME}
     ${SOURCE_FILES}
 )
 
-add_compile_options(${TARGET_NAME} ${COMPILE_OPTIONS})
+add_compile_options(${COMPILE_OPTIONS})
 
 target_include_directories(${TARGET_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/src)
 
-target_link_libraries(${TARGET_NAME} Modbus)
+target_link_libraries(${TARGET_NAME} PRIVATE Modbus spdlog::spdlog)
 
 add_json(${TARGET_NAME})
 add_spdlog(${TARGET_NAME})
