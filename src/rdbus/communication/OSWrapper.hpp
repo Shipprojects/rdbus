@@ -27,12 +27,12 @@ struct OS
 
     struct Exception : public std::runtime_error
     {
-        Exception( const std::string& what );
+        explicit Exception( const std::string& what );
     };
 
     struct Timeout : public Exception
     {
-        Timeout( const std::string& what );
+        explicit Timeout( const std::string& what );
     };
 };
 
@@ -57,7 +57,7 @@ struct OSWrapper : public OS
 // values and throws if the return value is -1
 struct OSExtended : public OS
 {
-    OSExtended( std::unique_ptr< OS > os );
+    explicit OSExtended( std::unique_ptr< OS > os );
 
     int open( const char* __file, int __oflag ) override;
     int tcgetattr( int __fd, struct termios* __termios_p ) override;

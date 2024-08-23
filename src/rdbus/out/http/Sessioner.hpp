@@ -22,7 +22,7 @@ public:
 
     struct Exception : public std::runtime_error
     {
-        Exception( const std::string& what );
+        explicit Exception( const std::string& what );
     };
 
     static constexpr auto inactivityTimeout = std::chrono::minutes( 5 );

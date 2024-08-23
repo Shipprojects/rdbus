@@ -6,7 +6,7 @@
 #include <fcntl.h>
 #include <poll.h>
 #include <spdlog/spdlog.h>
-#include <stdint.h>
+#include <cstdint>
 #include <sys/poll.h>
 #include <termios.h>
 #include <vector>

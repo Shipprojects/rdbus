@@ -15,13 +15,7 @@
         "configurePreset": {
             "statusBarVisibility": "visible"
         },
-        "ctest": {
-            "statusBarVisibility": "visible"
-        },
         "debug": {
-            "statusBarVisibility": "visible"
-        },
-        "testPreset": {
             "statusBarVisibility": "visible"
         },
         "launchTarget": {

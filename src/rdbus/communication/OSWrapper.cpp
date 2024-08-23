@@ -2,7 +2,7 @@
 #include <cerrno>
 #include <fcntl.h>
 #include <stdexcept>
-#include <string.h>
+#include <cstring>
 #include <termios.h>
 #include <unistd.h>
 

@@ -19,7 +19,7 @@ namespace rdbus::out::http
 class HTTP : public Output
 {
 public:
-    HTTP( const config::Output& settings );
+    explicit HTTP( const config::Output& settings );
     ~HTTP();
 
     // This function does not actually send data but rather adds it to a buffer

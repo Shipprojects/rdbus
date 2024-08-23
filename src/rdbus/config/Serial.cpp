@@ -51,7 +51,6 @@ void from_json( const nlohmann::json& j, Serial& x )
     }
     else
     {
-        parity = Serial::Parity::None;
         throw ParseException( "Unknown parity '" + parityStr + "'!" );
     }
 

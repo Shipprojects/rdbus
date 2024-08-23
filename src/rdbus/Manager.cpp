@@ -20,7 +20,7 @@ std::optional< Data > Manager::run( std::unique_ptr< tasks::Task >& task )
     return task->run();
 }
 
-void Manager::send( std::list< rdbus::Data > list )
+void Manager::send( const std::list< rdbus::Data >& list )
 {
     output->send( list );
 }

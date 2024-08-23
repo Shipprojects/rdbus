@@ -11,7 +11,7 @@ using namespace nlohmann;
 namespace rdbus::out::http
 {
 
-static void exceptionHandler( const httplib::Request& req, httplib::Response& res, std::exception_ptr ep )
+static void exceptionHandler( const httplib::Request&, httplib::Response& res, std::exception_ptr ep )
 {
     std::string errorMessage;
     try

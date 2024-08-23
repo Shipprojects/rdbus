@@ -1,7 +1,7 @@
 #pragma once
 
 #include <stdexcept>
-#include <stdint.h>
+#include <cstdint>
 #include <string>
 #include <vector>
 
@@ -16,7 +16,7 @@ public:
 
     struct Exception : public std::runtime_error
     {
-        Exception( const std::string& what );
+        explicit Exception( const std::string& what );
     };
 
     const std::string& getTalkerID() const;

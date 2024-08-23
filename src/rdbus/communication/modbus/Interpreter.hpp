@@ -3,7 +3,7 @@
 #include "rdbus/Data.hpp"
 #include "rdbus/config/modbus/Register.hpp"
 #include <MB/modbusResponse.hpp>
-#include <stdint.h>
+#include <cstdint>
 
 namespace rdbus::communication::modbus::interpreter
 {

@@ -28,8 +28,8 @@ rdbus::Data Communicator::request( const config::modbus::Slave& slave )
 
             const auto& timestamp = std::chrono::system_clock::now();
             // Parse response to data fields
-            const auto& fields = interpreter::parse( response, description.registers, timestamp );
-            for ( const auto& field : fields )
+            auto fields = interpreter::parse( response, description.registers, timestamp );
+            for ( auto& field : fields )
             {
                 data.fields.emplace_back( std::move( field ) );
             }
