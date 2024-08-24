@@ -1,5 +1,5 @@
 #include "Config.hpp"
-#include "exception.hpp"
+#include "Exception.hpp"
 #include "modbus/Modbus.hpp"
 #include "modbus/Register.hpp"
 #include "utility.hpp"
@@ -108,10 +108,7 @@ static void parseModbus( const nlohmann::json& j, Config& x )
     Slaves slaves;
     tools::parseKeyValue( j, "slaves", slaves, "No slaves present!" );
 
-    if ( slaves.empty() )
-    {
-        throw ParseException( "No slaves present!" );
-    }
+    tools::throwIf( slaves.empty(), "No slaves present!" );
 
     checkRegisterAddressSpacing( slaves );
     checkDuplicateRegisterNames( slaves );

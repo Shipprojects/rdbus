@@ -1,12 +1,16 @@
 #include "Interpreter.hpp"
 #include "rdbus/Data.hpp"
-#include <stdexcept>
 
 namespace rdbus::communication::nmea::interpreter
 {
 
 namespace tools
 {
+
+Exception::Exception( const std::string& what )
+: rdbus::communication::interpreter::Exception( "NMEA - " + what )
+{
+}
 
 const Sentence& findSentence( const tools::Sentences& sentences, const std::string& sentenceId )
 {
@@ -18,7 +22,7 @@ const Sentence& findSentence( const tools::Sentences& sentences, const std::stri
 
     if ( it == sentences.end() )
     {
-        throw std::runtime_error( "Unknown sentence type -" + sentenceId );
+        throw Exception( "Unknown sentence type -" + sentenceId );
     }
 
     return *it;
@@ -38,23 +42,23 @@ std::list< rdbus::Data::Field > parse( const Response& response,
 
     if ( sentence.fields.size() != response.getFields().size() )
     {
-        throw std::runtime_error( "NMEA parse error - incoming sentence does not match sentence in config!" );
+        throw Exception( "Incoming sentence and sentence size in config mismatch!" );
     }
 
     Fields output;
 
-    for ( const auto& sentenceField : sentence.fields )
+    auto sentenceIt = sentence.fields.begin();
+    auto fieldIt = response.getFields().begin();
+    for ( ; sentenceIt != sentence.fields.end() && fieldIt != response.getFields().end(); sentenceIt++, fieldIt++ )
     {
-        const int i = output.size();
-
         rdbus::Data::Field field = {
-            .name = sentenceField.name,
-            .type = sentenceField.type,
+            .name = sentenceIt->name,
+            .type = sentenceIt->type,
             .timestamp = timestamp
         };
 
         // Indicate that field is empty
-        if ( response.getFields()[ i ].empty() )
+        if ( fieldIt->empty() )
         {
             field.type = rdbus::Type::None;
         }
@@ -62,21 +66,21 @@ std::list< rdbus::Data::Field > parse( const Response& response,
         switch ( field.type )
         {
             case Type::Int64:
-                field.value = std::stoll( response.getFields()[ i ] );
+                field.value = std::stoll( *fieldIt );
                 break;
             case Type::Uint64:
-                field.value = std::stoull( response.getFields()[ i ] );
+                field.value = std::stoull( *fieldIt );
                 break;
             case Type::Double:
-                field.value = std::stod( response.getFields()[ i ] );
+                field.value = std::stod( *fieldIt );
                 break;
             case Type::String:
-                field.value = response.getFields()[ i ];
+                field.value = *fieldIt;
                 break;
             case Type::None:
                 break;
             default:
-                throw std::invalid_argument( "Unsupported type " + std::to_string( static_cast< int >( field.type ) ) + "!" );
+                throw Exception( "Unsupported type " + std::to_string( static_cast< int >( field.type ) ) + "!" );
                 break;
         }
 

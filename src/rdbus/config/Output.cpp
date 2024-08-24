@@ -1,5 +1,4 @@
 #include "Output.hpp"
-#include "exception.hpp"
 #include "utility.hpp"
 
 using namespace nlohmann;
@@ -19,25 +18,10 @@ void from_json( const json& j, Output& x )
     std::string type;
     tools::parseKeyValue( j, "type", type, "Missing 'type' field in 'output' section!" );
 
-    if ( type != "stdout" && type != "TCP/IP" )
-    {
-        throw ParseException( "The only allowed output types are 'stdout' and 'TCP/IP'!" );
-    }
-
-    if ( type == "stdout" && ( !ip.empty() || port != invalidPort ) )
-    {
-        throw ParseException( "Multiple output types detected! Do not mix 'ip/port' with stdout 'type'!" );
-    }
-
-    if ( type == "TCP/IP" && port == invalidPort )
-    {
-        throw ParseException( "No 'port' field!" );
-    }
-
-    if ( type == "TCP/IP" && ip.empty() )
-    {
-        throw ParseException( "No 'ip' field!" );
-    }
+    tools::throwIf( type != "stdout" && type != "TCP/IP", "The only allowed output types are 'stdout' and 'TCP/IP'!" );
+    tools::throwIf( type == "stdout" && ( !ip.empty() || port != invalidPort ), "Multiple output types detected! Do not mix 'ip/port' with stdout 'type'!" );
+    tools::throwIf( type == "TCP/IP" && port == invalidPort, "No 'port' field!" );
+    tools::throwIf( type == "TCP/IP" && ip.empty(), "No 'ip' field!" );
 
     if ( type == "stdout" )
     {

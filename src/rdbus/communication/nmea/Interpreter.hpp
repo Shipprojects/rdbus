@@ -2,6 +2,7 @@
 
 #include "Response.hpp"
 #include "rdbus/Data.hpp"
+#include "rdbus/communication/Interpreter.hpp"
 #include "rdbus/config/nmea/NMEA.hpp"
 #include <stdint.h>
 
@@ -10,6 +11,11 @@ namespace rdbus::communication::nmea::interpreter
 
 namespace tools
 {
+
+struct Exception : rdbus::communication::interpreter::Exception
+{
+    Exception( const std::string& what );
+};
 
 using Sentences = rdbus::config::nmea::NMEA::Sentences;
 using Timestamp = rdbus::Data::Field::Timestamp;

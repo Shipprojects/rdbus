@@ -1,5 +1,5 @@
 #include "Serial.hpp"
-#include "exception.hpp"
+#include "Exception.hpp"
 #include "utility.hpp"
 #include <chrono>
 

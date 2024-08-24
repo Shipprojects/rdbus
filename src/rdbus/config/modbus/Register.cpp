@@ -1,6 +1,6 @@
 #include "Register.hpp"
 #include "rdbus/Data.hpp"
-#include "rdbus/config/exception.hpp"
+#include "rdbus/config/Exception.hpp"
 #include "rdbus/config/utility.hpp"
 
 using namespace nlohmann;

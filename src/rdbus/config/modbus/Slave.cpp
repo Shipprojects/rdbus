@@ -1,5 +1,4 @@
 #include "Slave.hpp"
-#include "rdbus/config/exception.hpp"
 #include "rdbus/config/utility.hpp"
 
 using namespace nlohmann;
@@ -24,10 +23,7 @@ void from_json( const nlohmann::json& j, Slave& x )
     Slave::Registers outputRegisters;
     tools::parseKeyValue( j, "analog_output_registers", outputRegisters );
 
-    if ( inputRegisters.empty() && outputRegisters.empty() )
-    {
-        throw ParseException( "No slave registers present!" );
-    }
+    tools::throwIf( inputRegisters.empty() && outputRegisters.empty(), "No slave registers present!" );
 
     x.name = name;
     x.id = id;
@@ -36,4 +32,4 @@ void from_json( const nlohmann::json& j, Slave& x )
     x.outputRegisters = outputRegisters;
 }
 
-} // namespace rdbus::config
+} // namespace rdbus::config::modbus

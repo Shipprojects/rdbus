@@ -1,13 +1,12 @@
 #include "Response.hpp"
 #include <algorithm>
 #include <sstream>
-#include <stdexcept>
 
 namespace rdbus::communication::nmea
 {
 
 Response::Exception::Exception( const std::string& what )
-: std::runtime_error( "NMEA parse error - " + what )
+: rdbus::Exception( "NMEA parse error - " + what )
 {
 }
 

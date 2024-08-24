@@ -1,8 +1,8 @@
 #pragma once
 
+#include "rdbus/Exception.hpp"
 #include <cstddef>
 #include <memory>
-#include <stdexcept>
 #include <sys/poll.h>
 #include <sys/types.h>
 #include <termios.h>
@@ -25,7 +25,7 @@ struct OS
     virtual int cfsetispeed( struct termios* __termios_p, speed_t __speed ) = 0;
     virtual ~OS() = default;
 
-    struct Exception : public std::runtime_error
+    struct Exception : public rdbus::Exception
     {
         explicit Exception( const std::string& what );
     };

@@ -6,7 +6,6 @@
 #include <chrono>
 #include <cstdint>
 #include <gtest/gtest.h>
-#include <stdexcept>
 
 using namespace rdbus;
 using namespace rdbus::communication::nmea;
@@ -240,5 +239,5 @@ TEST( TestNMEAInterpreter, TestConfigMismatch )
     EXPECT_THROW( {
         const auto& fields = communication::nmea::interpreter::parse( response, sentences, now );
     },
-                  std::runtime_error );
+                  rdbus::Exception );
 }
