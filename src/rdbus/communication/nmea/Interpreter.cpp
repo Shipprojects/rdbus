@@ -1,12 +1,17 @@
 #include "Interpreter.hpp"
 #include "rdbus/Data.hpp"
-#include <stdexcept>
+#include "rdbus/Exception.hpp"
 
 namespace rdbus::communication::nmea::interpreter
 {
 
 namespace tools
 {
+
+InterpretationException::InterpretationException( const std::string& what )
+: rdbus::Exception( "NMEA interpretation exception - " + what )
+{
+}
 
 const Sentence& findSentence( const tools::Sentences& sentences, const std::string& sentenceId )
 {
@@ -18,7 +23,7 @@ const Sentence& findSentence( const tools::Sentences& sentences, const std::stri
 
     if ( it == sentences.end() )
     {
-        throw std::runtime_error( "Unknown sentence type -" + sentenceId );
+        throw InterpretationException( "Unknown sentence type -" + sentenceId );
     }
 
     return *it;
@@ -38,7 +43,7 @@ std::list< rdbus::Data::Field > parse( const Response& response,
 
     if ( sentence.fields.size() != response.getFields().size() )
     {
-        throw std::runtime_error( "NMEA parse error - incoming sentence does not match sentence in config!" );
+        throw InterpretationException( "NMEA parse error - incoming sentence does not match sentence in config!" );
     }
 
     Fields output;
@@ -76,7 +81,7 @@ std::list< rdbus::Data::Field > parse( const Response& response,
             case Type::None:
                 break;
             default:
-                throw std::invalid_argument( "Unsupported type " + std::to_string( static_cast< int >( field.type ) ) + "!" );
+                throw InterpretationException( "Unsupported type " + std::to_string( static_cast< int >( field.type ) ) + "!" );
                 break;
         }
 

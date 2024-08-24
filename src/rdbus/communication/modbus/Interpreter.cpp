@@ -1,13 +1,17 @@
 #include "Interpreter.hpp"
 #include "rdbus/Data.hpp"
 #include <cstdint>
-#include <stdexcept>
 
 namespace rdbus::communication::modbus::interpreter
 {
 
 namespace tools
 {
+
+InterpretationException::InterpretationException( const std::string& what )
+: rdbus::Exception( "Modbus interpretation exception - " + what )
+{
+}
 
 RawUint16List toRaw16BitRegisters( const std::vector< MB::ModbusCell >& input )
 {
@@ -126,7 +130,7 @@ Fields toParsedFields( const SmallEndianRegisters& input, const Registers& regis
                 field.value = *reinterpret_cast< const double* >( input[ i ].data() );
                 break;
             default:
-                throw std::invalid_argument( "Unsupported type " + std::to_string( static_cast< int >( reg.type ) ) + "!" );
+                throw InterpretationException( "Unsupported type " + std::to_string( static_cast< int >( reg.type ) ) + "!" );
                 break;
         }
 

@@ -50,7 +50,6 @@ rdbus::Data Communicator::request( const config::modbus::Slave& slave )
                                          .what = e.what() };
     }
 
-
     return data;
 }
 

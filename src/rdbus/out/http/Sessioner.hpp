@@ -3,7 +3,7 @@
 #include <chrono>
 #include <map>
 #include <mutex>
-#include <stdexcept>
+#include "rdbus/Exception.hpp"
 
 namespace rdbus::out::http
 {
@@ -20,7 +20,7 @@ public:
     // Clears expired cookies. Updates last access time for given id. Returns last access time.
     TimePoint getLastAccessTime( int id, const TimePoint& newAccessTime = std::chrono::system_clock::now() );
 
-    struct Exception : public std::runtime_error
+    struct Exception : public rdbus::Exception
     {
         explicit Exception( const std::string& what );
     };

@@ -5,11 +5,11 @@
 #include "config/Config.hpp"
 #include "out/http/HTTP.hpp"
 #include "out/pipe/Pipe.hpp"
+#include "rdbus/Exception.hpp"
 #include "rdbus/config/Output.hpp"
 #include "tasks/modbus/PollSlave.hpp"
 #include "tasks/nmea/Listen.hpp"
 #include <filesystem>
-#include <stdexcept>
 
 namespace rdbus
 {
@@ -29,7 +29,7 @@ std::list< config::Config > initializeConfigs( const std::string& configDir )
             std::ifstream file( path );
             if ( !file.good() )
             {
-                throw std::runtime_error( "Failed to open config file at " + path + "!" );
+                throw Exception( "Failed to open config file at " + path + "!" );
             }
 
             jsonList.emplace_back( nlohmann::json::parse( file ) );
@@ -38,7 +38,7 @@ std::list< config::Config > initializeConfigs( const std::string& configDir )
 
     if ( jsonList.empty() )
     {
-        throw std::runtime_error( "No '*.rdbus.json' configuration files found in " + configDir + "!" );
+        throw Exception( "No '*.rdbus.json' configuration files found in " + configDir + "!" );
     }
 
     return std::list< config::Config >( jsonList.begin(), jsonList.end() );
@@ -58,7 +58,7 @@ Manager::Output initializeOutput( const config::Output& output )
     }
 
     // Throw if we came here
-    throw std::runtime_error( "Unknown output type!" );
+    throw Exception( "Unknown output type!" );
 }
 
 static Manager::Tasks initializeTasks( const config::Config& config )

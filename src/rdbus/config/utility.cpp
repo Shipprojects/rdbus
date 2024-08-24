@@ -1,5 +1,5 @@
 #include "utility.hpp"
-#include "exception.hpp"
+#include "Exception.hpp"
 
 namespace rdbus::config::tools
 {

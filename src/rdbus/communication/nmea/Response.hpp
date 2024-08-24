@@ -1,6 +1,6 @@
 #pragma once
 
-#include <stdexcept>
+#include "rdbus/Exception.hpp"
 #include <cstdint>
 #include <string>
 #include <vector>
@@ -14,7 +14,7 @@ class Response
 public:
     Response( const std::vector< uint8_t >& data, bool validateChecksum = false );
 
-    struct Exception : public std::runtime_error
+    struct Exception : public rdbus::Exception
     {
         explicit Exception( const std::string& what );
     };

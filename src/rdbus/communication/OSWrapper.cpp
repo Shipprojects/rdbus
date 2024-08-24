@@ -1,7 +1,6 @@
 #include "OSWrapper.hpp"
 #include <cerrno>
 #include <fcntl.h>
-#include <stdexcept>
 #include <cstring>
 #include <termios.h>
 #include <unistd.h>
@@ -10,7 +9,7 @@ namespace rdbus::communication
 {
 
 OS::Exception::Exception( const std::string& what )
-: std::runtime_error( "OS exception - " + what )
+: rdbus::Exception( "OS exception - " + what )
 {
 }
 

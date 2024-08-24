@@ -1,4 +1,4 @@
-#include "rdbus/config/exception.hpp"
+#include "rdbus/config/Exception.hpp"
 #include "rdbus/config/modbus/Slave.hpp"
 #include "tests/utility.hpp"
 #include <gtest/gtest.h>

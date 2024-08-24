@@ -1,5 +1,5 @@
 #include "rdbus/Data.hpp"
-#include "rdbus/config/exception.hpp"
+#include "rdbus/config/Exception.hpp"
 #include "rdbus/config/nmea/Field.hpp"
 #include "tests/utility.hpp"
 #include <gtest/gtest.h>

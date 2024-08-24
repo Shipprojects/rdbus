@@ -1,15 +1,15 @@
 #pragma once
 
-#include <stdexcept>
+#include "rdbus/Exception.hpp"
 #include <string>
 
 namespace rdbus::config
 {
 
-struct ParseException : public std::runtime_error
+struct ParseException : public rdbus::Exception
 {
     explicit ParseException( const std::string& what )
-    : std::runtime_error( "Config parse exception - " + what )
+    : rdbus::Exception( "Config parse exception - " + what )
     {
     }
 };

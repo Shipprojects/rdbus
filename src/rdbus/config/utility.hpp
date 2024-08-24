@@ -1,6 +1,6 @@
 #pragma once
 
-#include "exception.hpp"
+#include "Exception.hpp"
 #include <nlohmann/json.hpp>
 
 namespace rdbus::config::tools
@@ -31,4 +31,4 @@ void parseKeyValue( const nlohmann::json& j, const std::string& key, T& target, 
 
 void throwIf( bool condition, const std::string& message );
 
-} // namespace rdbus::config
+} // namespace rdbus::config::tools

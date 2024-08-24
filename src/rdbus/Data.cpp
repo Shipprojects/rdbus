@@ -1,5 +1,5 @@
 #include "Data.hpp"
-#include "config/exception.hpp"
+#include "config/Exception.hpp"
 #include <chrono>
 #include <nlohmann/json.hpp>
 

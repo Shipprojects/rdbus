@@ -1,4 +1,4 @@
-#include "rdbus/config/exception.hpp"
+#include "rdbus/config/Exception.hpp"
 #include "rdbus/config/nmea/Sentence.hpp"
 #include "tests/utility.hpp"
 #include <gtest/gtest.h>
@@ -69,4 +69,3 @@ TEST( TestOutput, TestDeserializationDuplicateFieldNames )
     },
                   config::ParseException );
 }
-

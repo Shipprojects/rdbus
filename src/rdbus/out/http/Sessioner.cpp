@@ -7,7 +7,7 @@ namespace rdbus::out::http
 {
 
 Sessioner::Exception::Exception( const std::string& what )
-: std::runtime_error( "Cookie exception - " + what )
+: rdbus::Exception( "Cookie exception - " + what )
 {
 }
 

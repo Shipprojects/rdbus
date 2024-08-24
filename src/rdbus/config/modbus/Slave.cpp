@@ -1,5 +1,5 @@
 #include "Slave.hpp"
-#include "rdbus/config/exception.hpp"
+#include "rdbus/config/Exception.hpp"
 #include "rdbus/config/utility.hpp"
 
 using namespace nlohmann;
@@ -36,4 +36,4 @@ void from_json( const nlohmann::json& j, Slave& x )
     x.outputRegisters = outputRegisters;
 }
 
-} // namespace rdbus::config
+} // namespace rdbus::config::modbus

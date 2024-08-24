@@ -1,5 +1,5 @@
 #include "Output.hpp"
-#include "exception.hpp"
+#include "Exception.hpp"
 #include "utility.hpp"
 
 using namespace nlohmann;

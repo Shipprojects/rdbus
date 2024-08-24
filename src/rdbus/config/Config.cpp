@@ -1,5 +1,5 @@
 #include "Config.hpp"
-#include "exception.hpp"
+#include "Exception.hpp"
 #include "modbus/Modbus.hpp"
 #include "modbus/Register.hpp"
 #include "utility.hpp"
