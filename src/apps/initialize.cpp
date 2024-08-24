@@ -16,10 +16,8 @@ Args parseArguments( int argc, char** argv )
     Args args;
     argparse::ArgumentParser parser( "rdbus", VERSION );
 
-    parser.add_description( "Modbus serial reader and parser. Requires .json config file. You can either pass "
-                            "the path to the config file or rdbus will search for '.rdbus.json' in current folder. "
-                            "The arguments that you pass on command line take precedence over the arguments "
-                            "in config file." );
+    parser.add_description( "Modbus serial reader and parser. Requires .rdbus.json config file(-s). You can either pass "
+                            "the path to the directory of config file(-s) or rdbus will search for them in current folder. " );
 
     parser.add_epilog( "Note: rdbus runs with valid configuration only!" );
 

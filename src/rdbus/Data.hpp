@@ -24,7 +24,7 @@ enum class Type
     Int64
 };
 
-// For storing data from single device
+// All data from single device
 struct Data
 {
     std::string deviceName;

@@ -23,10 +23,10 @@ void from_json( const nlohmann::json& j, Serial& x )
     tools::parseKeyValue( j, "parity", parityStr, "No parity field present in 'serial' section!" );
 
     int responseTimeout = 0;
-    tools::parseKeyValue( j, "response_timeout_ms", responseTimeout, "No response_timeout_ms field present in 'serial' section!" );
+    tools::parseKeyValue( j, "response_timeout_ms", responseTimeout, "No response timeout ms field present in 'serial' section!" );
 
     int lineTimeout = 0;
-    tools::parseKeyValue( j, "line_timeout_ms", lineTimeout, "No line_timeout_ms field present in 'serial' section!" );
+    tools::parseKeyValue( j, "line_timeout_ms", lineTimeout, "No line timeout ms field present in 'serial' section!" );
 
     tools::throwIf( !path.starts_with( '/' ), "Absolute path required for serial device!" );
     tools::throwIf( stopBitsCount > 2, "There cannot be more than 2 stop bits!" );

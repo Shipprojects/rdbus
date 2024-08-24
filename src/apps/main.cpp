@@ -52,10 +52,10 @@ void start( std::list< std::thread >& threads, std::list< rdbus::Manager >& mana
             SPDLOG_INFO( "Starting manager of " + manager.getName() );
             while ( keepRunning )
             {
-                // This try-catch clause is meant to catch exceptions on actual runtime.
-                // In general most of the exceptions must be handled by manager, however
-                // if some kind of exception comes from it then it means that some critical
-                // error occurred and the program shall exit.
+                // This try-catch clause is meant to catch exceptions on actual runtime
+                // (i.e. after setup). In general most of the exceptions must be handled by
+                // manager, however if some kind of exception comes from it then it means
+                // that some critical error occurred and the program shall exit.
                 try
                 {
                     manager.run();
@@ -86,7 +86,7 @@ int main( int argc, char** argv )
     std::list< rdbus::Manager > managers;
 
     // This try-catch clause is meant to catch exceptions on configuration
-    // time. In case of invalid configuration the program shall exit.
+    // time. In case of invalid configuration the program will exit.
     try
     {
         const auto& args = parseArguments( argc, argv );

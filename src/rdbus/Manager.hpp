@@ -9,6 +9,7 @@
 namespace rdbus
 {
 
+// The task manager. Meant for tasks that operate on the same port.
 class Manager
 {
 public:
@@ -16,7 +17,9 @@ public:
     using Tasks = std::list< std::unique_ptr< tasks::Task > >;
     Manager( const std::string& name, Tasks tasks, Output output );
 
+    // Execute all tasks once
     void run();
+
     const std::string& getName() const;
 
 private:
