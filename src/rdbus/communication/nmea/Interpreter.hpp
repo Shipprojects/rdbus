@@ -2,7 +2,6 @@
 
 #include "Response.hpp"
 #include "rdbus/Data.hpp"
-#include "rdbus/Exception.hpp"
 #include "rdbus/communication/Interpreter.hpp"
 #include "rdbus/config/nmea/NMEA.hpp"
 #include <stdint.h>

@@ -58,14 +58,16 @@ BigEndianRegisters toUserInterpretation( const RawMergedList& input, const Regis
 {
     BigEndianRegisters output;
 
-    for ( const auto& reg : registers )
+    auto regIt = registers.begin();
+    auto inputIt = input.begin();
+    for ( ; regIt != registers.end() && inputIt != input.end(); regIt++, inputIt++ )
     {
         const int i = output.size();
         std::vector< uint8_t > word;
 
-        for ( const auto position : reg.byteOrder )
+        for ( const auto position : regIt->byteOrder )
         {
-            word.push_back( input[ i ][ position ] );
+            word.push_back( ( *inputIt )[ position ] );
         }
 
         output.emplace_back( std::move( word ) );
@@ -89,49 +91,54 @@ SmallEndianRegisters toMachineInterpretation( const SmallEndianRegisters& input 
 
 Fields toParsedFields( const SmallEndianRegisters& input, const Registers& registers, const Timestamp& timestamp )
 {
-    assert( input.size() == registers.size() );
+    if ( input.size() != registers.size() )
+    {
+        throw Exception( "Config register and input register count mismatch!" );
+    }
 
     using namespace rdbus;
 
     Fields output;
 
-    for ( const auto& reg : registers )
+    auto regIt = registers.begin();
+    auto inputIt = input.begin();
+    for ( ; regIt != registers.end() && inputIt != input.end(); regIt++, inputIt++ )
     {
         const int i = output.size();
         rdbus::Data::Field field = {
-            .name = reg.name,
-            .type = reg.type,
+            .name = regIt->name,
+            .type = regIt->type,
             .timestamp = timestamp
         };
 
-        switch ( reg.type )
+        switch ( regIt->type )
         {
             case Type::Int16:
-                field.value = *reinterpret_cast< const int16_t* >( input[ i ].data() );
+                field.value = *reinterpret_cast< const int16_t* >( inputIt->data() );
                 break;
             case Type::Uint16:
-                field.value = *reinterpret_cast< const uint16_t* >( input[ i ].data() );
+                field.value = *reinterpret_cast< const uint16_t* >( inputIt->data() );
                 break;
             case Type::Int32:
-                field.value = *reinterpret_cast< const int32_t* >( input[ i ].data() );
+                field.value = *reinterpret_cast< const int32_t* >( inputIt->data() );
                 break;
             case Type::Uint32:
-                field.value = *reinterpret_cast< const uint32_t* >( input[ i ].data() );
+                field.value = *reinterpret_cast< const uint32_t* >( inputIt->data() );
                 break;
             case Type::Int64:
-                field.value = *reinterpret_cast< const int64_t* >( input[ i ].data() );
+                field.value = *reinterpret_cast< const int64_t* >( inputIt->data() );
                 break;
             case Type::Uint64:
-                field.value = *reinterpret_cast< const uint64_t* >( input[ i ].data() );
+                field.value = *reinterpret_cast< const uint64_t* >( inputIt->data() );
                 break;
             case Type::Float:
-                field.value = *reinterpret_cast< const float* >( input[ i ].data() );
+                field.value = *reinterpret_cast< const float* >( inputIt->data() );
                 break;
             case Type::Double:
-                field.value = *reinterpret_cast< const double* >( input[ i ].data() );
+                field.value = *reinterpret_cast< const double* >( inputIt->data() );
                 break;
             default:
-                throw Exception( "Unsupported type " + std::to_string( static_cast< int >( reg.type ) ) + "!" );
+                throw Exception( "Unsupported type " + std::to_string( static_cast< int >( regIt->type ) ) + "!" );
                 break;
         }
 
