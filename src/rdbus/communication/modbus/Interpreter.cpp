@@ -1,5 +1,6 @@
 #include "Interpreter.hpp"
 #include "rdbus/Data.hpp"
+#include "rdbus/communication/Interpreter.hpp"
 #include <cstdint>
 
 namespace rdbus::communication::modbus::interpreter
@@ -8,8 +9,8 @@ namespace rdbus::communication::modbus::interpreter
 namespace tools
 {
 
-InterpretationException::InterpretationException( const std::string& what )
-: rdbus::Exception( "Modbus interpretation exception - " + what )
+Exception::Exception( const std::string& what )
+: rdbus::communication::interpreter::Exception( "Modbus - " + what )
 {
 }
 
@@ -130,7 +131,7 @@ Fields toParsedFields( const SmallEndianRegisters& input, const Registers& regis
                 field.value = *reinterpret_cast< const double* >( input[ i ].data() );
                 break;
             default:
-                throw InterpretationException( "Unsupported type " + std::to_string( static_cast< int >( reg.type ) ) + "!" );
+                throw Exception( "Unsupported type " + std::to_string( static_cast< int >( reg.type ) ) + "!" );
                 break;
         }
 

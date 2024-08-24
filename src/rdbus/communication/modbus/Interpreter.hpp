@@ -1,7 +1,7 @@
 #pragma once
 
 #include "rdbus/Data.hpp"
-#include "rdbus/Exception.hpp"
+#include "rdbus/communication/Interpreter.hpp"
 #include "rdbus/config/modbus/Register.hpp"
 #include <MB/modbusResponse.hpp>
 #include <cstdint>
@@ -12,9 +12,9 @@ namespace rdbus::communication::modbus::interpreter
 namespace tools
 {
 
-struct InterpretationException : rdbus::Exception
+struct Exception : rdbus::communication::interpreter::Exception
 {
-    InterpretationException( const std::string& what );
+    Exception( const std::string& what );
 };
 
 // Modbus data interpretation algorithm

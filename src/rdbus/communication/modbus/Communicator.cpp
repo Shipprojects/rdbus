@@ -3,6 +3,7 @@
 #include "MB/modbusException.hpp"
 #include "RequestPlanner.hpp"
 #include "rdbus/Data.hpp"
+#include "rdbus/communication/Interpreter.hpp"
 
 namespace rdbus::communication::modbus
 {
@@ -36,6 +37,13 @@ rdbus::Data Communicator::request( const config::modbus::Slave& slave )
         }
     }
     catch ( const MB::ModbusException& e )
+    {
+        SPDLOG_ERROR( e.what() );
+        data.fields.clear();
+        data.error = rdbus::Data::Error{ .code = rdbus::Data::Error::Modbus,
+                                         .what = e.what() };
+    }
+    catch ( const communication::interpreter::Exception& e )
     {
         SPDLOG_ERROR( e.what() );
         data.fields.clear();

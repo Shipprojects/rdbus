@@ -33,6 +33,13 @@ std::optional< rdbus::Data > Communicator::receive( const NMEA& settings )
         data->error = rdbus::Data::Error{ .code = rdbus::Data::Error::NMEA,
                                           .what = e.what() };
     }
+    catch ( const communication::interpreter::Exception& e )
+    {
+        SPDLOG_ERROR( e.what() );
+        data = rdbus::Data();
+        data->error = rdbus::Data::Error{ .code = rdbus::Data::Error::NMEA,
+                                          .what = e.what() };
+    }
     catch ( const OS::Timeout& e )
     {
         // It is OK if timeout occurs. Means that talker did not talk. We cannot

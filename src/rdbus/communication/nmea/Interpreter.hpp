@@ -3,6 +3,7 @@
 #include "Response.hpp"
 #include "rdbus/Data.hpp"
 #include "rdbus/Exception.hpp"
+#include "rdbus/communication/Interpreter.hpp"
 #include "rdbus/config/nmea/NMEA.hpp"
 #include <stdint.h>
 
@@ -12,9 +13,9 @@ namespace rdbus::communication::nmea::interpreter
 namespace tools
 {
 
-struct InterpretationException : rdbus::Exception
+struct Exception : rdbus::communication::interpreter::Exception
 {
-    InterpretationException( const std::string& what );
+    Exception( const std::string& what );
 };
 
 using Sentences = rdbus::config::nmea::NMEA::Sentences;
