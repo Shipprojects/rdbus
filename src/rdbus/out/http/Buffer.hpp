@@ -7,6 +7,8 @@
 namespace rdbus::out::http
 {
 
+// A self-cleaning buffer that you can get all data from starting at your
+// given time point
 class Buffer
 {
 public:

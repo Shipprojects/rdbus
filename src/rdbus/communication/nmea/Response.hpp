@@ -8,7 +8,7 @@
 namespace rdbus::communication::nmea
 {
 
-// A basic representation of uninterpreted NMEA response
+// A basic representation of uninterpreted (but split into parts) NMEA response
 class Response
 {
 public:

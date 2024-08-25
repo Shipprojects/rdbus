@@ -14,7 +14,7 @@
 namespace rdbus::communication
 {
 
-// Interface with serial port
+// Interface of serial port
 class Connection
 {
 public:

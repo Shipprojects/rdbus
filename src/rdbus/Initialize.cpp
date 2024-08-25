@@ -18,7 +18,7 @@ std::list< config::Config > initializeConfigs( const std::string& configDir )
 {
     std::list< nlohmann::json > jsonList;
 
-    // Get all configs from files that end with .rdbus.json
+    // Parse all configuration files that end with .rdbus.json
     const std::string extension( ".rdbus.json" );
     for ( const auto& it : std::filesystem::directory_iterator( configDir ) )
     {

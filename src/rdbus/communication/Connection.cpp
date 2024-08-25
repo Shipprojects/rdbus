@@ -125,8 +125,6 @@ void Connection::setupIO( const config::Serial& settings )
         termios_.c_iflag &= ~IGNPAR;
         // Enable input parity checking
         termios_.c_iflag |= INPCK;
-        // Do not prefix parity error bytes
-        termios_.c_iflag &= ~PARMRK;
     }
 
     if ( settings.stopBitsCount == 2 )
@@ -138,6 +136,11 @@ void Connection::setupIO( const config::Serial& settings )
     // Force read() to return any amount of data after 1 second
     termios_.c_cc[ VTIME ] = 10;
     termios_.c_cc[ VMIN ] = 0;
+
+    // Disable RTS/CTS hardware flow control
+    termios_.c_cflag &= ~CRTSCTS;
+    // Turn on READ & ignore ctrl lines
+    termios_.c_cflag |= CREAD | CLOCAL;
 }
 
 void Connection::setBaudRate( speed_t speed )

@@ -29,14 +29,14 @@ std::optional< rdbus::Data > Communicator::receive( const NMEA& settings )
     catch ( const Response::Exception& e )
     {
         SPDLOG_ERROR( e.what() );
-        data = rdbus::Data();
+        data = rdbus::Data{ .deviceName = settings.talkerId };
         data->error = rdbus::Data::Error{ .code = rdbus::Data::Error::NMEA,
                                           .what = e.what() };
     }
     catch ( const communication::interpreter::Exception& e )
     {
         SPDLOG_ERROR( e.what() );
-        data = rdbus::Data();
+        data = rdbus::Data{ .deviceName = settings.talkerId };
         data->error = rdbus::Data::Error{ .code = rdbus::Data::Error::NMEA,
                                           .what = e.what() };
     }
@@ -49,7 +49,7 @@ std::optional< rdbus::Data > Communicator::receive( const NMEA& settings )
     catch ( const OS::Exception& e )
     {
         SPDLOG_ERROR( e.what() );
-        data = rdbus::Data();
+        data = rdbus::Data{ .deviceName = settings.talkerId };
         data->error = rdbus::Data::Error{ .code = rdbus::Data::Error::OS,
                                           .what = e.what() };
     }

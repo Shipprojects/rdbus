@@ -133,10 +133,10 @@ static std::pair< Type, std::list< int > > getStandardType( const std::string& t
 void from_json( const nlohmann::json& j, Register& x )
 {
     std::string name;
-    tools::parseKeyValue( j, "name", name, "No name field present in 'register' section!" );
+    tools::parseKeyValue( j, "name", name, "No 'name' field present in 'register' section!" );
 
     int address = 0;
-    tools::parseKeyValue( j, "address", address, "No address field present in 'register' section!" );
+    tools::parseKeyValue( j, "address", address, "No 'address' field present in 'register' section!" );
 
     std::string order;
     tools::parseKeyValue( j, "data_order", order );
