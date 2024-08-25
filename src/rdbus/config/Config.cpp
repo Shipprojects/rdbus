@@ -106,7 +106,7 @@ static void checkRegisterAddressSpacing( Slaves slaves )
 static void parseModbus( const nlohmann::json& j, Config& x )
 {
     Slaves slaves;
-    tools::parseKeyValue( j, "slaves", slaves, "No slaves present!" );
+    tools::parseKeyValue( j, "slaves", slaves, "No 'slaves' present!" );
 
     tools::throwIf( slaves.empty(), "No slaves present!" );
 
@@ -139,7 +139,7 @@ static void parseNMEA( const nlohmann::json& j, Config& x )
 void from_json( const nlohmann::json& j, Config& x )
 {
     std::string protocol;
-    tools::parseKeyValue( j, "protocol", protocol, "No protocol name present!" );
+    tools::parseKeyValue( j, "protocol", protocol, "No 'protocol' name present!" );
 
     Serial serial;
     tools::parseKeyValue( j, "serial", serial, "No 'serial' section present!" );
