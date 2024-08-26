@@ -17,7 +17,7 @@ public:
 
     using NMEA = config::nmea::NMEA;
     // In NMEA we are always reading, listening for talker
-    std::optional< rdbus::Data > receive( const NMEA& settings );
+    std::list< rdbus::Data > receive( const NMEA& settings );
 
 private:
     Connection connection;

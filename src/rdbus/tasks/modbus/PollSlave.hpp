@@ -19,7 +19,7 @@ private:
 
 public:
     PollSlave( const config::modbus::Slave& slave, const Communicator& communicator );
-    std::optional< Data > run() override;
+    std::list< Data > run() override;
 };
 
 } // namespace rdbus::tasks

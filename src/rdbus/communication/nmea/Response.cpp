@@ -13,15 +13,25 @@ Response::Exception::Exception( const std::string& what )
 // Extracts device id from data before the first comma
 static std::string extractTalkerID( const std::string& token )
 {
-    // The device id comes after '$' and before last 3 characters which is sentence id
-    return token.substr( 1, token.size() - 1 - 3 );
+    // The talker ID comes after '$' and is 2 symbols long, or in case proprietary sentences
+    // it takes 3 characters and prepended 'P'.
+
+    // If proprietery sentence
+    if ( token[ 1 ] == 'P' )
+    {
+        return token.substr( 1, 4 );
+    }
+    else
+    {
+        return token.substr( 1, 2 );
+    }
 }
 
 // Extracts sentence id from data before the first comma
-static std::string extractSentenceID( const std::string& token )
+static std::string extractSentenceID( const std::string& token, const std::string& talkerID )
 {
-    // The sentence id is last 3 characters
-    return token.substr( token.size() - 3 );
+    // The sentence id can have various sizes, but it comes after talker id (note the '$' at the beginning).
+    return token.substr( talkerID.size() + 1 );
 }
 
 static uint8_t computeChecksum( std::string data )
@@ -119,7 +129,7 @@ Response::Response( const std::vector< uint8_t >& data, bool validateChecksum )
     cleanBack( tokens.back() );
 
     talkerID = extractTalkerID( tokens[ 0 ] );
-    sentenceId = extractSentenceID( tokens[ 0 ] );
+    sentenceId = extractSentenceID( tokens[ 0 ], talkerID );
     // Do not include the talker/sentence ID part in fields
     fields = Fields( std::next( tokens.begin() ), tokens.end() );
 }

@@ -10,20 +10,20 @@ PollSlave::PollSlave( const config::modbus::Slave& slave, const Communicator& co
 {
 }
 
-std::optional< Data > PollSlave::run()
+std::list< Data > PollSlave::run()
 {
     const auto now = std::chrono::steady_clock::now();
     const auto diff = now - lastRun;
     const auto timeSinceLastExecution = std::chrono::duration_cast< std::chrono::milliseconds >( diff );
-    std::optional< rdbus::Data > data;
+    std::list< rdbus::Data > data;
 
     if ( timeSinceLastExecution >= slave.pollTimeMs )
     {
         lastRun = now;
-        data = com->request( slave );
+        data.emplace_back( com->request( slave ) );
     }
 
     return data;
 }
 
-} // namespace rdbus::tasks
+} // namespace rdbus::tasks::modbus

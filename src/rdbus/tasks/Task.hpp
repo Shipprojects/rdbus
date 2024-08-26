@@ -1,7 +1,7 @@
 #pragma once
 
 #include "rdbus/Data.hpp"
-#include <optional>
+#include <list>
 
 namespace rdbus::tasks
 {
@@ -9,7 +9,7 @@ namespace rdbus::tasks
 class Task
 {
 public:
-    virtual std::optional< Data > run() = 0;
+    virtual std::list< Data > run() = 0;
     virtual ~Task() = default;
 };
 

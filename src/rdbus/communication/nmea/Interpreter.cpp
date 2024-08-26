@@ -23,7 +23,7 @@ const Sentence& findSentence( const tools::Sentences& sentences, const std::stri
 
     if ( it == sentences.end() )
     {
-        throw Exception( "Unknown sentence type -" + sentenceId );
+        throw Exception( "Unknown sentence type - " + sentenceId );
     }
 
     return *it;
@@ -43,7 +43,7 @@ std::list< rdbus::Data::Field > parse( const Response& response,
 
     if ( sentence.fields.size() != response.getFields().size() )
     {
-        throw Exception( "Incoming sentence and sentence size in config mismatch!" );
+        throw Exception( "Incoming sentence (" + response.getSentenceID() + ") and sentence size in config mismatch!" );
     }
 
     Fields output;
@@ -105,6 +105,28 @@ std::list< rdbus::Data::Field > parse( const Response& response,
     }
 
     return output;
+}
+
+std::list< std::vector< uint8_t > > split( const std::vector< uint8_t >& data )
+{
+    std::list< std::vector< uint8_t > > result;
+
+    for ( const uint8_t c : data )
+    {
+        // if delimiter
+        if ( c == '$' )
+        {
+            result.emplace_back( std::vector< uint8_t >{} );
+        }
+
+        // If there is a container to store data
+        if ( !result.empty() )
+        {
+            result.back().emplace_back( c );
+        }
+    }
+
+    return result;
 }
 
 } // namespace rdbus::communication::nmea::interpreter

@@ -161,7 +161,7 @@ Example configuration for NMEA:
     },
 
     "checksum": false,
-    "talker_id": "VD",
+    "name": "NMEA device",
     "sentences": [
         {
             "id": "VHW",
@@ -232,19 +232,19 @@ Example configuration for NMEA:
     ]
 }
 ```
-The NMEA specific part is `"checksum"`, `"talker_id"` and `"sentences"`. Also note that `"protocol": "nmea"`. In case of NMEA, you will only have one device connected to a serial port.
+The NMEA specific part is `"checksum"`, `"name"` and `"sentences"`. Also note that `"protocol": "nmea"`. In case of NMEA, you will only have one device connected to a serial port.
 
 | Field name    | Description                                                                                 |
 |---------------|---------------------------------------------------------------------------------------------|
 | `"checksum"`  | Either to check the checksum part of the incoming sentence or not.                          |
-| `"talker_id"` | The identificator of the device. It is the part that goes after `$` but before sentence id. Used for section identification in `rdbus` output.|
+| `"name"`      | Arbitrary name of the device. Used for section identification in `rdbus` output.            |
 | `"sentences"` | A list of all sentences that the talker is going to send.                                   |
 
 Now you will have to describe the structure of all messages (sentences) that you are going to receive.
 
 | Field name    | Description                                               |
 |---------------|-----------------------------------------------------------|
-| `"id"`        | 3 character long sentence identificator.                  |
+| `"id"`        | Sentence identificator string.                            |
 | `"fields"`    | All consecutive sentence fields.                          |
 
 And each field in sentence.
@@ -291,7 +291,7 @@ Each config file is meant to operate with one serial port. In each config file t
 | `"path"`                | Path to the device file of serial port i.e.`"/dev/*"`.          |
 | `"stop_bits_count"`     | Either `1` or `2`.                                              |
 | `"response_timeout_ms"` | Max time to wait for data to arrive.                            |
-| `"line_timeout_ms"`     | Max time to wait for each data segment (8 bytes).               |
+| `"line_timeout_ms"`     | Max time to wait for each data segment (8 bytes) to arrive. You can calculate the minimum time (in milliseconds) by using formula `y=8000/(baud_rate/8)`. It is best to round the result up, e.g. 6.6ms to 10ms, 13ms to 20ms, etc.|
 
 ## Output
 
@@ -345,16 +345,17 @@ Each config file is meant to operate with one serial port. In each config file t
 ```
 where a single entry can consist of either
 
-| Field name | Description                                                        |
-|------------|--------------------------------------------------------------------|
-| `"device"` | Slave `"name"` in case of Modbus or `"talker_id"` in case of NMEA. |
-| `"fields"` | A list of data fields.                                             |
+| Field name | Description                                                             |
+|------------|-------------------------------------------------------------------------|
+| `"device"` | Slave `"name"` in case of Modbus or top level `"name"` in case of NMEA. |
+| `"fields"` | A list of data fields.                                                  |
+| `"metadata"` | An optional helper field. Currently not present in Modbus, but in case of NMEA contains sentence id so you could have sentences with same field names but different meanings. |
 
 or
 
 | Field name | Description                                                        |
 |------------|--------------------------------------------------------------------|
-| `"device"` | Slave `"name"` in case of Modbus or `"talker_id"` in case of NMEA. |
+| `"device"` | Slave `"name"` in case of Modbus or top level `"name"` in case of NMEA. |
 | `"error"`  | Error description object.                                          |
 
 Structure of a single entry in `"fields"`:
@@ -549,7 +550,7 @@ $ kill -s SIGINT <rdbus_process_id>
 
 # Docker environment
 
-There is a Docker image available with everything you need to develop and build `rdbus`. Follow [this guide](https://docs.docker.com/engine/install/ubuntu/) to install Docker and [this guide](https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user) to finalize your Docker setup. For development you will also need Visual Studio Code with `ms-vscode-remote.remote-containers` extension installed.
+There is a Docker image available with everything you need to develop and build `rdbus`. Follow [this guide](https://docs.docker.com/engine/install/ubuntu/) to install Docker and [this guide](https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user) to finalize your Docker setup. For development you will also need Visual Studio Code with `ms-vscode-remote.remote-containers` extension installed and `~/.ssh` directory present on your machine that will be mounted in Docker container.
 
 To open the development environment you have to open the `rdbus` project root directory in `vscode` and run `>Dev Containers: Reopen in Container`. Wait for the image to build for the first time and then wait until all extensions get automatically installed. Now you are ready to go.
 

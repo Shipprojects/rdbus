@@ -64,6 +64,8 @@ struct Data
         std::string what;
     };
     std::optional< Error > error;
+
+    std::optional< std::string > metadata;
 };
 
 void to_json( nlohmann::json& j, const Data& x );

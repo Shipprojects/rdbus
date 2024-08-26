@@ -16,7 +16,7 @@ private:
 
 public:
     Listen( const config::nmea::NMEA& nmea, const Communicator& communicator );
-    std::optional< Data > run() override;
+    std::list< Data > run() override;
 };
 
 } // namespace rdbus::tasks::nmea

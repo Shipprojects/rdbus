@@ -120,8 +120,8 @@ static void parseModbus( const nlohmann::json& j, Config& x )
 
 static void parseNMEA( const nlohmann::json& j, Config& x )
 {
-    std::string talkerId;
-    tools::parseKeyValue( j, "talker_id", talkerId, "No 'talker_id' field present!" );
+    std::string name;
+    tools::parseKeyValue( j, "name", name, "No 'name' field present!" );
 
     bool withChecksum = false;
     tools::parseKeyValue( j, "checksum", withChecksum, "No 'checksum' field present!" );
@@ -132,7 +132,7 @@ static void parseNMEA( const nlohmann::json& j, Config& x )
     checkDuplicateSentenceIDs( sentences );
 
     x.nmea.sentences = sentences;
-    x.nmea.talkerId = talkerId;
+    x.nmea.name = name;
     x.nmea.withChecksum = withChecksum;
 }
 

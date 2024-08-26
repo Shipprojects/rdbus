@@ -12,7 +12,7 @@ using namespace rdbus::communication::nmea;
 using namespace rdbus::config::nmea;
 using namespace communication::nmea::interpreter;
 
-std::list< Sentence > getSentences()
+static std::list< Sentence > getSentences()
 {
     std::list< Sentence > sentences;
     {
