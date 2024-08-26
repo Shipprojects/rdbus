@@ -24,7 +24,8 @@ std::optional< rdbus::Data > Communicator::receive( const NMEA& settings )
         // Parse response to data fields
         auto fields = interpreter::parse( response, settings.sentences, timestamp );
         data = rdbus::Data{ .deviceName = settings.name,
-                            .fields = std::move( fields ) };
+                            .fields = std::move( fields ),
+                            .metadata = response.getSentenceID() };
     }
     catch ( const Response::Exception& e )
     {

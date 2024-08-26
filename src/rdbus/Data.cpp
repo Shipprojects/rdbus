@@ -82,6 +82,11 @@ void to_json( nlohmann::json& j, const Data& x )
     {
         j[ "fields" ] = x.fields;
     }
+
+    if ( x.metadata.has_value() )
+    {
+        j[ "metadata" ] = x.metadata.value();
+    }
 }
 
 } // namespace rdbus
