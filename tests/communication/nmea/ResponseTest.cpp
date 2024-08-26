@@ -10,8 +10,8 @@ TEST( TestResponse, TestWithoutChecksum )
 
     const Response response( data );
 
-    EXPECT_EQ( response.getTalkerID(), "VDSD" );
-    EXPECT_EQ( response.getSentenceID(), "DBK" );
+    EXPECT_EQ( response.getTalkerID(), "VD" );
+    EXPECT_EQ( response.getSentenceID(), "SDDBK" );
     ASSERT_EQ( response.getFields().size(), 6 );
     EXPECT_EQ( response.getFields()[ 0 ], "1330.5" );
     EXPECT_EQ( response.getFields()[ 1 ], "f" );
@@ -28,8 +28,8 @@ TEST( TestResponse, TestWithChecksum )
 
     const Response response( data, true );
 
-    EXPECT_EQ( response.getTalkerID(), "VDSD" );
-    EXPECT_EQ( response.getSentenceID(), "DBK" );
+    EXPECT_EQ( response.getTalkerID(), "VD" );
+    EXPECT_EQ( response.getSentenceID(), "SDDBK" );
     ASSERT_EQ( response.getFields().size(), 5 );
     EXPECT_EQ( response.getFields()[ 0 ], "1330.5" );
     EXPECT_EQ( response.getFields()[ 1 ], "f" );
@@ -99,8 +99,8 @@ TEST( TestResponse, TestSingleField )
 
     const Response response( data );
 
-    EXPECT_EQ( response.getTalkerID(), "VDT" );
-    EXPECT_EQ( response.getSentenceID(), "EST" );
+    EXPECT_EQ( response.getTalkerID(), "VD" );
+    EXPECT_EQ( response.getSentenceID(), "TEST" );
     ASSERT_EQ( response.getFields().size(), 1 );
     EXPECT_EQ( response.getFields()[ 0 ], "text" );
 }
@@ -112,8 +112,21 @@ TEST( TestResponse, TestEmptyFields )
 
     const Response response( data );
 
-    EXPECT_EQ( response.getTalkerID(), "VDSD" );
-    EXPECT_EQ( response.getSentenceID(), "MTW" );
+    EXPECT_EQ( response.getTalkerID(), "VD" );
+    EXPECT_EQ( response.getSentenceID(), "SDMTW" );
+    ASSERT_EQ( response.getFields().size(), 1 );
+    EXPECT_EQ( response.getFields()[ 0 ], "" );
+}
+
+TEST( TestResponse, TestProprietery )
+{
+    const std::string representation = "$PASMTEST,*45\r\n";
+    const std::vector< uint8_t > data( representation.begin(), representation.end() );
+
+    const Response response( data );
+
+    EXPECT_EQ( response.getTalkerID(), "PASM" );
+    EXPECT_EQ( response.getSentenceID(), "TEST" );
     ASSERT_EQ( response.getFields().size(), 1 );
     EXPECT_EQ( response.getFields()[ 0 ], "" );
 }
