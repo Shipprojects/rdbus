@@ -1,5 +1,8 @@
 # rdbus
 
+- Replaced config `"talker_id"` field of `"protocol": "nmea"` with `"name"`. The field is now used as arbitrary name of NMEA device.
+- Sentence IDs can now be of any length. Previously the only acceptable incoming sentence IDs were at fixed length of 3.
+
 # 0.1.0
 
 - Defined `rdbus` API

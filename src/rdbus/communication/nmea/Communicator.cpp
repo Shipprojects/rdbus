@@ -23,20 +23,20 @@ std::optional< rdbus::Data > Communicator::receive( const NMEA& settings )
 
         // Parse response to data fields
         auto fields = interpreter::parse( response, settings.sentences, timestamp );
-        data = rdbus::Data{ .deviceName = settings.talkerId,
+        data = rdbus::Data{ .deviceName = settings.name,
                             .fields = std::move( fields ) };
     }
     catch ( const Response::Exception& e )
     {
         SPDLOG_ERROR( e.what() );
-        data = rdbus::Data{ .deviceName = settings.talkerId };
+        data = rdbus::Data{ .deviceName = settings.name };
         data->error = rdbus::Data::Error{ .code = rdbus::Data::Error::NMEA,
                                           .what = e.what() };
     }
     catch ( const communication::interpreter::Exception& e )
     {
         SPDLOG_ERROR( e.what() );
-        data = rdbus::Data{ .deviceName = settings.talkerId };
+        data = rdbus::Data{ .deviceName = settings.name };
         data->error = rdbus::Data::Error{ .code = rdbus::Data::Error::NMEA,
                                           .what = e.what() };
     }
@@ -49,7 +49,7 @@ std::optional< rdbus::Data > Communicator::receive( const NMEA& settings )
     catch ( const OS::Exception& e )
     {
         SPDLOG_ERROR( e.what() );
-        data = rdbus::Data{ .deviceName = settings.talkerId };
+        data = rdbus::Data{ .deviceName = settings.name };
         data->error = rdbus::Data::Error{ .code = rdbus::Data::Error::OS,
                                           .what = e.what() };
     }

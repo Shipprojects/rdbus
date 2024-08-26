@@ -12,7 +12,7 @@ struct NMEA
     using Sentences = std::list< Sentence >;
     Sentences sentences;
 
-    std::string talkerId;
+    std::string name;
     bool withChecksum = false;
 };
 

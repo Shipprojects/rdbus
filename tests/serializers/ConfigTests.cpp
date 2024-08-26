@@ -129,7 +129,7 @@ TEST( TestConfig, TestDeserializationValidNMEA )
     EXPECT_EQ( config.serial.baudRate, 4800 );
     EXPECT_EQ( config.nmea.sentences.size(), 2 );
     EXPECT_TRUE( config.nmea.withChecksum );
-    EXPECT_EQ( config.nmea.talkerId, "SS" );
+    EXPECT_EQ( config.nmea.name, "RPM reader" );
 }
 
 TEST( TestConfig, TestDeserializationNoChecksum )
@@ -158,7 +158,7 @@ TEST( TestConfig, TestDeserializationDuplicateSentenceIDs )
 
 TEST( TestConfig, TestDeserializationNoTalkerID )
 {
-    const auto path = testFilePath + "no_talker_id.json";
+    const auto path = testFilePath + "no_nmea_name.json";
 
     const auto jsonIn = getJsonFromPath( path );
 

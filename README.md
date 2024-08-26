@@ -161,7 +161,7 @@ Example configuration for NMEA:
     },
 
     "checksum": false,
-    "talker_id": "VD",
+    "name": "NMEA device",
     "sentences": [
         {
             "id": "VHW",
@@ -232,19 +232,19 @@ Example configuration for NMEA:
     ]
 }
 ```
-The NMEA specific part is `"checksum"`, `"talker_id"` and `"sentences"`. Also note that `"protocol": "nmea"`. In case of NMEA, you will only have one device connected to a serial port.
+The NMEA specific part is `"checksum"`, `"name"` and `"sentences"`. Also note that `"protocol": "nmea"`. In case of NMEA, you will only have one device connected to a serial port.
 
 | Field name    | Description                                                                                 |
 |---------------|---------------------------------------------------------------------------------------------|
 | `"checksum"`  | Either to check the checksum part of the incoming sentence or not.                          |
-| `"talker_id"` | The identificator of the device. It is the part that goes after `$` but before sentence id. Used for section identification in `rdbus` output.|
+| `"name"`      | Arbitrary name of the device. Used for section identification in `rdbus` output.            |
 | `"sentences"` | A list of all sentences that the talker is going to send.                                   |
 
 Now you will have to describe the structure of all messages (sentences) that you are going to receive.
 
 | Field name    | Description                                               |
 |---------------|-----------------------------------------------------------|
-| `"id"`        | 3 character long sentence identificator.                  |
+| `"id"`        | Sentence identificator string.                            |
 | `"fields"`    | All consecutive sentence fields.                          |
 
 And each field in sentence.
@@ -291,7 +291,7 @@ Each config file is meant to operate with one serial port. In each config file t
 | `"path"`                | Path to the device file of serial port i.e.`"/dev/*"`.          |
 | `"stop_bits_count"`     | Either `1` or `2`.                                              |
 | `"response_timeout_ms"` | Max time to wait for data to arrive.                            |
-| `"line_timeout_ms"`     | Max time to wait for each data segment (8 bytes).               |
+| `"line_timeout_ms"`     | Max time to wait for each data segment (8 bytes) to arrive. You can calculate the minimum time (in milliseconds) by using formula `y=8000/(baud_rate/8)`. It is best to round the result up, e.g. 6.6ms to 10ms, 13ms to 20ms, etc.|
 
 ## Output
 
