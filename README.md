@@ -251,8 +251,8 @@ And each field in sentence.
 
 | Field name    | Description                                                             |
 |---------------|-------------------------------------------------------------------------|
-| `"name"`      | The name the of field. Used for field identification in `rdbus` output. |
-| `"data_type"` | Data type the of field.                                                 |
+| `"name"`      | The name of the field. Used for field identification in `rdbus` output. |
+| `"data_type"` | Data type of the field.                                                 |
 
 Allowed values for `"data_type"` are `"INT"`, `"UINT"`, `"FLOAT"`, `"STRING"`.
 
@@ -291,7 +291,7 @@ Each config file is meant to operate with one serial port. In each config file t
 | `"path"`                | Path to the device file of serial port i.e.`"/dev/*"`.          |
 | `"stop_bits_count"`     | Either `1` or `2`.                                              |
 | `"response_timeout_ms"` | Max time to wait for data to arrive.                            |
-| `"line_timeout_ms"`     | Max time to wait for each data segment (8 bytes) to arrive. You can calculate the minimum time (in milliseconds) by using formula `y=8000/(baud_rate/8)`. It is best to round the result up, e.g. 6.6ms to 10ms, 13ms to 20ms, etc.|
+| `"line_timeout_ms"`     | Max time to wait for each data segment (8 bytes) to arrive. You can calculate the minimum time (in milliseconds) by using formula `y=8000/(baud_rate/8)`. It is strongly recommended to round the result up, e.g. 6.6ms to 10ms, 13ms to 20ms, etc.|
 
 ## Output
 
@@ -349,7 +349,7 @@ where a single entry can consist of either
 |------------|-------------------------------------------------------------------------|
 | `"device"` | Slave `"name"` in case of Modbus or top level `"name"` in case of NMEA. |
 | `"fields"` | A list of data fields.                                                  |
-| `"metadata"` | An optional helper field. Currently not present in Modbus, but in case of NMEA contains sentence id so you could have sentences with same field names but different meanings. |
+| `"metadata"` | An optional helper field. Currently not present in Modbus, but in case of NMEA contains sentence id so you could have sentences with the same field names but different meanings. |
 
 or
 
@@ -554,7 +554,7 @@ There is a Docker image available with everything you need to develop and build 
 
 To open the development environment you have to open the `rdbus` project root directory in `vscode` and run `>Dev Containers: Reopen in Container`. Wait for the image to build for the first time and then wait until all extensions get automatically installed. Now you are ready to go.
 
-This README file does not go into further details on how to develop the program or use the environment. Just know that this setup has all the necessary tools installed and automatically configured.
+This README file does not go into further details on how to develop the program or use the environment. Just know that this setup has all the necessary tools installed and gets automatically configured.
 
 # Building
 
