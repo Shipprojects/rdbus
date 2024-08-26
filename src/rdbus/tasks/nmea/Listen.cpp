@@ -9,7 +9,7 @@ Listen::Listen( const config::nmea::NMEA& nmea, const Communicator& communicator
 {
 }
 
-std::optional< Data > Listen::run()
+std::list< Data > Listen::run()
 {
     return com->receive( nmea );
 }

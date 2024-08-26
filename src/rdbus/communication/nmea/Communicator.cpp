@@ -11,35 +11,15 @@ Communicator::Communicator( const config::Serial& settings, std::unique_ptr< OS 
 {
 }
 
-std::optional< rdbus::Data > Communicator::receive( const NMEA& settings )
+std::list< rdbus::Data > Communicator::receive( const NMEA& settings )
 {
-    std::optional< rdbus::Data > data;
+    std::list< rdbus::Data > data;
+
+    // NMEA may return all data in one single response
+    std::vector< uint8_t > rawed;
     try
     {
-        const auto& rawed = connection.getData();
-        const Response response( rawed, settings.withChecksum );
-
-        const auto& timestamp = std::chrono::system_clock::now();
-
-        // Parse response to data fields
-        auto fields = interpreter::parse( response, settings.sentences, timestamp );
-        data = rdbus::Data{ .deviceName = settings.name,
-                            .fields = std::move( fields ),
-                            .metadata = response.getSentenceID() };
-    }
-    catch ( const Response::Exception& e )
-    {
-        SPDLOG_ERROR( e.what() );
-        data = rdbus::Data{ .deviceName = settings.name };
-        data->error = rdbus::Data::Error{ .code = rdbus::Data::Error::NMEA,
-                                          .what = e.what() };
-    }
-    catch ( const communication::interpreter::Exception& e )
-    {
-        SPDLOG_ERROR( e.what() );
-        data = rdbus::Data{ .deviceName = settings.name };
-        data->error = rdbus::Data::Error{ .code = rdbus::Data::Error::NMEA,
-                                          .what = e.what() };
+        rawed = connection.getData();
     }
     catch ( const OS::Timeout& e )
     {
@@ -50,9 +30,39 @@ std::optional< rdbus::Data > Communicator::receive( const NMEA& settings )
     catch ( const OS::Exception& e )
     {
         SPDLOG_ERROR( e.what() );
-        data = rdbus::Data{ .deviceName = settings.name };
-        data->error = rdbus::Data::Error{ .code = rdbus::Data::Error::OS,
-                                          .what = e.what() };
+        data.emplace_back( rdbus::Data{ .deviceName = settings.name } );
+        data.back().error = rdbus::Data::Error{ .code = rdbus::Data::Error::OS,
+                                                .what = e.what() };
+    }
+
+    const auto& timestamp = std::chrono::system_clock::now();
+    const auto& chunks = interpreter::split( rawed );
+    for ( const auto& chunk : chunks )
+    {
+        try
+        {
+            const Response response( chunk, settings.withChecksum );
+
+            // Parse response to data fields
+            auto fields = interpreter::parse( response, settings.sentences, timestamp );
+            data.emplace_back( rdbus::Data{ .deviceName = settings.name,
+                                            .fields = std::move( fields ),
+                                            .metadata = response.getSentenceID() } );
+        }
+        catch ( const Response::Exception& e )
+        {
+            SPDLOG_ERROR( e.what() );
+            data.emplace_back( rdbus::Data{ .deviceName = settings.name } );
+            data.back().error = rdbus::Data::Error{ .code = rdbus::Data::Error::NMEA,
+                                                    .what = e.what() };
+        }
+        catch ( const communication::interpreter::Exception& e )
+        {
+            SPDLOG_ERROR( e.what() );
+            data.emplace_back( rdbus::Data{ .deviceName = settings.name } );
+            data.back().error = rdbus::Data::Error{ .code = rdbus::Data::Error::NMEA,
+                                                    .what = e.what() };
+        }
     }
 
     return data;

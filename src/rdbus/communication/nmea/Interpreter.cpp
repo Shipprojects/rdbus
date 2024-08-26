@@ -107,4 +107,26 @@ std::list< rdbus::Data::Field > parse( const Response& response,
     return output;
 }
 
+std::list< std::vector< uint8_t > > split( const std::vector< uint8_t >& data )
+{
+    std::list< std::vector< uint8_t > > result;
+
+    for ( const uint8_t c : data )
+    {
+        // if delimiter
+        if ( c == '$' )
+        {
+            result.emplace_back( std::vector< uint8_t >{} );
+        }
+
+        // If there is a container to store data
+        if ( !result.empty() )
+        {
+            result.back().emplace_back( c );
+        }
+    }
+
+    return result;
+}
+
 } // namespace rdbus::communication::nmea::interpreter

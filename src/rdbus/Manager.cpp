@@ -15,7 +15,7 @@ const std::string& Manager::getName() const
     return name;
 }
 
-std::optional< Data > Manager::run( std::unique_ptr< tasks::Task >& task )
+std::list< Data > Manager::run( std::unique_ptr< tasks::Task >& task )
 {
     return task->run();
 }
@@ -31,10 +31,7 @@ void Manager::run()
     for ( auto& task : tasks )
     {
         auto data = run( task );
-        if ( data.has_value() )
-        {
-            list.emplace_back( std::move( data.value() ) );
-        }
+        list.insert( list.end(), data.begin(), data.end() );
     }
 
     if ( !list.empty() )
