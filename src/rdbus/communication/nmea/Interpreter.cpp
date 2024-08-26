@@ -23,7 +23,7 @@ const Sentence& findSentence( const tools::Sentences& sentences, const std::stri
 
     if ( it == sentences.end() )
     {
-        throw Exception( "Unknown sentence type -" + sentenceId );
+        throw Exception( "Unknown sentence type - " + sentenceId );
     }
 
     return *it;
@@ -43,7 +43,7 @@ std::list< rdbus::Data::Field > parse( const Response& response,
 
     if ( sentence.fields.size() != response.getFields().size() )
     {
-        throw Exception( "Incoming sentence and sentence size in config mismatch!" );
+        throw Exception( "Incoming sentence (" + response.getSentenceID() + ") and sentence size in config mismatch!" );
     }
 
     Fields output;
