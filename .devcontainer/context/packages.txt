@@ -7,6 +7,8 @@ git
 gnupg2
 gnupg2
 openssh-server
+qtbase5-dev
+qttools5-dev
 socat
 software-properties-common
 wget
