@@ -1,0 +1,35 @@
+{
+    "protocol": "modbus",
+
+    "serial": {
+      "baud_rate": 9600,
+      "line_timeout_ms": 10,
+      "parity": "none",
+      "path": "/dev/user/tty_master_B",
+      "response_timeout_ms": 500,
+      "stop_bits_count": 1
+    },
+
+    "slaves": [
+      {
+        "id": 1,
+        "name": "Pressure meter",
+        "poll_time_ms": 3000,
+        "analog_input_registers": [
+          {
+            "address": 9,
+            "data_type": "UINT",
+            "data_order": "AB",
+            "name": "Pressure 1"
+          }
+        ],
+        "analog_output_registers": [
+            {
+              "address": 9,
+              "data_type": "UINT_16A",
+              "name": "Pressure 2"
+            }
+          ]
+      }
+    ]
+  }

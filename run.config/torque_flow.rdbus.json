@@ -1,0 +1,70 @@
+{
+  "protocol": "modbus",
+
+  "serial": {
+    "baud_rate": 9600,
+    "line_timeout_ms": 10,
+    "parity": "none",
+    "path": "/dev/user/tty_master_A",
+    "response_timeout_ms": 500,
+    "stop_bits_count": 1
+  },
+
+  "slaves": [
+    {
+      "id": 1,
+      "name": "Torque meter",
+      "poll_time_ms": 3000,
+      "analog_output_registers": [
+        {
+          "address": 0,
+          "data_order": "DCAB",
+          "data_type": "UINT",
+          "name": "Torque"
+        },
+        {
+          "address": 2,
+          "name": "Shaft speed",
+          "data_type": "INT_32C"
+        },
+        {
+          "address": 5,
+          "name": "Power",
+          "data_type": "UINT_16A"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Flow meter",
+      "poll_time_ms": 5000,
+      "analog_input_registers": [
+        {
+          "address": 0,
+          "data_type": "INT_32C",
+          "name": "Mass flow"
+        },
+        {
+          "address": 2,
+          "name": "Density",
+          "data_order": "GHEFCDAB",
+          "data_type": "UINT"
+        }
+      ],
+      "analog_output_registers": [
+        {
+          "address": 0,
+          "data_order": "ABCD",
+          "data_type": "FLOAT_32C",
+          "name": "Temperature"
+        },
+        {
+          "address": 2,
+          "name": "Volume flow",
+          "data_type": "FLOAT",
+          "data_order": "GHEFCDAB"
+        }
+      ]
+    }
+  ]
+}
