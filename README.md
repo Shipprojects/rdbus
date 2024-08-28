@@ -19,6 +19,7 @@ Readbus (`rdbus`) is a program designed for serial data reading, data interpreta
    * [Stopping the progam](#stopping-the-progam)
 - [Docker environment](#docker-environment)
 - [Building](#building)
+- [Running](#running)
 - [Versioning](#versioning)
 
 # API
@@ -578,6 +579,25 @@ $ cmake --build --preset Release --target rdbus_tests
 ```
 
 The binaries are located in `build/Release/src/apps/` and `build/Release/tests/` respectively.
+
+# Running
+
+"But.. but I can't run it without Modbus/NMEA devices connected to my machine!". That is valid thought, until we remember that we use superior operating system - Linux. You can use `rdbus` locally without any additional ports and devices attached to your machine using `launch.py` script. It starts `socat` serial port emulation along with preconfigured Modbus slave and `rdbus` that is located in your `build/Release` directory.
+
+```bash
+$ ./launch.py --stdout
+```
+starts `rdbus` in stdout mode with the necessary environment.
+
+The Docker environment contains two executables - `mbclient` and `mbserver` which are Modbus Master and Slave executables respectively. `launch.py` uses `mbserver`. You can also use `mbserver` in GUI mode and check Modbus values in the app.
+```bash
+$ mbserver -project run.config/mbserver.pjs
+```
+In such case you can
+```bash
+$ ./launch.py --no-slave --stdout
+```
+to launch `rdbus` without additional `mbserver` instance and use the one you just opened in GUI.
 
 # Versioning
 

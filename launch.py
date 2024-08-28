@@ -4,9 +4,15 @@ import os
 import shutil
 import subprocess
 import signal
-import sys
+from argparse import ArgumentParser
 from string import ascii_uppercase
 from subprocess import Popen
+
+parser = ArgumentParser( description = 'Launch rdbus locally with predefined modbus server and serial device emulation.'
+                                       'Unknown parameters will be passed to rdbus.' )
+parser.add_argument( '--no-slave', action = 'store_true', help = 'do not start modbus slave (for cases when you run it separately)' )
+
+args, rdbusArgs = parser.parse_known_args()
 
 rdbus = None
 def signal_handler( sig, frame ):
@@ -50,7 +56,7 @@ def startModbusServer( configDir = '' ):
     return Popen( [ 'mbserver', '-project', 'mbserver.pjs', '-no-gui' ], stdout = subprocess.DEVNULL )
 
 def runRdbus( configDir = '' ):
-    with Popen( [ './rdbus', '--log', 'info', '--stdout' ] ) as proc:
+    with Popen( [ './rdbus' ] + rdbusArgs ) as proc:
         global rdbus
         rdbus = proc
         rdbus.wait()
@@ -71,12 +77,15 @@ configCount = getConfigFileCount( os.getcwd() )
 # Start serial
 ttys = startTTY( configCount )
 # Start Modbus server
-mbServer = startModbusServer()
+mbServer = None
+if not args.no_slave:
+    mbServer = startModbusServer()
 
 # Run rdbus
 runRdbus()
 
-mbServer.terminate()
+if mbServer is not None:
+    mbServer.terminate()
 
 for tty in ttys:
     tty.terminate()
