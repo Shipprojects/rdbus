@@ -605,6 +605,11 @@ The script also starts `nmeasimulator` which can be found in the Docker environm
 $ ./run.py --no-nmea --stdout
 ```
 
+To start `nmeasimulator` separately:
+```bash
+$ nmeasimulator --no-sandbox
+```
+
 > [!WARNING]
 > As of now `run.py` is not perfect and cannot be cleanly shut down with `Ctrl+C`. Please use `kill <run.py_process_id>`. Otherwise you will have dangling processes left.
 
