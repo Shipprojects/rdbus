@@ -18,5 +18,5 @@ ln --symbolic /opt/modbus_tools/server /usr/bin/mbserver
 ln --symbolic /opt/modbus_tools/client /usr/bin/mbclient
 
 # So we will be able to create socat device files there
-mkdir /dev/user
+mkdir --parents /dev/user
 chown developer:developer /dev/user
