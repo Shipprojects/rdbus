@@ -19,8 +19,15 @@
 		}
 	},
 	"mounts": [
-		"source=${localEnv:HOME}/.ssh,target=/home/developer/.ssh,type=bind,consistency=cached"
+		// Required so you could reuse your ssh keys in container
+		"source=${localEnv:HOME}/.ssh,target=/home/developer/.ssh,type=bind,consistency=cached",
+		// Required for GUI applications to be displayed
+        "source=/tmp/.X11-unix,target=/tmp/.X11-unix,type=bind,consistency=cached"
 	],
+	"containerEnv": {
+		// Required for GUI applications to be displayed
+        "DISPLAY": "unix:0"
+    },
 	"name": "rdbus",
 	"workspaceFolder": "/code",
 	"workspaceMount": "source=${localWorkspaceFolder},target=/code,type=bind,consistency=cached"

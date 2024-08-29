@@ -19,6 +19,7 @@ Readbus (`rdbus`) is a program designed for serial data reading, data interpreta
    * [Stopping the progam](#stopping-the-progam)
 - [Docker environment](#docker-environment)
 - [Building](#building)
+- [Running](#running)
 - [Versioning](#versioning)
 
 # API
@@ -578,6 +579,33 @@ $ cmake --build --preset Release --target rdbus_tests
 ```
 
 The binaries are located in `build/Release/src/apps/` and `build/Release/tests/` respectively.
+
+# Running
+
+"But.. but I can't run it without Modbus/NMEA devices connected to my machine!". That is valid thought, until we remember that we use superior operating system - Linux. You can use `rdbus` locally without any additional ports and devices attached to your machine using `run.py` script. It starts `socat` serial port emulation along with preconfigured Modbus slave and `rdbus` that is located in your `build/Release` directory.
+
+```bash
+$ ./run.py --stdout
+```
+starts `rdbus` in stdout mode with the necessary environment.
+
+The Docker environment contains two executables - `mbclient` and `mbserver` which are Modbus Master and Slave executables respectively. `run.py` uses `mbserver`. The server starts in GUI mode, so if you want to start the server you will have to press the green button there. You can also start the server as a separate app:
+```bash
+$ mbserver -project run.config/mbserver.pjs
+```
+In such case you can
+```bash
+$ ./run.py --no-modbus --stdout
+```
+to launch `rdbus` without additional `mbserver` instance and use the one you just opened in GUI.
+
+The script also starts `nmeasimulator` which can be found in the Docker environment. Unfortunately, there is no way to preconfigure the simulator, so if you are going to use it you will have to manually set `/home/developer/dev/tty_master_C` serial path in it's settings and launch the simulation afterwards. If you do not wish to start `nmeasimulator` you can:
+```bash
+$ ./run.py --no-nmea --stdout
+```
+
+> [!WARNING]
+> As of now `run.py` is not perfect and cannot be cleanly shut down with `Ctrl+C`. Please use `kill <run.py_process_id>`. Otherwise you will have dangling processes left.
 
 # Versioning
 
