@@ -72,7 +72,7 @@ def runRdbus( configDir = '' ):
 
 # We cannot terminate this script by Ctrl+C, because the parent process then sends
 # this signal to all child processes simultaneously. Socat may then close and delete
-# it's /dev/* before rdbus exits, causing rdbus to hang on read/write.
+# it's dev/* before rdbus exits, causing rdbus to hang on read/write.
 signal.signal( signal.SIGTERM, signal_handler )
 
 # Clean run directory first
