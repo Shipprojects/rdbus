@@ -54,7 +54,6 @@
       "analog_output_registers": [
         {
           "address": 0,
-          "data_order": "ABCD",
           "data_type": "FLOAT_32C",
           "name": "Temperature"
         },

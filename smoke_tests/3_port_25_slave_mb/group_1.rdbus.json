@@ -1,0 +1,236 @@
+{
+    "protocol": "modbus",
+
+    "serial": {
+      "baud_rate": 9600,
+      "line_timeout_ms": 10,
+      "parity": "none",
+      "path": "/home/developer/dev/tty_master_A",
+      "response_timeout_ms": 500,
+      "stop_bits_count": 1
+    },
+
+    "slaves": [
+      {
+        "id": 1,
+        "name": "Slave_1_1",
+        "poll_time_ms": 5000,
+        "analog_output_registers": [
+          {
+            "address": 0,
+            "data_type": "UINT_16A",
+            "name": "A"
+          },
+          {
+            "address": 1,
+            "data_type": "UINT_16A",
+            "name": "B"
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "name": "Slave_1_2",
+        "poll_time_ms": 5000,
+        "analog_output_registers": [
+          {
+            "address": 0,
+            "data_type": "UINT_16A",
+            "name": "A"
+          },
+          {
+            "address": 1,
+            "data_type": "UINT_16A",
+            "name": "B"
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "name": "Slave_1_3",
+        "poll_time_ms": 5000,
+        "analog_output_registers": [
+          {
+            "address": 0,
+            "data_type": "UINT_16A",
+            "name": "A"
+          },
+          {
+            "address": 1,
+            "data_type": "UINT_16A",
+            "name": "B"
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "name": "Slave_1_4",
+        "poll_time_ms": 5000,
+        "analog_output_registers": [
+          {
+            "address": 0,
+            "data_type": "UINT_16A",
+            "name": "A"
+          },
+          {
+            "address": 1,
+            "data_type": "UINT_16A",
+            "name": "B"
+          }
+        ]
+      },
+      {
+        "id": 5,
+        "name": "Slave_1_5",
+        "poll_time_ms": 5000,
+        "analog_output_registers": [
+          {
+            "address": 0,
+            "data_type": "UINT_16A",
+            "name": "A"
+          },
+          {
+            "address": 1,
+            "data_type": "UINT_16A",
+            "name": "B"
+          }
+        ]
+      },
+      {
+        "id": 6,
+        "name": "Slave_1_6",
+        "poll_time_ms": 5000,
+        "analog_output_registers": [
+          {
+            "address": 0,
+            "data_type": "UINT_16A",
+            "name": "A"
+          },
+          {
+            "address": 1,
+            "data_type": "UINT_16A",
+            "name": "B"
+          }
+        ]
+      },
+      {
+        "id": 7,
+        "name": "Slave_1_7",
+        "poll_time_ms": 5000,
+        "analog_output_registers": [
+          {
+            "address": 0,
+            "data_type": "UINT_16A",
+            "name": "A"
+          },
+          {
+            "address": 1,
+            "data_type": "UINT_16A",
+            "name": "B"
+          }
+        ]
+      },
+      {
+        "id": 8,
+        "name": "Slave_1_8",
+        "poll_time_ms": 5000,
+        "analog_output_registers": [
+          {
+            "address": 0,
+            "data_type": "UINT_16A",
+            "name": "A"
+          },
+          {
+            "address": 1,
+            "data_type": "UINT_16A",
+            "name": "B"
+          }
+        ]
+      },
+      {
+        "id": 9,
+        "name": "Slave_1_9",
+        "poll_time_ms": 5000,
+        "analog_output_registers": [
+          {
+            "address": 0,
+            "data_type": "UINT_16A",
+            "name": "A"
+          },
+          {
+            "address": 1,
+            "data_type": "UINT_16A",
+            "name": "B"
+          }
+        ]
+      },
+      {
+        "id": 10,
+        "name": "Slave_1_10",
+        "poll_time_ms": 5000,
+        "analog_output_registers": [
+          {
+            "address": 0,
+            "data_type": "UINT_16A",
+            "name": "A"
+          },
+          {
+            "address": 1,
+            "data_type": "UINT_16A",
+            "name": "B"
+          }
+        ]
+      },
+      {
+        "id": 11,
+        "name": "Slave_1_11",
+        "poll_time_ms": 5000,
+        "analog_output_registers": [
+          {
+            "address": 0,
+            "data_type": "UINT_16A",
+            "name": "A"
+          },
+          {
+            "address": 1,
+            "data_type": "UINT_16A",
+            "name": "B"
+          }
+        ]
+      },
+      {
+        "id": 12,
+        "name": "Slave_1_12",
+        "poll_time_ms": 5000,
+        "analog_output_registers": [
+          {
+            "address": 0,
+            "data_type": "UINT_16A",
+            "name": "A"
+          },
+          {
+            "address": 1,
+            "data_type": "UINT_16A",
+            "name": "B"
+          }
+        ]
+      },
+      {
+        "id": 13,
+        "name": "Slave_1_13",
+        "poll_time_ms": 5000,
+        "analog_output_registers": [
+          {
+            "address": 0,
+            "data_type": "UINT_16A",
+            "name": "A"
+          },
+          {
+            "address": 1,
+            "data_type": "UINT_16A",
+            "name": "B"
+          }
+        ]
+      }
+    ]
+  }

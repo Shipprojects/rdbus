@@ -13,6 +13,7 @@ parser = ArgumentParser( description = 'Launch rdbus locally with predefined mod
                                        'Unknown parameters will be passed to rdbus.' )
 parser.add_argument( '--no-modbus', action = 'store_true', help = 'do not start modbus slave (for cases when it is already running)' )
 parser.add_argument( '--no-nmea', action = 'store_true', help = 'do not start nmea talker (for cases when it is already running)' )
+parser.add_argument( '--config-dir', default = 'run.config', help = 'directory that contains all necessary config files (default - run.config/)' )
 
 args, rdbusArgs = parser.parse_known_args()
 
@@ -58,13 +59,13 @@ def startTTY( count ):
 
     return processes
 
-def startModbusServer( configDir = '' ):
+def startModbusServer():
     return Popen( [ 'mbserver', '-project', 'mbserver.pjs' ], stdout = subprocess.DEVNULL )
 
 def startNMEATalker():
     return Popen( [ 'nmeasimulator', '--no-sandbox' ], stdout = subprocess.DEVNULL )
 
-def runRdbus( configDir = '' ):
+def runRdbus():
     with Popen( [ './rdbus' ] + rdbusArgs ) as proc:
         global rdbus
         rdbus = proc
@@ -76,7 +77,7 @@ def runRdbus( configDir = '' ):
 signal.signal( signal.SIGTERM, signal_handler )
 
 # Clean run directory first
-setupDirectory( 'run/', 'run.config/' )
+setupDirectory( 'run/', args.config_dir )
 # Copy executable to target directory
 copyRdbus( 'build/Release/src/apps/rdbus', 'run/' )
 # Go to target directory
