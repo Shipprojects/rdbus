@@ -1,5 +1,7 @@
 # rdbus
 
+- Added check that validates that known `"data_type"` is not present with unnecessary `"data_order"`.
+
 # 0.2.0
 - Fixed `rdbus` not being able to parse NMEA messages which come in a single blob of continuous data.
 - Added new optional `"metadata"` field in response JSON object. The field is not present in Modbus responses, but in case of NMEA contains sentence ID.
