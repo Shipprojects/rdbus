@@ -207,3 +207,15 @@ TEST( TestRegister, TestDeserializationSmallEndian )
     },
                   config::ParseException );
 }
+
+TEST( TestRegister, TestDeserializationU32AndDataOrder )
+{
+    const auto path = testFilePath + "U32_and_data_order.json";
+
+    const auto jsonIn = getJsonFromPath( path );
+
+    EXPECT_THROW( {
+        Register reg = jsonIn;
+    },
+                  config::ParseException );
+}

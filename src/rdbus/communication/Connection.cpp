@@ -65,8 +65,8 @@ void Connection::sendData( const std::vector< uint8_t >& data )
 
 std::vector< uint8_t > Connection::getData()
 {
-    // Arbitrary large max size
-    constexpr int maxSize = 1024;
+    // Arbitrary large max size. Should be sufficient for baud rates up to 9600.
+    constexpr int maxSize = 2048;
     std::vector< uint8_t > data( maxSize );
 
     pollfd waitingFileDescriptor = { .fd = fileDescriptor, .events = POLLIN, .revents = POLLIN };

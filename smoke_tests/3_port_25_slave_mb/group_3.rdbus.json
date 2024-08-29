@@ -1,0 +1,100 @@
+{
+    "protocol": "modbus",
+
+    "serial": {
+      "baud_rate": 9600,
+      "line_timeout_ms": 10,
+      "parity": "none",
+      "path": "/home/developer/dev/tty_master_C",
+      "response_timeout_ms": 500,
+      "stop_bits_count": 1
+    },
+
+    "slaves": [
+      {
+        "id": 1,
+        "name": "Slave_3_1",
+        "poll_time_ms": 5000,
+        "analog_output_registers": [
+          {
+            "address": 0,
+            "data_type": "UINT_16A",
+            "name": "A"
+          },
+          {
+            "address": 2,
+            "data_type": "UINT_16A",
+            "name": "B"
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "name": "Slave_3_2",
+        "poll_time_ms": 5000,
+        "analog_output_registers": [
+          {
+            "address": 0,
+            "data_type": "UINT_16A",
+            "name": "A"
+          },
+          {
+            "address": 2,
+            "data_type": "UINT_16A",
+            "name": "B"
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "name": "Slave_3_3",
+        "poll_time_ms": 5000,
+        "analog_output_registers": [
+          {
+            "address": 0,
+            "data_type": "UINT_16A",
+            "name": "A"
+          },
+          {
+            "address": 2,
+            "data_type": "UINT_16A",
+            "name": "B"
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "name": "Slave_3_4",
+        "poll_time_ms": 5000,
+        "analog_output_registers": [
+          {
+            "address": 0,
+            "data_type": "UINT_16A",
+            "name": "A"
+          },
+          {
+            "address": 2,
+            "data_type": "UINT_16A",
+            "name": "B"
+          }
+        ]
+      },
+      {
+        "id": 5,
+        "name": "Slave_3_5",
+        "poll_time_ms": 5000,
+        "analog_output_registers": [
+          {
+            "address": 0,
+            "data_type": "UINT_16A",
+            "name": "A"
+          },
+          {
+            "address": 2,
+            "data_type": "UINT_16A",
+            "name": "B"
+          }
+        ]
+      }
+    ]
+  }

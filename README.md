@@ -20,6 +20,7 @@ Readbus (`rdbus`) is a program designed for serial data reading, data interpreta
 - [Docker environment](#docker-environment)
 - [Building](#building)
 - [Running](#running)
+- [Smoke tests](#smoke-tests)
 - [Versioning](#versioning)
 
 # API
@@ -604,8 +605,20 @@ The script also starts `nmeasimulator` which can be found in the Docker environm
 $ ./run.py --no-nmea --stdout
 ```
 
+To start `nmeasimulator` separately:
+```bash
+$ nmeasimulator --no-sandbox
+```
+
 > [!WARNING]
 > As of now `run.py` is not perfect and cannot be cleanly shut down with `Ctrl+C`. Please use `kill <run.py_process_id>`. Otherwise you will have dangling processes left.
+
+# Smoke tests
+
+While there are no smoke tests yet, there are placeholders for them. In `smoke_tests/` directory you can find various config directories for different cases that you can check with `run.py`:
+```bash
+$ ./run.py --config-dir smoke_tests/your_directory --stdout
+```
 
 # Versioning
 

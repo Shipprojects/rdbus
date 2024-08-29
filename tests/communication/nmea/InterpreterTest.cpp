@@ -1,5 +1,6 @@
 #include "rdbus/communication/nmea/Interpreter.hpp"
 #include "rdbus/Data.hpp"
+#include "rdbus/communication/Interpreter.hpp"
 #include "rdbus/communication/nmea/Response.hpp"
 #include "rdbus/config/nmea/Sentence.hpp"
 #include <MB/modbusResponse.hpp>
@@ -240,4 +241,74 @@ TEST( TestNMEAInterpreter, TestConfigMismatch )
         const auto& fields = communication::nmea::interpreter::parse( response, sentences, now );
     },
                   rdbus::Exception );
+}
+
+TEST( TestNMEAInterpreter, TestSingleSplit )
+{
+    const std::string representation = "$VPMWV,120,T,30,K,A*ab\r\n";
+    const std::vector< uint8_t > data( representation.begin(), representation.end() );
+
+    const auto& split = communication::nmea::interpreter::split( data );
+    ASSERT_EQ( split.size(), 1 );
+    EXPECT_EQ( split.front().size(), representation.size() );
+}
+
+TEST( TestNMEAInterpreter, TestMultipleSplit )
+{
+    const std::string representation = "$VPMWV,120,T,30,K,A*ab\r\n$VPMWV,1,T,2,,*a1\r\n$VPMWV,,,35,K,A*42\r\n";
+    const std::vector< uint8_t > data( representation.begin(), representation.end() );
+
+    const auto& split = communication::nmea::interpreter::split( data );
+    ASSERT_EQ( split.size(), 3 );
+    auto it = split.begin();
+    EXPECT_EQ( it->size(), 24 );
+    it++;
+    EXPECT_EQ( it->size(), 19 );
+    it++;
+    EXPECT_EQ( it->size(), 20 );
+}
+
+TEST( TestNMEAInterpreter, TestSplitFromMiddle )
+{
+    // A case where message gets read from the middle
+    const std::string representation = "MWV,120,T,30,K,A*ab\r\n$VPMWV,1,T,2,,*a1\r\n$VPMWV,,,35,K,A*42\r\n";
+    const std::vector< uint8_t > data( representation.begin(), representation.end() );
+
+    const auto& split = communication::nmea::interpreter::split( data );
+    ASSERT_EQ( split.size(), 2 );
+    auto it = split.begin();
+    EXPECT_EQ( it->size(), 19 );
+    it++;
+    EXPECT_EQ( it->size(), 20 );
+}
+
+TEST( TestNMEAInterpreter, TestConfigInaproppriateData )
+{
+    // String instead of uint
+    {
+        const std::string representation = "$GPRMC,asdawra,A,5209.6815,N,00643.0724,E,000.1,187.0,310109,,*24\r\n";
+        const std::vector< uint8_t > input( representation.begin(), representation.end() );
+
+        const Response response( input );
+
+        auto sentences = getSentences();
+
+        const auto& now = std::chrono::system_clock::now();
+
+        EXPECT_THROW( communication::nmea::interpreter::parse( response, sentences, now ), communication::interpreter::Exception );
+    }
+
+    // String instead of float
+    {
+        const std::string representation = "$GPRMC,181004,A,asdzxc,N,00643.0724,E,000.1,187.0,310109,,*24\r\n";
+        const std::vector< uint8_t > input( representation.begin(), representation.end() );
+
+        const Response response( input );
+
+        auto sentences = getSentences();
+
+        const auto& now = std::chrono::system_clock::now();
+
+        EXPECT_THROW( communication::nmea::interpreter::parse( response, sentences, now ), communication::interpreter::Exception );
+    }
 }

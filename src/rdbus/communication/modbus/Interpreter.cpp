@@ -49,20 +49,22 @@ RawMergedList toRawMergedRegisters( const RawUint16List& input, const Registers&
         output.emplace_back( std::move( word ) );
     }
 
-    assert( output.size() == registers.size() );
-
     return output;
 }
 
 BigEndianRegisters toUserInterpretation( const RawMergedList& input, const Registers& registers )
 {
+    if ( input.size() != registers.size() )
+    {
+        throw Exception( "Config register and merged input register count mismatch!" );
+    }
+
     BigEndianRegisters output;
 
     auto regIt = registers.begin();
     auto inputIt = input.begin();
     for ( ; regIt != registers.end() && inputIt != input.end(); regIt++, inputIt++ )
     {
-        const int i = output.size();
         std::vector< uint8_t > word;
 
         for ( const auto position : regIt->byteOrder )

@@ -154,6 +154,8 @@ void from_json( const nlohmann::json& j, Register& x )
     }
     else
     {
+        throwIf( !order.empty(), "Unnecessary 'data_order' field with known 'data_type' field!" );
+
         const auto& [ dataType, dataOrder ] = getStandardType( type );
         x.type = dataType;
         x.byteOrder = dataOrder;

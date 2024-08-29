@@ -1,123 +1,192 @@
 {
-    "protocol": "nmea",
-    "serial": {
-      "baud_rate": 4800,
-      "parity": "none",
-      "path": "/home/developer/dev/tty_slave_C",
-      "stop_bits_count": 1,
-      "response_timeout_ms": 2000,
-      "line_timeout_ms": 20
+  "protocol": "nmea",
+  "serial": {
+    "baud_rate": 4800,
+    "parity": "none",
+    "path": "/home/developer/dev/tty_slave_C",
+    "stop_bits_count": 1,
+    "response_timeout_ms": 2000,
+    "line_timeout_ms": 20
+  },
+  "checksum": true,
+  "name": "NMEA emulator",
+  "sentences": [
+    {
+      "id": "APB",
+      "fields": [
+        {
+          "name": "Status",
+          "data_type": "STRING"
+        },
+        {
+          "name": "Status",
+          "data_type": "STRING"
+        },
+        {
+          "name": "Cross Track Error Magnitude",
+          "data_type": "UINT"
+        },
+        {
+          "name": "Direction to steer",
+          "data_type": "STRING"
+        },
+        {
+          "name": "Cross Track Units",
+          "data_type": "STRING"
+        },
+        {
+          "name": "Status",
+          "data_type": "STRING"
+        },
+        {
+          "name": "Status",
+          "data_type": "STRING"
+        },
+        {
+          "name": "Bearing origin to destination",
+          "data_type": "UINT"
+        },
+        {
+          "name": "Type",
+          "data_type": "STRING"
+        },
+        {
+          "name": "Destination Waypoint ID",
+          "data_type": "STRING"
+        },
+        {
+          "name": "Bearing, present position to Destination",
+          "data_type": "UINT"
+        },
+        {
+          "name": "Type",
+          "data_type": "STRING"
+        },
+        {
+          "name": "Heading to steer to destination waypoint",
+          "data_type": "UINT"
+        },
+        {
+          "name": "Type",
+          "data_type": "STRING"
+        }
+      ]
     },
-    "checksum": true,
-    "name": "NMEA emulator",
-    "sentences": [
-      {
-        "id": "VHW",
+    {
+        "id": "RMB",
         "fields": [
           {
-            "name": "Degrees true",
-            "data_type": "UINT"
-          },
-          {
-            "name": "True",
+            "name": "Status",
             "data_type": "STRING"
           },
           {
-            "name": "Degrees Magnetic",
+            "name": "Cross Track error",
             "data_type": "UINT"
           },
           {
-            "name": "Magnetic",
+            "name": "Direction to Steer",
             "data_type": "STRING"
           },
           {
-            "name": "STW (knots/h)",
-            "data_type": "UINT"
-          },
-          {
-            "name": "Is Knots",
+            "name": "FROM Waypoint ID",
             "data_type": "STRING"
           },
           {
-            "name": "More",
+            "name": "TO Waypoint ID",
+            "data_type": "STRING"
+          },
+          {
+            "name": "Destination Waypoint Latitude",
             "data_type": "UINT"
+          },
+          {
+            "name": "Type",
+            "data_type": "STRING"
+          },
+          {
+            "name": "Destination Waypoint Longitude",
+            "data_type": "UINT"
+          },
+          {
+            "name": "Type",
+            "data_type": "STRING"
+          },
+          {
+            "name": "Range to destination in nautical miles",
+            "data_type": "FLOAT"
+          },
+          {
+            "name": "Bearing to destination in degrees True",
+            "data_type": "FLOAT"
+          },
+          {
+            "name": "Destination closing velocity in knots",
+            "data_type": "FLOAT"
+          },
+          {
+            "name": "Status",
+            "data_type": "STRING"
+          },
+          {
+            "name": "Status",
+            "data_type": "STRING"
           }
         ]
-      },
-      {
-          "id": "TEST",
-          "fields": [
-              {
-                  "name": "String",
-                  "data_type": "STRING"
-              }
-          ]
-      },
-      {
-          "id": "SDDBS",
-          "fields": [
-          {
-            "name": "Depth",
-            "data_type": "FLOAT"
-          },
-          {
-            "name": "Units",
-            "data_type": "STRING"
-          },
-          {
-            "name": "Depth",
-            "data_type": "FLOAT"
-          },
-          {
-            "name": "Units",
-            "data_type": "STRING"
-          },
-          {
-            "name": "Depth",
-            "data_type": "FLOAT"
-          }
-          ]
-      },
-      {
-          "id": "VBW",
-          "fields": [
-          {
-            "name": "Longitudinal water speed",
-            "data_type": "FLOAT"
-          },
-          {
-            "name": "Transverse water speed",
-            "data_type": "FLOAT"
-          },
-          {
-            "name": "Data valid",
-            "data_type": "STRING"
-          },
-          {
-            "name": "Longitudinal ground speed",
-            "data_type": "FLOAT"
-          },
-          {
-            "name": "Transverse ground speed",
-            "data_type": "FLOAT"
-          },
-          {
-            "name": "Data valid",
-            "data_type": "STRING"
-          },
-          {
-            "name": "Speed",
-            "data_type": "FLOAT"
-          },
-          {
-            "name": "Data valid",
-            "data_type": "STRING"
-          },
-          {
-            "name": "etc",
-            "data_type": "FLOAT"
-          }
-          ]
-      }
-    ]
-  }
+    },
+    {
+      "id": "DPT",
+      "fields": [
+        {
+          "name": "Water depth",
+          "data_type": "FLOAT"
+        },
+        {
+          "name": "Offset from transducer",
+          "data_type": "FLOAT"
+        }
+      ]
+    },
+    {
+      "id": "DBT",
+      "fields": [
+        {
+          "name": "Water depth",
+          "data_type": "FLOAT"
+        },
+        {
+          "name": "feet",
+          "data_type": "STRING"
+        },
+        {
+          "name": "Water depth",
+          "data_type": "FLOAT"
+        },
+        {
+          "name": "meters",
+          "data_type": "STRING"
+        },
+        {
+          "name": "Water depth",
+          "data_type": "FLOAT"
+        },
+        {
+          "name": "fathoms",
+          "data_type": "STRING"
+        }
+      ]
+    },
+    {
+      "id": "MTW",
+      "fields": [
+        {
+          "name": "Temperature",
+          "data_type": "FLOAT"
+        },
+        {
+          "name": "Unit of measurement",
+          "data_type": "STRING"
+        }
+      ]
+    }
+  ]
+}
