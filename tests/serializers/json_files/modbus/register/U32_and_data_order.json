@@ -1,0 +1,6 @@
+{
+    "name": "REGISTER_A",
+    "address": 1,
+    "data_type": "UINT_32A",
+    "data_order": "CDAB"
+}

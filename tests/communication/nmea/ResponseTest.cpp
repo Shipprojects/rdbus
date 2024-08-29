@@ -130,3 +130,26 @@ TEST( TestResponse, TestProprietery )
     ASSERT_EQ( response.getFields().size(), 1 );
     EXPECT_EQ( response.getFields()[ 0 ], "" );
 }
+
+TEST( TestResponse, TestInvalidEnding )
+{
+    {
+        const std::string representation = "$PASMTEST,*45\n";
+        const std::vector< uint8_t > data( representation.begin(), representation.end() );
+
+        EXPECT_THROW( {
+            const Response response( data, true );
+        },
+                      Response::Exception );
+    }
+
+    {
+        const std::string representation = "$PASMTEST,*45\r";
+        const std::vector< uint8_t > data( representation.begin(), representation.end() );
+
+        EXPECT_THROW( {
+            const Response response( data, true );
+        },
+                      Response::Exception );
+    }
+}
