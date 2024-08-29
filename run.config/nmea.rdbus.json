@@ -75,63 +75,118 @@
     {
         "id": "RMB",
         "fields": [
+          {
+            "name": "Status",
+            "data_type": "STRING"
+          },
+          {
+            "name": "Cross Track error",
+            "data_type": "UINT"
+          },
+          {
+            "name": "Direction to Steer",
+            "data_type": "STRING"
+          },
+          {
+            "name": "FROM Waypoint ID",
+            "data_type": "STRING"
+          },
+          {
+            "name": "TO Waypoint ID",
+            "data_type": "STRING"
+          },
+          {
+            "name": "Destination Waypoint Latitude",
+            "data_type": "UINT"
+          },
+          {
+            "name": "Type",
+            "data_type": "STRING"
+          },
+          {
+            "name": "Destination Waypoint Longitude",
+            "data_type": "UINT"
+          },
+          {
+            "name": "Type",
+            "data_type": "STRING"
+          },
+          {
+            "name": "Range to destination in nautical miles",
+            "data_type": "FLOAT"
+          },
+          {
+            "name": "Bearing to destination in degrees True",
+            "data_type": "FLOAT"
+          },
+          {
+            "name": "Destination closing velocity in knots",
+            "data_type": "FLOAT"
+          },
+          {
+            "name": "Status",
+            "data_type": "STRING"
+          },
+          {
+            "name": "Status",
+            "data_type": "STRING"
+          }
+        ]
+    },
+    {
+      "id": "DPT",
+      "fields": [
         {
-          "name": "Status",
-          "data_type": "STRING"
-        },
-        {
-          "name": "Cross Track error",
-          "data_type": "UINT"
-        },
-        {
-          "name": "Direction to Steer",
-          "data_type": "STRING"
-        },
-        {
-          "name": "FROM Waypoint ID",
-          "data_type": "STRING"
-        },
-        {
-          "name": "TO Waypoint ID",
-          "data_type": "STRING"
-        },
-        {
-          "name": "Destination Waypoint Latitude",
-          "data_type": "UINT"
-        },
-        {
-          "name": "Type",
-          "data_type": "STRING"
-        },
-        {
-          "name": "Destination Waypoint Longitude",
-          "data_type": "UINT"
-        },
-        {
-          "name": "Type",
-          "data_type": "STRING"
-        },
-        {
-          "name": "Range to destination in nautical miles",
+          "name": "Water depth",
           "data_type": "FLOAT"
         },
         {
-          "name": "Bearing to destination in degrees True",
+          "name": "Offset from transducer",
+          "data_type": "FLOAT"
+        }
+      ]
+    },
+    {
+      "id": "DBT",
+      "fields": [
+        {
+          "name": "Water depth",
           "data_type": "FLOAT"
         },
         {
-          "name": "Destination closing velocity in knots",
-          "data_type": "FLOAT"
-        },
-        {
-          "name": "Status",
+          "name": "feet",
           "data_type": "STRING"
         },
         {
-          "name": "Status",
+          "name": "Water depth",
+          "data_type": "FLOAT"
+        },
+        {
+          "name": "meters",
+          "data_type": "STRING"
+        },
+        {
+          "name": "Water depth",
+          "data_type": "FLOAT"
+        },
+        {
+          "name": "fathoms",
           "data_type": "STRING"
         }
-        ]
+      ]
+    },
+    {
+      "id": "MTW",
+      "fields": [
+        {
+          "name": "Temperature",
+          "data_type": "FLOAT"
+        },
+        {
+          "name": "Unit of measurement",
+          "data_type": "STRING"
+        }
+      ]
     }
   ]
 }
