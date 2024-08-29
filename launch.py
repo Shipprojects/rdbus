@@ -4,6 +4,7 @@ import os
 import shutil
 import subprocess
 import signal
+import time
 from argparse import ArgumentParser
 from string import ascii_uppercase
 from subprocess import Popen
@@ -51,6 +52,10 @@ def startTTY( count ):
     for i in range( count ):
         cmd = f'socat -d -d pty,raw,echo=0,link=/home/developer/dev/tty_master_{ ascii_uppercase[ i ] } pty,raw,echo=0,link=/home/developer/dev/tty_slave_{ ascii_uppercase[ i ] }'
         processes.append( Popen( cmd.split() ) )
+
+    # Socat needs some time to initialize
+    time.sleep( 1 )
+
     return processes
 
 def startModbusServer( configDir = '' ):
