@@ -1,0 +1,123 @@
+{
+    "protocol": "nmea",
+    "serial": {
+      "baud_rate": 4800,
+      "parity": "none",
+      "path": "/home/developer/dev/tty_slave_C",
+      "stop_bits_count": 1,
+      "response_timeout_ms": 2000,
+      "line_timeout_ms": 20
+    },
+    "checksum": true,
+    "name": "NMEA emulator",
+    "sentences": [
+      {
+        "id": "VHW",
+        "fields": [
+          {
+            "name": "Degrees true",
+            "data_type": "UINT"
+          },
+          {
+            "name": "True",
+            "data_type": "STRING"
+          },
+          {
+            "name": "Degrees Magnetic",
+            "data_type": "UINT"
+          },
+          {
+            "name": "Magnetic",
+            "data_type": "STRING"
+          },
+          {
+            "name": "STW (knots/h)",
+            "data_type": "UINT"
+          },
+          {
+            "name": "Is Knots",
+            "data_type": "STRING"
+          },
+          {
+            "name": "More",
+            "data_type": "UINT"
+          }
+        ]
+      },
+      {
+          "id": "TEST",
+          "fields": [
+              {
+                  "name": "String",
+                  "data_type": "STRING"
+              }
+          ]
+      },
+      {
+          "id": "SDDBS",
+          "fields": [
+          {
+            "name": "Depth",
+            "data_type": "FLOAT"
+          },
+          {
+            "name": "Units",
+            "data_type": "STRING"
+          },
+          {
+            "name": "Depth",
+            "data_type": "FLOAT"
+          },
+          {
+            "name": "Units",
+            "data_type": "STRING"
+          },
+          {
+            "name": "Depth",
+            "data_type": "FLOAT"
+          }
+          ]
+      },
+      {
+          "id": "VBW",
+          "fields": [
+          {
+            "name": "Longitudinal water speed",
+            "data_type": "FLOAT"
+          },
+          {
+            "name": "Transverse water speed",
+            "data_type": "FLOAT"
+          },
+          {
+            "name": "Data valid",
+            "data_type": "STRING"
+          },
+          {
+            "name": "Longitudinal ground speed",
+            "data_type": "FLOAT"
+          },
+          {
+            "name": "Transverse ground speed",
+            "data_type": "FLOAT"
+          },
+          {
+            "name": "Data valid",
+            "data_type": "STRING"
+          },
+          {
+            "name": "Speed",
+            "data_type": "FLOAT"
+          },
+          {
+            "name": "Data valid",
+            "data_type": "STRING"
+          },
+          {
+            "name": "etc",
+            "data_type": "FLOAT"
+          }
+          ]
+      }
+    ]
+  }

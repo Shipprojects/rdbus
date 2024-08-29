@@ -10,7 +10,7 @@ RUN sh download_packages.sh
 COPY user_setup.sh .
 RUN sh user_setup.sh
 
-COPY nmea_tools_setup.sh 000003.log .
+COPY nmea_tools_setup.sh .
 RUN sh nmea_tools_setup.sh
 
 COPY modbus_tools_setup.sh .

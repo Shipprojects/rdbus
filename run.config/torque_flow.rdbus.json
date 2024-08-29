@@ -5,7 +5,7 @@
     "baud_rate": 9600,
     "line_timeout_ms": 10,
     "parity": "none",
-    "path": "/dev/user/tty_master_A",
+    "path": "/home/developer/dev/tty_master_A",
     "response_timeout_ms": 500,
     "stop_bits_count": 1
   },

@@ -11,7 +11,7 @@
             <stopBits>OneStop</stopBits>
             <timeout>3000</timeout>
             <host>localhost</host>
-            <serialPortName>/dev/user/tty_slave_A</serialPortName>
+            <serialPortName>/home/developer/dev//tty_slave_A</serialPortName>
             <port>502</port>
             <name>Slave_A</name>
             <timeoutInterByte>50</timeoutInterByte>
@@ -30,7 +30,7 @@
             <stopBits>OneStop</stopBits>
             <timeout>3000</timeout>
             <host>localhost</host>
-            <serialPortName>/dev/user/tty_slave_B</serialPortName>
+            <serialPortName>/home/developer/dev/tty_slave_B</serialPortName>
             <port>502</port>
             <name>Slave_B</name>
             <timeoutInterByte>50</timeoutInterByte>

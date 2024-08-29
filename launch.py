@@ -10,7 +10,8 @@ from subprocess import Popen
 
 parser = ArgumentParser( description = 'Launch rdbus locally with predefined modbus server and serial device emulation.'
                                        'Unknown parameters will be passed to rdbus.' )
-parser.add_argument( '--no-slave', action = 'store_true', help = 'do not start modbus slave (for cases when you run it separately)' )
+parser.add_argument( '--no-modbus', action = 'store_true', help = 'do not start modbus slave (for cases when it is already running)' )
+parser.add_argument( '--no-nmea', action = 'store_true', help = 'do not start nmea talker (for cases when it is already running)' )
 
 args, rdbusArgs = parser.parse_known_args()
 
@@ -48,12 +49,15 @@ def startTTY( count ):
 
     processes = []
     for i in range( count ):
-        cmd = f'socat -d -d pty,raw,echo=0,link=/dev/user/tty_master_{ ascii_uppercase[ i ] } pty,raw,echo=0,link=/dev/user/tty_slave_{ ascii_uppercase[ i ] }'
+        cmd = f'socat -d -d pty,raw,echo=0,link=/home/developer/dev/tty_master_{ ascii_uppercase[ i ] } pty,raw,echo=0,link=/home/developer/dev/tty_slave_{ ascii_uppercase[ i ] }'
         processes.append( Popen( cmd.split() ) )
     return processes
 
 def startModbusServer( configDir = '' ):
-    return Popen( [ 'mbserver', '-project', 'mbserver.pjs', '-no-gui' ], stdout = subprocess.DEVNULL )
+    return Popen( [ 'mbserver', '-project', 'mbserver.pjs' ], stdout = subprocess.DEVNULL )
+
+def startNMEATalker():
+    return Popen( [ 'nmeasimulator', '--no-sandbox' ], stdout = subprocess.DEVNULL )
 
 def runRdbus( configDir = '' ):
     with Popen( [ './rdbus' ] + rdbusArgs ) as proc:
@@ -78,11 +82,18 @@ configCount = getConfigFileCount( os.getcwd() )
 ttys = startTTY( configCount )
 # Start Modbus server
 mbServer = None
-if not args.no_slave:
+if not args.no_modbus:
     mbServer = startModbusServer()
+# Start NMEA talker
+nmeaTalker = None
+if not args.no_nmea:
+    nmeaTalker = startNMEATalker()
 
 # Run rdbus
 runRdbus()
+
+if nmeaTalker is not None:
+    nmeaTalker.terminate()
 
 if mbServer is not None:
     mbServer.terminate()
