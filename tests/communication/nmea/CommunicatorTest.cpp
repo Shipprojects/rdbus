@@ -393,3 +393,149 @@ TEST( TestCommunicatorNMEA, MergedResponse )
     EXPECT_EQ( it->error->code, Data::Error::NMEA );
     EXPECT_EQ( it->fields.size(), 0 );
 }
+
+TEST( TestCommunicatorNMEA, UnindentifiableResponse )
+{
+    auto os = std::make_unique< testing::NiceMock< OSMock > >();
+
+    EXPECT_CALL( *os, poll( _, _, _ ) )
+    .WillOnce( Return( 1 ) )
+    .WillOnce( Return( 1 ) )
+    .WillRepeatedly( Return( 0 ) );
+
+    // Emulate a two part response
+    EXPECT_CALL( *os, read( _, _, _ ) )
+    .WillOnce( Invoke( []( int, void* buf, size_t length )
+                       {
+        const std::string rawResponse = "RIStCXYHRKPkisi";
+
+        std::memcpy( buf, rawResponse.data(), rawResponse.size() );
+        return rawResponse.size(); } ) )
+
+    .WillOnce( Invoke( []( int, void* buf, size_t length )
+                       {
+
+        const std::string rawResponse = "YYd1Z5xl4vdUfo0hY8H86L0Yh0YEhTfo";
+
+        std::memcpy( buf, rawResponse.data(), rawResponse.size() );
+        return rawResponse.size(); } ) );
+
+
+    communication::nmea::Communicator com( getSerial(), std::move( os ) );
+
+    const auto data = com.receive( getNMEASettings() );
+
+    ASSERT_EQ( data.size(), 1 );
+    EXPECT_EQ( data.front().deviceName, "NMEA Sensor" );
+    EXPECT_FALSE( data.front().metadata.has_value() );
+    ASSERT_TRUE( data.front().error.has_value() );
+    EXPECT_EQ( data.front().error->code, Data::Error::NMEA );
+    EXPECT_FALSE( data.front().error->what.empty() );
+    EXPECT_TRUE( data.front().fields.empty() );
+}
+
+
+TEST( TestCommunicatorNMEA, UnindentifiebleMessageBeforeValidOne )
+{
+    auto os = std::make_unique< testing::NiceMock< OSMock > >();
+
+    EXPECT_CALL( *os, poll( _, _, _ ) )
+    .WillOnce( Return( 1 ) )
+    .WillOnce( Return( 1 ) )
+    .WillRepeatedly( Return( 0 ) );
+
+    // Emulate a two part response
+    EXPECT_CALL( *os, read( _, _, _ ) )
+    .WillOnce( Invoke( []( int, void* buf, size_t length )
+                       {
+        const std::string rawResponse = "8H86L0Yh0YEhTfo";
+
+        std::memcpy( buf, rawResponse.data(), rawResponse.size() );
+        return rawResponse.size(); } ) )
+
+    .WillOnce( Invoke( []( int, void* buf, size_t length )
+                       {
+
+        const std::string rawResponse = "$VDVHW,55,T,43,M,22,N,11*27\r\n";
+
+        std::memcpy( buf, rawResponse.data(), rawResponse.size() );
+        return rawResponse.size(); } ) );
+
+
+    communication::nmea::Communicator com( getSerial(), std::move( os ) );
+
+    const auto data = com.receive( getNMEASettings() );
+
+    ASSERT_EQ( data.size(), 1 );
+    EXPECT_EQ( data.front().deviceName, "NMEA Sensor" );
+    ASSERT_TRUE( data.front().metadata.has_value() );
+    EXPECT_FALSE( data.front().error.has_value() );
+
+    auto fieldIt = data.front().fields.begin();
+    EXPECT_EQ( fieldIt->name, "Degrees true" );
+    EXPECT_EQ( fieldIt->type, Type::Uint64 );
+    EXPECT_EQ( std::get< uint64_t >( fieldIt->value ), 55 );
+
+    fieldIt++;
+    EXPECT_EQ( fieldIt->name, "True" );
+    EXPECT_EQ( fieldIt->type, Type::String );
+    EXPECT_EQ( std::get< std::string >( fieldIt->value ), "T" );
+
+    fieldIt++;
+    EXPECT_EQ( fieldIt->name, "Degrees magnetic" );
+    EXPECT_EQ( fieldIt->type, Type::Uint64 );
+    EXPECT_EQ( std::get< uint64_t >( fieldIt->value ), 43 );
+
+    fieldIt++;
+    EXPECT_EQ( fieldIt->name, "Magnetic" );
+    EXPECT_EQ( fieldIt->type, Type::String );
+    EXPECT_EQ( std::get< std::string >( fieldIt->value ), "M" );
+
+    fieldIt++;
+    EXPECT_EQ( fieldIt->name, "STW (knots/h)" );
+    EXPECT_EQ( fieldIt->type, Type::Uint64 );
+    EXPECT_EQ( std::get< uint64_t >( fieldIt->value ), 22 );
+
+    fieldIt++;
+    EXPECT_EQ( fieldIt->name, "Units" );
+    EXPECT_EQ( fieldIt->type, Type::String );
+    EXPECT_EQ( std::get< std::string >( fieldIt->value ), "N" );
+
+    fieldIt++;
+    EXPECT_EQ( fieldIt->name, "More" );
+    EXPECT_EQ( fieldIt->type, Type::String );
+    EXPECT_EQ( std::get< std::string >( fieldIt->value ), "11" );
+}
+
+
+TEST( TestCommunicatorNMEA, Timeout )
+{
+    auto os = std::make_unique< testing::NiceMock< OSMock > >();
+
+    EXPECT_CALL( *os, poll( _, _, _ ) ).WillRepeatedly( Return( 0 ) );
+
+    communication::nmea::Communicator com( getSerial(), std::move( os ) );
+
+    const auto data = com.receive( getNMEASettings() );
+
+    ASSERT_TRUE( data.empty() );
+}
+
+TEST( TestCommunicatorNMEA, OSFailure )
+{
+    auto os = std::make_unique< testing::NiceMock< OSMock > >();
+
+    EXPECT_CALL( *os, poll( _, _, _ ) ).WillRepeatedly( Return( -1 ) );
+
+    communication::nmea::Communicator com( getSerial(), std::move( os ) );
+
+    const auto data = com.receive( getNMEASettings() );
+
+    ASSERT_EQ( data.size(), 1 );
+    EXPECT_EQ( data.front().deviceName, "NMEA Sensor" );
+    EXPECT_FALSE( data.front().metadata.has_value() );
+    ASSERT_TRUE( data.front().error.has_value() );
+    EXPECT_EQ( data.front().error->code, Data::Error::OS );
+    EXPECT_FALSE( data.front().error->what.empty() );
+    EXPECT_TRUE( data.front().fields.empty() );
+}
