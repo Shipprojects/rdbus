@@ -1,5 +1,7 @@
 # rdbus
 
+- Added check to validate that only _ABCDEFGH_ letters can be present in `"data_order"`.
+
 # 0.2.1
 - `rdbus` now outputs an error if incoming NMEA data could not be parsed in any way (trash).
 - Added check that validates that known `"data_type"` is not present with unnecessary `"data_order"`.

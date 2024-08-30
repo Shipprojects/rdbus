@@ -23,6 +23,8 @@ static std::pair< Type, std::list< int > > getWildType( const std::string& typeS
     std::list< int > order;
     for ( const char c : orderString )
     {
+        throwIf( c < 'A' || c > 'H', std::string( "Invalid character '" ) + c + "' in 'data_order'!" );
+
         // Since valid characters are big letters, and
         // we start from 'A', subtract it's value
         order.emplace_back( c - 'A' );
