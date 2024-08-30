@@ -219,3 +219,28 @@ TEST( TestRegister, TestDeserializationU32AndDataOrder )
     },
                   config::ParseException );
 }
+
+TEST( TestRegister, TestDeserializationSmallLettersInDataOrder )
+{
+    const auto path = testFilePath + "small_letters_in_data_order.json";
+
+    const auto jsonIn = getJsonFromPath( path );
+
+    EXPECT_THROW( {
+        Register reg = jsonIn;
+    },
+                  config::ParseException );
+}
+
+TEST( TestRegister, TestDeserializationIInDataOrder )
+{
+    const auto path = testFilePath + "I_in_data_order.json";
+
+    const auto jsonIn = getJsonFromPath( path );
+
+    EXPECT_THROW( {
+        Register reg = jsonIn;
+    },
+                  config::ParseException );
+}
+
