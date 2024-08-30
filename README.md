@@ -293,7 +293,7 @@ Each config file is meant to operate with one serial port. In each config file t
 | `"path"`                | Path to the device file of serial port i.e.`"/dev/*"`.          |
 | `"stop_bits_count"`     | Either `1` or `2`.                                              |
 | `"response_timeout_ms"` | Max time to wait for data to arrive.                            |
-| `"line_timeout_ms"`     | Max time to wait for each data segment (8 bytes) to arrive. You can calculate the minimum time (in milliseconds) by using formula `y=8000/(baud_rate/8)`. It is strongly recommended to round the result up, e.g. 6.6ms to 10ms, 13ms to 20ms, etc.|
+| `"line_timeout_ms"`     | Max time to wait for each data segment (8 bytes) to arrive. You can calculate the minimum time (in milliseconds) by using formula `y=64000/baud_rate`. It is strongly recommended to round the result up, e.g. 6.6ms to 10ms, 13ms to 20ms, etc.|
 
 ## Output
 

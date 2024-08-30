@@ -26,6 +26,7 @@ std::list< rdbus::Data > Communicator::receive( const NMEA& settings )
         // It is OK if timeout occurs. Means that talker did not talk. We cannot
         // do anything in this case but wait for next time it speaks
         SPDLOG_WARN( std::string( "NMEA - " ) + e.what() );
+        return data;
     }
     catch ( const OS::Exception& e )
     {
@@ -33,10 +34,21 @@ std::list< rdbus::Data > Communicator::receive( const NMEA& settings )
         data.emplace_back( rdbus::Data{ .deviceName = settings.name } );
         data.back().error = rdbus::Data::Error{ .code = rdbus::Data::Error::OS,
                                                 .what = e.what() };
+        return data;
     }
 
     const auto& timestamp = std::chrono::system_clock::now();
     const auto& chunks = interpreter::split( rawed );
+
+    // In case there was an unidentifiable trash that could not be split into chunks
+    if ( chunks.empty() )
+    {
+        data.emplace_back( rdbus::Data{ .deviceName = settings.name } );
+        data.back().error = rdbus::Data::Error{ .code = rdbus::Data::Error::NMEA,
+                                                .what = "Unidentifiable response!" };
+        return data;
+    }
+
     for ( const auto& chunk : chunks )
     {
         try
