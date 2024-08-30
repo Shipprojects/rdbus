@@ -1,5 +1,6 @@
 # rdbus
 
+# 0.2.2
 - Added check to validate that only _ABCDEFGH_ letters can be present in `"data_order"`.
 
 # 0.2.1
