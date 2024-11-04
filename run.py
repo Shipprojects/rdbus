@@ -9,7 +9,7 @@ from argparse import ArgumentParser
 from string import ascii_uppercase
 from subprocess import Popen
 
-parser = ArgumentParser( description = 'Launch rdbus locally with predefined modbus server and serial device emulation.'
+parser = ArgumentParser( description = 'Launch rdbus locally with predefined modbus server and serial device emulation. '
                                        'Unknown parameters will be passed to rdbus.' )
 parser.add_argument( '--no-modbus', action = 'store_true', help = 'do not start modbus slave (for cases when it is already running)' )
 parser.add_argument( '--no-nmea', action = 'store_true', help = 'do not start nmea talker (for cases when it is already running)' )

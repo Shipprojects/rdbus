@@ -32,16 +32,6 @@ void stop( std::list< std::thread >& threads )
     }
 }
 
-void yield()
-{
-    while ( keepRunning )
-    {
-        // Do not do anything with this thread, let OS schedule execution
-        // of other threads here
-        std::this_thread::yield();
-    }
-}
-
 void start( std::list< std::thread >& threads, std::list< rdbus::Manager >& managers )
 {
     for ( auto& manager : managers )
@@ -112,7 +102,6 @@ int main( int argc, char** argv )
     if ( result == 0 )
     {
         start( threads, managers );
-        yield();
     }
     stop( threads );
 
