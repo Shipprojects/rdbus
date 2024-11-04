@@ -1,5 +1,6 @@
 # rdbus
 
+# 0.2.3
 - Fixed 100% CPU usage bug.
 
 # 0.2.2
