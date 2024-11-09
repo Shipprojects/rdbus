@@ -1,0 +1,8 @@
+{
+    "name": "Sensors",
+    "poll_time_ms": 150,
+    "instances":
+    [
+        "sensor_2"
+    ]
+}

@@ -1,0 +1,31 @@
+{
+    "protocol": "ip",
+
+    "address": {
+        "ip": "192.168.10.23",
+        "port": 1000
+    },
+
+    "modules":
+    [
+        {
+            "name": "name1",
+            "poll_time_ms": 150,
+            "instances":
+            [
+                "input_a",
+                "input_b"
+            ]
+        },
+        {
+            "name": "name2",
+            "poll_time_ms": 150,
+            "offset": 12,
+            "instances":
+            [
+                "input_a",
+                "input_c"
+            ]
+        }
+    ]
+}

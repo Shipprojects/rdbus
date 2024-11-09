@@ -1,0 +1,29 @@
+{
+    "protocol": "ip",
+
+    "address": {
+        "ip": "192.168.10.23",
+        "port": 1000
+    },
+
+    "serial": {
+        "baud_rate": 4800,
+        "parity": "even",
+        "path": "/dev/ttyS0",
+        "stop_bits_count": 1,
+        "response_timeout_ms": 500,
+        "line_timeout_ms": 10
+      },
+
+    "modules":
+    [
+        {
+            "name": "name_1",
+            "poll_time_ms": 150,
+            "instances":
+            [
+                "input_a"
+            ]
+        }
+    ]
+}

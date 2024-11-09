@@ -16,10 +16,9 @@ TEST( TestOutput, TestDeserializationValidTCPIP )
     const auto jsonIn = getJsonFromPath( path );
     const config::Output output = jsonIn;
 
-    ASSERT_TRUE( output.ip.has_value() );
-    ASSERT_TRUE( output.port.has_value() );
-    EXPECT_EQ( output.ip, "0.0.0.0" );
-    EXPECT_EQ( output.port, 6000 );
+    ASSERT_TRUE( output.address.has_value() );
+    EXPECT_EQ( output.address->ip, "0.0.0.0" );
+    EXPECT_EQ( output.address->port, 6000 );
     EXPECT_EQ( output.type, config::Output::TCP_IP );
 }
 
@@ -30,8 +29,7 @@ TEST( TestOutput, TestDeserializationValidStdout )
     const auto jsonIn = getJsonFromPath( path );
     const config::Output output = jsonIn;
 
-    ASSERT_FALSE( output.ip.has_value() );
-    ASSERT_FALSE( output.port.has_value() );
+    ASSERT_FALSE( output.address.has_value() );
     EXPECT_EQ( output.type, config::Output::Stdout );
 }
 

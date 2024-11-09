@@ -1,0 +1,7 @@
+{
+    "name": "Sensors",
+    "instances":
+    [
+        "sensor_2"
+    ]
+}

@@ -49,7 +49,7 @@ Manager::Output initializeOutput( const config::Output& output )
     if ( output.type == config::Output::TCP_IP )
     {
         SPDLOG_INFO( "Outputting using TCP/IP server" );
-        return std::make_shared< out::http::HTTP >( output );
+        return std::make_shared< out::http::HTTP >( *output.address );
     }
     else if ( output.type == config::Output::Stdout )
     {
@@ -65,14 +65,19 @@ static Manager::Tasks initializeTasks( const config::Config& config )
 {
     Manager::Tasks tasks;
 
+    if ( !config.serial.has_value() )
+    {
+        throw Exception( "No serial configuration!" );
+    }
+
     if ( config.protocol == "nmea" )
     {
-        auto communicator = std::make_shared< communication::nmea::Communicator >( config.serial, std::make_unique< communication::OSWrapper >() );
+        auto communicator = std::make_shared< communication::nmea::Communicator >( *config.serial, std::make_unique< communication::OSWrapper >() );
         tasks.emplace_back( std::make_unique< tasks::nmea::Listen >( config.nmea, communicator ) );
     }
     else if ( config.protocol == "modbus" )
     {
-        auto communicator = std::make_shared< communication::modbus::Communicator >( config.serial, std::make_unique< communication::OSWrapper >() );
+        auto communicator = std::make_shared< communication::modbus::Communicator >( *config.serial, std::make_unique< communication::OSWrapper >() );
         for ( const auto& slave : config.modbus.slaves )
         {
             // 1 slave == 1 task
@@ -88,7 +93,14 @@ std::list< rdbus::Manager > initializeManagers( const std::list< rdbus::config::
     std::list< rdbus::Manager > managers;
     for ( const auto& config : configs )
     {
-        managers.emplace_back( config.serial.path, initializeTasks( config ), output );
+        if ( config.serial.has_value() )
+        {
+            managers.emplace_back( config.serial->path, initializeTasks( config ), output );
+        }
+        else
+        {
+            throw Exception( "No serial configuration!" );
+        }
     }
 
     return managers;

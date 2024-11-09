@@ -1,5 +1,8 @@
 # rdbus
 
+- Added configuration settings for new `"ip"` (i.e. Industrial Protocol) `"protocol"`.
+- Added new input type - TCP/IP, configurable with new `"address"` section, which is mutually exclusive with `"serial"`.
+
 # 0.2.3
 - Fixed 100% CPU usage bug.
 

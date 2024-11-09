@@ -2,7 +2,7 @@
 
 #include "Buffer.hpp"
 #include "Sessioner.hpp"
-#include "rdbus/config/Output.hpp"
+#include "rdbus/config/Address.hpp"
 #include "rdbus/out/Output.hpp"
 #include <mutex>
 #include <nlohmann/json.hpp>
@@ -19,7 +19,7 @@ namespace rdbus::out::http
 class HTTP : public Output
 {
 public:
-    explicit HTTP( const config::Output& settings );
+    explicit HTTP( const config::Address& settings );
     ~HTTP();
 
     // This function does not actually send data but rather adds it to a buffer

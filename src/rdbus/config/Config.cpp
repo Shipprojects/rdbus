@@ -8,6 +8,7 @@
 using namespace nlohmann;
 using namespace rdbus::config::modbus;
 using namespace rdbus::config::nmea;
+using namespace rdbus::config::ip;
 
 namespace rdbus::config
 {
@@ -15,6 +16,66 @@ namespace rdbus::config
 using Slaves = Modbus::Slaves;
 using Registers = Slave::Registers;
 using Sentences = NMEA::Sentences;
+
+static void checkDuplicateModuleNames( std::list< Module > modules )
+{
+    modules.sort( []( const Module& left, const Module& right )
+                  { return left.name < right.name; } );
+
+    const auto& it = std::adjacent_find( modules.begin(), modules.end(),
+                                         []( const Module& left, const Module& right )
+                                         {
+                                             return left.name == right.name;
+                                         } );
+
+    tools::throwIf( it != modules.end(), "Duplicate module names found!" );
+}
+
+static void validateLimitModules( const std::list< Module >& modules, const Limits& limits )
+{
+    for ( const auto& limitModule : limits.modules )
+    {
+        tools::throwIf( std::find_if( modules.begin(), modules.end(), [ & ]( const Module& module )
+                                      { return limitModule == module.name; } ) == modules.end(),
+                        "No module named " + limitModule + " found in 'modules' section!" );
+    }
+}
+
+static void setOffsetValues( std::list< Module >& modules )
+{
+    if ( modules.size() == 1 )
+    {
+        return;
+    }
+
+    for ( auto it = std::next( modules.begin() ); it != modules.end(); it++ )
+    {
+        // If offset is not set
+        if ( it->offset == 0 )
+        {
+            const auto previous = std::prev( it );
+            it->offset = previous->offset + previous->instances.size();
+        }
+    }
+}
+
+static void checkOverlappingOffsets( std::list< Module >& modules )
+{
+    if ( modules.size() == 1 )
+    {
+        return;
+    }
+
+    for ( auto it = std::next( modules.begin() ); it != modules.end(); it++ )
+    {
+        // Offset overlapping can only happen if the offset is set manually
+        if ( it->offset != 0 )
+        {
+            const auto previous = std::prev( it );
+            tools::throwIf( it->offset < ( previous->offset + previous->instances.size() ), "Module offset overlapping detected!" );
+        }
+    }
+}
 
 static void checkDuplicateSentenceIDs( Sentences sentences )
 {
@@ -136,13 +197,48 @@ static void parseNMEA( const nlohmann::json& j, Config& x )
     x.nmea.withChecksum = withChecksum;
 }
 
+static void parseIP( const nlohmann::json& j, Config& x )
+{
+    std::list< Module > modules;
+    tools::parseKeyValue( j, "modules", modules, "No 'modules' section present!" );
+
+    if ( j.contains( "limits" ) )
+    {
+        Limits limits;
+        tools::parseKeyValue( j, "limits", limits );
+        x.ip.limits = limits;
+
+        validateLimitModules( modules, limits );
+    }
+
+    checkDuplicateModuleNames( modules );
+    checkOverlappingOffsets( modules );
+    setOffsetValues( modules );
+
+    x.ip.modules = modules;
+}
+
 void from_json( const nlohmann::json& j, Config& x )
 {
+    tools::throwIf( j.contains( "serial" ) && j.contains( "address" ), "Sections 'serial' and 'address' are mutually exclusive!" );
+    tools::throwIf( !j.contains( "serial" ) && !j.contains( "address" ), "No 'serial' or 'address' sections present!" );
+
     std::string protocol;
     tools::parseKeyValue( j, "protocol", protocol, "No 'protocol' name present!" );
 
-    Serial serial;
-    tools::parseKeyValue( j, "serial", serial, "No 'serial' section present!" );
+    if ( j.contains( "serial" ) )
+    {
+        Serial serial;
+        tools::parseKeyValue( j, "serial", serial );
+        x.serial = serial;
+    }
+
+    if ( j.contains( "address" ) )
+    {
+        Address address;
+        tools::parseKeyValue( j, "address", address );
+        x.address = address;
+    }
 
     if ( protocol == "modbus" )
     {
@@ -152,13 +248,16 @@ void from_json( const nlohmann::json& j, Config& x )
     {
         parseNMEA( j, x );
     }
+    else if ( protocol == "ip" )
+    {
+        parseIP( j, x );
+    }
     else
     {
         throw ParseException( "Unsupported protocol " + protocol + "!" );
     }
 
     x.protocol = protocol;
-    x.serial = serial;
 }
 
 } // namespace rdbus::config

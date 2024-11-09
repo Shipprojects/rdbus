@@ -1,0 +1,7 @@
+{
+    "poll_time_ms": 1000,
+    "modules":
+    [
+        "Sensors", "More sensors"
+    ]
+}
