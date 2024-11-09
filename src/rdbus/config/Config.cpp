@@ -72,7 +72,7 @@ static void checkOverlappingOffsets( std::list< Module >& modules )
         if ( it->offset != 0 )
         {
             const auto previous = std::prev( it );
-            tools::throwIf( it->offset < ( previous->offset + previous->instances.size() ), "Module absolute offset overlapping detected!" );
+            tools::throwIf( it->offset < ( previous->offset + previous->instances.size() ), "Module offset overlapping detected!" );
         }
     }
 }
@@ -220,7 +220,7 @@ static void parseIP( const nlohmann::json& j, Config& x )
 
 void from_json( const nlohmann::json& j, Config& x )
 {
-    tools::throwIf( j.contains( "serial" ) && j.contains( "address" ), "Sections 'serial' and 'address' ar mutually exclusive!" );
+    tools::throwIf( j.contains( "serial" ) && j.contains( "address" ), "Sections 'serial' and 'address' are mutually exclusive!" );
     tools::throwIf( !j.contains( "serial" ) && !j.contains( "address" ), "No 'serial' or 'address' sections present!" );
 
     std::string protocol;
