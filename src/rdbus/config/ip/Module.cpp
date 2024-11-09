@@ -18,10 +18,10 @@ void from_json( const nlohmann::json& j, Module& x )
     std::list< std::string > instances;
     tools::parseKeyValue( j, "instances", instances, "No 'instances' present in module!" );
 
-    int absoluteOffset = 0;
-    tools::parseKeyValue( j, "instances_absolute_offset", absoluteOffset );
+    int offset = 0;
+    tools::parseKeyValue( j, "offset", offset );
 
-    tools::throwIf( absoluteOffset < 0, "'instances_absolute_offset' cannot be less than 0!" );
+    tools::throwIf( offset < 0, "'offset' cannot be less than 0!" );
     tools::throwIf( instances.empty(), "'instances' empty in module!" );
     tools::throwIf( instances.size() != 1 &&
                     instances.size() != 2 &&
@@ -30,7 +30,7 @@ void from_json( const nlohmann::json& j, Module& x )
                     "Count of instances must be 1, 2, 4 or 8!" );
 
     x.name = name;
-    x.absoluteOffset = absoluteOffset;
+    x.offset = offset;
     x.instances = instances;
     x.pollTimeMs = Module::Millis( pollTimeMs );
 }

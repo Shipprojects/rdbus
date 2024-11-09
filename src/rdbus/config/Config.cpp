@@ -51,10 +51,10 @@ static void setOffsetValues( std::list< Module >& modules )
     for ( auto it = std::next( modules.begin() ); it != modules.end(); it++ )
     {
         // If offset is not set
-        if ( it->absoluteOffset == 0 )
+        if ( it->offset == 0 )
         {
             const auto previous = std::prev( it );
-            it->absoluteOffset = previous->absoluteOffset + previous->instances.size();
+            it->offset = previous->offset + previous->instances.size();
         }
     }
 }
@@ -68,11 +68,11 @@ static void checkOverlappingOffsets( std::list< Module >& modules )
 
     for ( auto it = std::next( modules.begin() ); it != modules.end(); it++ )
     {
-        // Offset overlapping can only happen if offset is set manually
-        if ( it->absoluteOffset != 0 )
+        // Offset overlapping can only happen if the offset is set manually
+        if ( it->offset != 0 )
         {
             const auto previous = std::prev( it );
-            tools::throwIf( it->absoluteOffset < ( previous->absoluteOffset + previous->instances.size() ), "Module absolute offset overlapping detected!" );
+            tools::throwIf( it->offset < ( previous->offset + previous->instances.size() ), "Module absolute offset overlapping detected!" );
         }
     }
 }

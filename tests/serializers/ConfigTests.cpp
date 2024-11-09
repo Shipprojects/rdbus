@@ -244,13 +244,13 @@ TEST( TestConfig, OffsetGap )
     const config::Config config = jsonIn;
 
     auto it = config.ip.modules.begin();
-    EXPECT_EQ( it->absoluteOffset, 0 );
+    EXPECT_EQ( it->offset, 0 );
     it++;
-    EXPECT_EQ( it->absoluteOffset, 4 );
+    EXPECT_EQ( it->offset, 4 );
     it++;
-    EXPECT_EQ( it->absoluteOffset, 6 );
+    EXPECT_EQ( it->offset, 6 );
     it++;
-    EXPECT_EQ( it->absoluteOffset, 8 );
+    EXPECT_EQ( it->offset, 8 );
 }
 
 TEST( TestConfig, OverlappingOffset )

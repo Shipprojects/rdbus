@@ -20,7 +20,7 @@
         {
             "name": "name_1",
             "poll_time_ms": 150,
-            "instances_absolute_offset": 12,
+            "offset": 12,
             "instances":
             [
                 "input_a",

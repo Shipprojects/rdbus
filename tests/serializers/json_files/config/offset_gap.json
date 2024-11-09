@@ -30,7 +30,7 @@
         {
             "name": "name_3",
             "poll_time_ms": 150,
-            "instances_absolute_offset": 6,
+            "offset": 6,
             "instances":
             [
                 "input_b",
