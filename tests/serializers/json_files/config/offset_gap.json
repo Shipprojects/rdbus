@@ -1,0 +1,49 @@
+{
+    "protocol": "ip",
+
+    "address": {
+        "ip": "192.168.10.23",
+        "port": 1000
+    },
+
+    "modules":
+    [
+        {
+            "name": "name_1",
+            "poll_time_ms": 150,
+            "instances":
+            [
+                "input_a",
+                "input_b",
+                "input_c",
+                "input_d"
+            ]
+        },
+        {
+            "name": "name_2",
+            "poll_time_ms": 150,
+            "instances":
+            [
+                "input_a"
+            ]
+        },
+        {
+            "name": "name_3",
+            "poll_time_ms": 150,
+            "instances_absolute_offset": 6,
+            "instances":
+            [
+                "input_b",
+                "input_c"
+            ]
+        },
+        {
+            "name": "name_4",
+            "poll_time_ms": 150,
+            "instances":
+            [
+                "input_c"
+            ]
+        }
+    ]
+}

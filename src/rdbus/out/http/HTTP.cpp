@@ -1,5 +1,4 @@
 #include "HTTP.hpp"
-#include "rdbus/config/Output.hpp"
 #include <httplib.h>
 #include <mutex>
 #include <nlohmann/json.hpp>
@@ -38,7 +37,7 @@ static void exceptionHandler( const httplib::Request&, httplib::Response& res, s
     res.status = httplib::StatusCode::InternalServerError_500;
 }
 
-HTTP::HTTP( const config::Output& settings )
+HTTP::HTTP( const config::Address& address )
 {
     server.Get( "/read",
                 [ & ]( const httplib::Request& req, httplib::Response& res )
@@ -78,8 +77,8 @@ HTTP::HTTP( const config::Output& settings )
 
     serverThread = std::thread( std::bind( &httplib::Server::listen,
                                            &server,
-                                           settings.ip.value(),
-                                           settings.port.value(),
+                                           address.ip,
+                                           address.port,
                                            0 ) );
 }
 
