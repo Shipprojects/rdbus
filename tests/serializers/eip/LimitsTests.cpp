@@ -5,7 +5,7 @@
 #include <nlohmann/json.hpp>
 #include <testDataDirectory.hpp>
 
-const std::string testFilePath = TEST_DATA_DIR "/serializers/json_files/ip/limits/";
+const std::string testFilePath = TEST_DATA_DIR "/serializers/json_files/eip/limits/";
 using namespace nlohmann;
 using namespace rdbus::config::eip;
 using namespace rdbus;

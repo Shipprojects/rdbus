@@ -206,7 +206,7 @@ static void parseIP( const nlohmann::json& j, Config& x )
     {
         Limits limits;
         tools::parseKeyValue( j, "limits", limits );
-        x.ip.limits = limits;
+        x.eip.limits = limits;
 
         validateLimitModules( modules, limits );
     }
@@ -215,7 +215,7 @@ static void parseIP( const nlohmann::json& j, Config& x )
     checkOverlappingOffsets( modules );
     setOffsetValues( modules );
 
-    x.ip.modules = modules;
+    x.eip.modules = modules;
 }
 
 void from_json( const nlohmann::json& j, Config& x )
