@@ -8,7 +8,7 @@
 using namespace nlohmann;
 using namespace rdbus::config::modbus;
 using namespace rdbus::config::nmea;
-using namespace rdbus::config::ip;
+using namespace rdbus::config::eip;
 
 namespace rdbus::config
 {

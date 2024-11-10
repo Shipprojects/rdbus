@@ -1,5 +1,5 @@
 #include "rdbus/config/Exception.hpp"
-#include "rdbus/config/ip/Module.hpp"
+#include "rdbus/config/eip/Module.hpp"
 #include "tests/utility.hpp"
 #include <gtest/gtest.h>
 #include <nlohmann/json.hpp>
@@ -7,7 +7,7 @@
 
 const std::string testFilePath = TEST_DATA_DIR "/serializers/json_files/ip/module/";
 using namespace nlohmann;
-using namespace rdbus::config::ip;
+using namespace rdbus::config::eip;
 using namespace rdbus;
 
 TEST( TestModule, Valid )

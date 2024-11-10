@@ -5,7 +5,7 @@
 #include <nlohmann/json.hpp>
 #include <string>
 
-namespace rdbus::config::ip
+namespace rdbus::config::eip
 {
 
 struct Module
@@ -23,4 +23,4 @@ struct Module
 
 void from_json( const nlohmann::json& j, Module& x );
 
-} // namespace rdbus::config::ip
+} // namespace rdbus::config::eip

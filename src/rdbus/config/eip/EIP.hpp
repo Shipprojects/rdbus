@@ -5,14 +5,14 @@
 #include <list>
 #include <optional>
 
-namespace rdbus::config::ip
+namespace rdbus::config::eip
 {
 
-// Industrial Protocol
-struct IP
+// Ethernet Industrial Protocol
+struct EIP
 {
     std::list< Module > modules;
     std::optional< Limits > limits;
 };
 
-} // namespace rdbus::config::ip
+} // namespace rdbus::config::eip

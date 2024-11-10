@@ -173,7 +173,7 @@ TEST( TestConfig, NoTalkerID )
 
 TEST( TestConfig, ValidIndustrialProtocol )
 {
-    const auto path = testFilePath + "valid_ip.json";
+    const auto path = testFilePath + "valid_eip.json";
 
     const auto jsonIn = getJsonFromPath( path );
     const config::Config config = jsonIn;
@@ -182,8 +182,8 @@ TEST( TestConfig, ValidIndustrialProtocol )
     ASSERT_FALSE( config.serial.has_value() );
     ASSERT_TRUE( config.address.has_value() );
     EXPECT_EQ( config.address->ip, "192.168.10.23" );
-    EXPECT_EQ( config.ip.modules.size(), 2 );
-    EXPECT_EQ( config.ip.limits->modules.size(), 1 );
+    EXPECT_EQ( config.eip.modules.size(), 2 );
+    EXPECT_EQ( config.eip.limits->modules.size(), 1 );
 }
 
 TEST( TestConfig, UnknownLimitModule )
@@ -200,7 +200,7 @@ TEST( TestConfig, UnknownLimitModule )
 
 TEST( TestConfig, NoIndustrialProtocolLimits )
 {
-    const auto path = testFilePath + "no_ip_limits.json";
+    const auto path = testFilePath + "no_eip_limits.json";
 
     const auto jsonIn = getJsonFromPath( path );
     const config::Config config = jsonIn;
@@ -208,13 +208,13 @@ TEST( TestConfig, NoIndustrialProtocolLimits )
     EXPECT_EQ( config.protocol, "ip" );
     ASSERT_FALSE( config.serial.has_value() );
     ASSERT_TRUE( config.address.has_value() );
-    EXPECT_EQ( config.ip.modules.size(), 2 );
-    EXPECT_FALSE( config.ip.limits.has_value() );
+    EXPECT_EQ( config.eip.modules.size(), 2 );
+    EXPECT_FALSE( config.eip.limits.has_value() );
 }
 
 TEST( TestConfig, NoIndustrialPorotocolModules )
 {
-    const auto path = testFilePath + "no_ip_modules.json";
+    const auto path = testFilePath + "no_eip_modules.json";
 
     const auto jsonIn = getJsonFromPath( path );
 
@@ -243,7 +243,7 @@ TEST( TestConfig, OffsetGap )
     const auto jsonIn = getJsonFromPath( path );
     const config::Config config = jsonIn;
 
-    auto it = config.ip.modules.begin();
+    auto it = config.eip.modules.begin();
     EXPECT_EQ( it->offset, 0 );
     it++;
     EXPECT_EQ( it->offset, 4 );
