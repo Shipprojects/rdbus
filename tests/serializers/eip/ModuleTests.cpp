@@ -82,7 +82,7 @@ TEST( TestModule, NoOffset )
 
     EXPECT_EQ( module.name, "Sensors" );
     EXPECT_EQ( module.pollTimeMs, Module::Millis( 150 ) );
-    EXPECT_EQ( module.offset, 0 );
+    EXPECT_EQ( module.offset, Module::defaultOffset );
     EXPECT_EQ( module.instances.size(), 1 );
     EXPECT_EQ( *module.instances.begin(), "sensor_2" );
 }

@@ -18,7 +18,9 @@ struct Module
     std::list< std::string > instances;
 
     // Absolute instance offset from all fields of other instances
-    unsigned int offset = 0;
+    // Instances start at 1
+    constexpr static unsigned int defaultOffset = 1;
+    unsigned int offset = defaultOffset;
 };
 
 void from_json( const nlohmann::json& j, Module& x );

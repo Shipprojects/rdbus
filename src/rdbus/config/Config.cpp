@@ -51,7 +51,7 @@ static void setOffsetValues( std::list< Module >& modules )
     for ( auto it = std::next( modules.begin() ); it != modules.end(); it++ )
     {
         // If offset is not set
-        if ( it->offset == 0 )
+        if ( it->offset == Module::defaultOffset )
         {
             const auto previous = std::prev( it );
             it->offset = previous->offset + previous->instances.size();
@@ -69,7 +69,8 @@ static void checkOverlappingOffsets( std::list< Module >& modules )
     for ( auto it = std::next( modules.begin() ); it != modules.end(); it++ )
     {
         // Offset overlapping can only happen if the offset is set manually
-        if ( it->offset != 0 )
+        // The offsets, which are set manually, arrive here with non-default value
+        if ( it->offset != Module::defaultOffset )
         {
             const auto previous = std::prev( it );
             tools::throwIf( it->offset < ( previous->offset + previous->instances.size() ), "Module offset overlapping detected!" );
@@ -197,7 +198,7 @@ static void parseNMEA( const nlohmann::json& j, Config& x )
     x.nmea.withChecksum = withChecksum;
 }
 
-static void parseIP( const nlohmann::json& j, Config& x )
+static void parseEIP( const nlohmann::json& j, Config& x )
 {
     std::list< Module > modules;
     tools::parseKeyValue( j, "modules", modules, "No 'modules' section present!" );
@@ -248,9 +249,9 @@ void from_json( const nlohmann::json& j, Config& x )
     {
         parseNMEA( j, x );
     }
-    else if ( protocol == "ip" )
+    else if ( protocol == "eip" )
     {
-        parseIP( j, x );
+        parseEIP( j, x );
     }
     else
     {

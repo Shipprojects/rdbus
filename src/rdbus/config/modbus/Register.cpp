@@ -12,18 +12,18 @@ namespace rdbus::config::modbus
 
 static std::pair< Type, std::list< int > > getWildType( const std::string& typeString, const std::string& orderString )
 {
-    throwIf( orderString.size() < sizeof( uint16_t ), "Data order " + orderString + " cannot be smaller than 2 bytes!" );
-    throwIf( orderString.size() > sizeof( uint64_t ), "Data order " + orderString + " cannot be bigger than 8 bytes!" );
-    throwIf( orderString.size() % 2, "Data order " + orderString + " does not contain even amount of characters!" );
+    tools::throwIf( orderString.size() < sizeof( uint16_t ), "Data order " + orderString + " cannot be smaller than 2 bytes!" );
+    tools::throwIf( orderString.size() > sizeof( uint64_t ), "Data order " + orderString + " cannot be bigger than 8 bytes!" );
+    tools::throwIf( orderString.size() % 2, "Data order " + orderString + " does not contain even amount of characters!" );
     // For case when there are 6 characters in data orer
-    throwIf( orderString.size() / 2 == 3, "Data order " + orderString + " is not a power of 2!" );
-    throwIf( typeString != "FLOAT" && typeString != "UINT" && typeString != "INT", "Unknown data type " + typeString + "!" );
-    throwIf( typeString == "FLOAT" && orderString.size() < sizeof( float ), "Order of float cannot be less than 4 bytes!" );
+    tools::throwIf( orderString.size() / 2 == 3, "Data order " + orderString + " is not a power of 2!" );
+    tools::throwIf( typeString != "FLOAT" && typeString != "UINT" && typeString != "INT", "Unknown data type " + typeString + "!" );
+    tools::throwIf( typeString == "FLOAT" && orderString.size() < sizeof( float ), "Order of float cannot be less than 4 bytes!" );
 
     std::list< int > order;
     for ( const char c : orderString )
     {
-        throwIf( c < 'A' || c > 'H', std::string( "Invalid character '" ) + c + "' in 'data_order'!" );
+        tools::throwIf( c < 'A' || c > 'H', std::string( "Invalid character '" ) + c + "' in 'data_order'!" );
 
         // Since valid characters are big letters, and
         // we start from 'A', subtract it's value
@@ -156,7 +156,7 @@ void from_json( const nlohmann::json& j, Register& x )
     }
     else
     {
-        throwIf( !order.empty(), "Unnecessary 'data_order' field with known 'data_type' field!" );
+        tools::throwIf( !order.empty(), "Unnecessary 'data_order' field with known 'data_type' field!" );
 
         const auto& [ dataType, dataOrder ] = getStandardType( type );
         x.type = dataType;

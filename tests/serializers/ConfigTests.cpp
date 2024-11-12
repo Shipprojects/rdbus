@@ -178,7 +178,7 @@ TEST( TestConfig, ValidIndustrialProtocol )
     const auto jsonIn = getJsonFromPath( path );
     const config::Config config = jsonIn;
 
-    EXPECT_EQ( config.protocol, "ip" );
+    EXPECT_EQ( config.protocol, "eip" );
     ASSERT_FALSE( config.serial.has_value() );
     ASSERT_TRUE( config.address.has_value() );
     EXPECT_EQ( config.address->ip, "192.168.10.23" );
@@ -205,7 +205,7 @@ TEST( TestConfig, NoIndustrialProtocolLimits )
     const auto jsonIn = getJsonFromPath( path );
     const config::Config config = jsonIn;
 
-    EXPECT_EQ( config.protocol, "ip" );
+    EXPECT_EQ( config.protocol, "eip" );
     ASSERT_FALSE( config.serial.has_value() );
     ASSERT_TRUE( config.address.has_value() );
     EXPECT_EQ( config.eip.modules.size(), 2 );
@@ -244,9 +244,9 @@ TEST( TestConfig, OffsetGap )
     const config::Config config = jsonIn;
 
     auto it = config.eip.modules.begin();
-    EXPECT_EQ( it->offset, 0 );
+    EXPECT_EQ( it->offset, 1 );
     it++;
-    EXPECT_EQ( it->offset, 4 );
+    EXPECT_EQ( it->offset, 5 );
     it++;
     EXPECT_EQ( it->offset, 6 );
     it++;
