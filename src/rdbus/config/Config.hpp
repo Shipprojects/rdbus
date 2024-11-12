@@ -2,7 +2,7 @@
 
 #include "Address.hpp"
 #include "Serial.hpp"
-#include "eip/EIP.hpp"
+#include "wago/Wago.hpp"
 #include "modbus/Modbus.hpp"
 #include "nmea/NMEA.hpp"
 #include <nlohmann/json.hpp>
@@ -18,7 +18,7 @@ struct Config
 
     modbus::Modbus modbus;
     nmea::NMEA nmea;
-    eip::EIP eip; // Ethernet Industrial Protocol, not to be confused with Internet Protocol!
+    wago::Wago wago;
 
     // Only one of these two is available for any given configuration
     std::optional< Serial > serial;

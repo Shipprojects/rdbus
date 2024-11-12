@@ -5,14 +5,14 @@
 #include <list>
 #include <optional>
 
-namespace rdbus::config::eip
+namespace rdbus::config::wago
 {
 
 // Ethernet Industrial Protocol
-struct EIP
+struct Wago
 {
     std::list< Module > modules;
     std::optional< Limits > limits;
 };
 
-} // namespace rdbus::config::eip
+} // namespace rdbus::config::wago

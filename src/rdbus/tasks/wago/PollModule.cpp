@@ -1,10 +1,12 @@
 #include "PollModule.hpp"
 #include <chrono>
 
+using namespace rdbus::config::wago;
+
 namespace rdbus::tasks::wago
 {
 
-PollModule::PollModule( const config::eip::Module& module, const Communicator& communicator )
+PollModule::PollModule( const Module& module, const Communicator& communicator )
 : module( module ),
   com( communicator )
 {

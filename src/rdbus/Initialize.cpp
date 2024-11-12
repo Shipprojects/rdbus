@@ -85,12 +85,12 @@ static Manager::Tasks initializeTasks( const config::Config& config )
             tasks.emplace_back( std::make_unique< tasks::modbus::PollSlave >( slave, communicator ) );
         }
     }
-    else if ( config.protocol == "eip" )
+    else if ( config.protocol == "wago" )
     {
-        throwIf( !config.address.has_value(), "'address' configuration required for 'protocol' eip!" );
+        throwIf( !config.address.has_value(), "'address' configuration required for 'protocol' wago!" );
 
         auto communicator = std::make_shared< communication::wago::Communicator >( *config.address );
-        for ( const auto& module : config.eip.modules )
+        for ( const auto& module : config.wago.modules )
         {
             // 1 module == 1 task
             tasks.emplace_back( std::make_unique< tasks::wago::PollModule >( module, communicator ) );

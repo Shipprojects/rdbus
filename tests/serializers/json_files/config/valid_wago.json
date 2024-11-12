@@ -1,5 +1,5 @@
 {
-    "protocol": "eip",
+    "protocol": "wago",
 
     "address": {
         "ip": "192.168.10.23",
@@ -9,7 +9,7 @@
     "modules":
     [
         {
-            "name": "name1",
+            "name": "name_1",
             "poll_time_ms": 150,
             "instances":
             [
@@ -18,7 +18,7 @@
             ]
         },
         {
-            "name": "name2",
+            "name": "name_2",
             "poll_time_ms": 150,
             "offset": 12,
             "instances":
@@ -27,5 +27,14 @@
                 "input_c"
             ]
         }
-    ]
+    ],
+
+    "limits":
+    {
+        "poll_time_ms": 1000,
+        "modules":
+        [
+            "name_2"
+        ]
+    }
 }

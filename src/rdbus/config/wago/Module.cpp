@@ -4,7 +4,7 @@
 
 using namespace nlohmann;
 
-namespace rdbus::config::eip
+namespace rdbus::config::wago
 {
 
 void from_json( const nlohmann::json& j, Module& x )
@@ -35,4 +35,4 @@ void from_json( const nlohmann::json& j, Module& x )
     x.pollTimeMs = Module::Millis( pollTimeMs );
 }
 
-} // namespace rdbus::config::eip
+} // namespace rdbus::config::wago

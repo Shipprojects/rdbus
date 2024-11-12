@@ -5,7 +5,7 @@
 #include <nlohmann/json.hpp>
 #include <string>
 
-namespace rdbus::config::eip
+namespace rdbus::config::wago
 {
 
 struct Limits
@@ -19,4 +19,4 @@ struct Limits
 
 void from_json( const nlohmann::json& j, Limits& x );
 
-} // namespace rdbus::config::eip
+} // namespace rdbus::config::wago

@@ -5,7 +5,7 @@
 #include <nlohmann/json.hpp>
 #include <string>
 
-namespace rdbus::config::eip
+namespace rdbus::config::wago
 {
 
 struct Module
@@ -25,4 +25,4 @@ struct Module
 
 void from_json( const nlohmann::json& j, Module& x );
 
-} // namespace rdbus::config::eip
+} // namespace rdbus::config::wago

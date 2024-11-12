@@ -1,6 +1,6 @@
 # rdbus
 
-- Added configuration settings for new `"eip"` (i.e. Ethernet Industrial Protocol) `"protocol"`.
+- Added configuration settings for new `"wago"` (based on Ethernet Industrial Protocol) `"protocol"`.
 - Added new input type - TCP/IP (as in Internet Protocol), configurable with new `"address"` section, which is mutually exclusive with `"serial"`.
 
 # 0.2.3

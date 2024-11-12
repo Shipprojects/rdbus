@@ -173,17 +173,17 @@ TEST( TestConfig, NoTalkerID )
 
 TEST( TestConfig, ValidIndustrialProtocol )
 {
-    const auto path = testFilePath + "valid_eip.json";
+    const auto path = testFilePath + "valid_wago.json";
 
     const auto jsonIn = getJsonFromPath( path );
     const config::Config config = jsonIn;
 
-    EXPECT_EQ( config.protocol, "eip" );
+    EXPECT_EQ( config.protocol, "wago" );
     ASSERT_FALSE( config.serial.has_value() );
     ASSERT_TRUE( config.address.has_value() );
     EXPECT_EQ( config.address->ip, "192.168.10.23" );
-    EXPECT_EQ( config.eip.modules.size(), 2 );
-    EXPECT_EQ( config.eip.limits->modules.size(), 1 );
+    EXPECT_EQ( config.wago.modules.size(), 2 );
+    EXPECT_EQ( config.wago.limits->modules.size(), 1 );
 }
 
 TEST( TestConfig, UnknownLimitModule )
@@ -200,21 +200,21 @@ TEST( TestConfig, UnknownLimitModule )
 
 TEST( TestConfig, NoIndustrialProtocolLimits )
 {
-    const auto path = testFilePath + "no_eip_limits.json";
+    const auto path = testFilePath + "no_wago_limits.json";
 
     const auto jsonIn = getJsonFromPath( path );
     const config::Config config = jsonIn;
 
-    EXPECT_EQ( config.protocol, "eip" );
+    EXPECT_EQ( config.protocol, "wago" );
     ASSERT_FALSE( config.serial.has_value() );
     ASSERT_TRUE( config.address.has_value() );
-    EXPECT_EQ( config.eip.modules.size(), 2 );
-    EXPECT_FALSE( config.eip.limits.has_value() );
+    EXPECT_EQ( config.wago.modules.size(), 2 );
+    EXPECT_FALSE( config.wago.limits.has_value() );
 }
 
 TEST( TestConfig, NoIndustrialPorotocolModules )
 {
-    const auto path = testFilePath + "no_eip_modules.json";
+    const auto path = testFilePath + "no_wago_modules.json";
 
     const auto jsonIn = getJsonFromPath( path );
 
@@ -243,7 +243,7 @@ TEST( TestConfig, OffsetGap )
     const auto jsonIn = getJsonFromPath( path );
     const config::Config config = jsonIn;
 
-    auto it = config.eip.modules.begin();
+    auto it = config.wago.modules.begin();
     EXPECT_EQ( it->offset, 1 );
     it++;
     EXPECT_EQ( it->offset, 5 );

@@ -8,7 +8,7 @@
 using namespace nlohmann;
 using namespace rdbus::config::modbus;
 using namespace rdbus::config::nmea;
-using namespace rdbus::config::eip;
+using namespace rdbus::config::wago;
 
 namespace rdbus::config
 {
@@ -198,7 +198,7 @@ static void parseNMEA( const nlohmann::json& j, Config& x )
     x.nmea.withChecksum = withChecksum;
 }
 
-static void parseEIP( const nlohmann::json& j, Config& x )
+static void parseWago( const nlohmann::json& j, Config& x )
 {
     std::list< Module > modules;
     tools::parseKeyValue( j, "modules", modules, "No 'modules' section present!" );
@@ -207,7 +207,7 @@ static void parseEIP( const nlohmann::json& j, Config& x )
     {
         Limits limits;
         tools::parseKeyValue( j, "limits", limits );
-        x.eip.limits = limits;
+        x.wago.limits = limits;
 
         validateLimitModules( modules, limits );
     }
@@ -216,7 +216,7 @@ static void parseEIP( const nlohmann::json& j, Config& x )
     checkOverlappingOffsets( modules );
     setOffsetValues( modules );
 
-    x.eip.modules = modules;
+    x.wago.modules = modules;
 }
 
 void from_json( const nlohmann::json& j, Config& x )
@@ -249,9 +249,9 @@ void from_json( const nlohmann::json& j, Config& x )
     {
         parseNMEA( j, x );
     }
-    else if ( protocol == "eip" )
+    else if ( protocol == "wago" )
     {
-        parseEIP( j, x );
+        parseWago( j, x );
     }
     else
     {

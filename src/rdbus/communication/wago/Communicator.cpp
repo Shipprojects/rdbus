@@ -2,11 +2,11 @@
 #include "rdbus/Data.hpp"
 #include "rdbus/communication/EIP.hpp"
 #include "rdbus/config/Address.hpp"
-#include "rdbus/config/eip/Module.hpp"
+#include "rdbus/config/wago/Module.hpp"
 #include <cip/EPath.h>
 #include <spdlog/spdlog.h>
 
-using namespace rdbus::config::eip;
+using namespace rdbus::config::wago;
 using namespace rdbus::config;
 
 namespace rdbus::communication::wago

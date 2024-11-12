@@ -1,13 +1,13 @@
 #include "rdbus/config/Exception.hpp"
-#include "rdbus/config/eip/Module.hpp"
+#include "rdbus/config/wago/Module.hpp"
 #include "tests/utility.hpp"
 #include <gtest/gtest.h>
 #include <nlohmann/json.hpp>
 #include <testDataDirectory.hpp>
 
-const std::string testFilePath = TEST_DATA_DIR "/serializers/json_files/eip/module/";
+const std::string testFilePath = TEST_DATA_DIR "/serializers/json_files/wago/module/";
 using namespace nlohmann;
-using namespace rdbus::config::eip;
+using namespace rdbus::config::wago;
 using namespace rdbus;
 
 TEST( TestModule, Valid )
