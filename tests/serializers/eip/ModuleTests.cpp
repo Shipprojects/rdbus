@@ -1,13 +1,13 @@
 #include "rdbus/config/Exception.hpp"
-#include "rdbus/config/ip/Module.hpp"
+#include "rdbus/config/wago/Module.hpp"
 #include "tests/utility.hpp"
 #include <gtest/gtest.h>
 #include <nlohmann/json.hpp>
 #include <testDataDirectory.hpp>
 
-const std::string testFilePath = TEST_DATA_DIR "/serializers/json_files/ip/module/";
+const std::string testFilePath = TEST_DATA_DIR "/serializers/json_files/wago/module/";
 using namespace nlohmann;
-using namespace rdbus::config::ip;
+using namespace rdbus::config::wago;
 using namespace rdbus;
 
 TEST( TestModule, Valid )
@@ -82,7 +82,7 @@ TEST( TestModule, NoOffset )
 
     EXPECT_EQ( module.name, "Sensors" );
     EXPECT_EQ( module.pollTimeMs, Module::Millis( 150 ) );
-    EXPECT_EQ( module.offset, 0 );
+    EXPECT_EQ( module.offset, Module::defaultOffset );
     EXPECT_EQ( module.instances.size(), 1 );
     EXPECT_EQ( *module.instances.begin(), "sensor_2" );
 }

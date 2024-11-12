@@ -57,7 +57,8 @@ struct Data
         {
             OS = 1,
             Modbus,
-            NMEA
+            NMEA,
+            Wago
         };
 
         Code code;

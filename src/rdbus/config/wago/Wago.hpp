@@ -5,14 +5,14 @@
 #include <list>
 #include <optional>
 
-namespace rdbus::config::ip
+namespace rdbus::config::wago
 {
 
-// Industrial Protocol
-struct IP
+// Ethernet Industrial Protocol
+struct Wago
 {
     std::list< Module > modules;
     std::optional< Limits > limits;
 };
 
-} // namespace rdbus::config::ip
+} // namespace rdbus::config::wago

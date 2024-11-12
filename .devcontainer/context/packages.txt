@@ -7,6 +7,7 @@ gdb
 git
 gnupg2
 libasound2
+libnet1-dev
 libnss3
 libsecret-1-0
 libxss1

@@ -8,7 +8,7 @@
 using namespace nlohmann;
 using namespace rdbus::config::modbus;
 using namespace rdbus::config::nmea;
-using namespace rdbus::config::ip;
+using namespace rdbus::config::wago;
 
 namespace rdbus::config
 {
@@ -51,7 +51,7 @@ static void setOffsetValues( std::list< Module >& modules )
     for ( auto it = std::next( modules.begin() ); it != modules.end(); it++ )
     {
         // If offset is not set
-        if ( it->offset == 0 )
+        if ( it->offset == Module::defaultOffset )
         {
             const auto previous = std::prev( it );
             it->offset = previous->offset + previous->instances.size();
@@ -69,7 +69,8 @@ static void checkOverlappingOffsets( std::list< Module >& modules )
     for ( auto it = std::next( modules.begin() ); it != modules.end(); it++ )
     {
         // Offset overlapping can only happen if the offset is set manually
-        if ( it->offset != 0 )
+        // The offsets, which are set manually, arrive here with non-default value
+        if ( it->offset != Module::defaultOffset )
         {
             const auto previous = std::prev( it );
             tools::throwIf( it->offset < ( previous->offset + previous->instances.size() ), "Module offset overlapping detected!" );
@@ -197,7 +198,7 @@ static void parseNMEA( const nlohmann::json& j, Config& x )
     x.nmea.withChecksum = withChecksum;
 }
 
-static void parseIP( const nlohmann::json& j, Config& x )
+static void parseWago( const nlohmann::json& j, Config& x )
 {
     std::list< Module > modules;
     tools::parseKeyValue( j, "modules", modules, "No 'modules' section present!" );
@@ -206,7 +207,7 @@ static void parseIP( const nlohmann::json& j, Config& x )
     {
         Limits limits;
         tools::parseKeyValue( j, "limits", limits );
-        x.ip.limits = limits;
+        x.wago.limits = limits;
 
         validateLimitModules( modules, limits );
     }
@@ -215,7 +216,7 @@ static void parseIP( const nlohmann::json& j, Config& x )
     checkOverlappingOffsets( modules );
     setOffsetValues( modules );
 
-    x.ip.modules = modules;
+    x.wago.modules = modules;
 }
 
 void from_json( const nlohmann::json& j, Config& x )
@@ -248,9 +249,9 @@ void from_json( const nlohmann::json& j, Config& x )
     {
         parseNMEA( j, x );
     }
-    else if ( protocol == "ip" )
+    else if ( protocol == "wago" )
     {
-        parseIP( j, x );
+        parseWago( j, x );
     }
     else
     {

@@ -1,7 +1,7 @@
 # rdbus
 
-- Added configuration settings for new `"ip"` (i.e. Industrial Protocol) `"protocol"`.
-- Added new input type - TCP/IP, configurable with new `"address"` section, which is mutually exclusive with `"serial"`.
+- Added configuration settings for new `"wago"` (based on Ethernet Industrial Protocol) `"protocol"`. `rdbus` is now able to read data from Wago PLCs.
+- Added new input type - TCP/IP (as in Internet Protocol), configurable with new `"address"` section, which is mutually exclusive with `"serial"`.
 
 # 0.2.3
 - Fixed 100% CPU usage bug.

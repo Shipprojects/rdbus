@@ -4,7 +4,7 @@
 
 using namespace nlohmann;
 
-namespace rdbus::config::ip
+namespace rdbus::config::wago
 {
 
 void from_json( const nlohmann::json& j, Limits& x )
@@ -21,4 +21,4 @@ void from_json( const nlohmann::json& j, Limits& x )
     x.pollTimeMs = Limits::Millis( pollTimeMs );
 }
 
-} // namespace rdbus::config::ip
+} // namespace rdbus::config::wago

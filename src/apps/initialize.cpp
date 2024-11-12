@@ -7,6 +7,8 @@
 #include <exception>
 #include <spdlog/spdlog.h>
 
+#include <utils/Logger.h> // Internal logger of EIPScanner that we have to disable
+
 using LogLevel = spdlog::level::level_enum;
 
 static rdbus::config::Output toOutputConfig( bool toStdout, const std::string& ipPort );
@@ -99,4 +101,7 @@ void initializeLogger( LogLevel loglevel )
     spdlog::set_level( loglevel );
     // Print [date time] [log-level] [thread-id] log
     spdlog::set_pattern( "[%Y-%m-%d %H:%M:%S:%e] [%l] [%t] %v" );
+
+    // Manually disable unnecessary EIPScanner library logger
+    eipScanner::utils::Logger::setLogLevel( eipScanner::utils::LogLevel::OFF );
 }

@@ -4,7 +4,7 @@
 
 using namespace nlohmann;
 
-namespace rdbus::config::ip
+namespace rdbus::config::wago
 {
 
 void from_json( const nlohmann::json& j, Module& x )
@@ -18,10 +18,10 @@ void from_json( const nlohmann::json& j, Module& x )
     std::list< std::string > instances;
     tools::parseKeyValue( j, "instances", instances, "No 'instances' present in module!" );
 
-    int offset = 0;
+    int offset = Module::defaultOffset;
     tools::parseKeyValue( j, "offset", offset );
 
-    tools::throwIf( offset < 0, "'offset' cannot be less than 0!" );
+    tools::throwIf( offset < 1, "'offset' cannot be less than 1!" );
     tools::throwIf( instances.empty(), "'instances' empty in module!" );
     tools::throwIf( instances.size() != 1 &&
                     instances.size() != 2 &&
@@ -35,4 +35,4 @@ void from_json( const nlohmann::json& j, Module& x )
     x.pollTimeMs = Module::Millis( pollTimeMs );
 }
 
-} // namespace rdbus::config::ip
+} // namespace rdbus::config::wago

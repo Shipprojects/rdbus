@@ -2,6 +2,7 @@
 #include "Manager.hpp"
 #include "communication/modbus/Communicator.hpp"
 #include "communication/nmea/Communicator.hpp"
+#include "communication/wago/Communicator.hpp"
 #include "config/Config.hpp"
 #include "out/http/HTTP.hpp"
 #include "out/pipe/Pipe.hpp"
@@ -9,6 +10,7 @@
 #include "rdbus/config/Output.hpp"
 #include "tasks/modbus/PollSlave.hpp"
 #include "tasks/nmea/Listen.hpp"
+#include "tasks/wago/PollModule.hpp"
 #include <filesystem>
 
 namespace rdbus
@@ -65,23 +67,33 @@ static Manager::Tasks initializeTasks( const config::Config& config )
 {
     Manager::Tasks tasks;
 
-    if ( !config.serial.has_value() )
-    {
-        throw Exception( "No serial configuration!" );
-    }
-
     if ( config.protocol == "nmea" )
     {
+        throwIf( !config.serial.has_value(), "'serial' configuration required for 'protocol' nmea!" );
+
         auto communicator = std::make_shared< communication::nmea::Communicator >( *config.serial, std::make_unique< communication::OSWrapper >() );
         tasks.emplace_back( std::make_unique< tasks::nmea::Listen >( config.nmea, communicator ) );
     }
     else if ( config.protocol == "modbus" )
     {
+        throwIf( !config.serial.has_value(), "'serial' configuration required for 'protocol' modbus!" );
+
         auto communicator = std::make_shared< communication::modbus::Communicator >( *config.serial, std::make_unique< communication::OSWrapper >() );
         for ( const auto& slave : config.modbus.slaves )
         {
             // 1 slave == 1 task
             tasks.emplace_back( std::make_unique< tasks::modbus::PollSlave >( slave, communicator ) );
+        }
+    }
+    else if ( config.protocol == "wago" )
+    {
+        throwIf( !config.address.has_value(), "'address' configuration required for 'protocol' wago!" );
+
+        auto communicator = std::make_shared< communication::wago::Communicator >( *config.address );
+        for ( const auto& module : config.wago.modules )
+        {
+            // 1 module == 1 task
+            tasks.emplace_back( std::make_unique< tasks::wago::PollModule >( module, communicator ) );
         }
     }
 
@@ -93,14 +105,16 @@ std::list< rdbus::Manager > initializeManagers( const std::list< rdbus::config::
     std::list< rdbus::Manager > managers;
     for ( const auto& config : configs )
     {
+        std::string managerName;
         if ( config.serial.has_value() )
         {
-            managers.emplace_back( config.serial->path, initializeTasks( config ), output );
+            managerName = config.serial->path;
         }
-        else
+        else if ( config.address.has_value() )
         {
-            throw Exception( "No serial configuration!" );
+            managerName = config.address->ip + ':' + std::to_string( config.address->port );
         }
+        managers.emplace_back( managerName, initializeTasks( config ), output );
     }
 
     return managers;
