@@ -15,4 +15,11 @@ void Pipe::send( const std::list< rdbus::Data >& list )
     std::cout << j.dump( indent ) + '\n';
 }
 
+void Pipe::send( const processing::Base::OutputList& list )
+{
+    for(const auto& entry: list)
+    {
+        // TODO
+    }
+}
 } // namespace rdbus::out::pipe

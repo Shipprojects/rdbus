@@ -94,4 +94,8 @@ void HTTP::send( const std::list< rdbus::Data >& list )
     buffer.add( list );
 }
 
+void HTTP::send( const processing::Base::OutputList& list )
+{
+}
+
 } // namespace rdbus::out::http

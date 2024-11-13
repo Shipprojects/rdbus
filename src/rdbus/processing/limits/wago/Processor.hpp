@@ -15,6 +15,7 @@ namespace rdbus::processing::limits::wago
 // NOTE! The processor is currently specialized to work with incoming Wago data only. In theory,
 // it is possible to make this class a generic processor and specialize it for each protocol
 // by inheriting this class and implementing a custom constructor for that specialization.
+// The Processor currently supports data of type int16_t only.
 class Processor : public Base
 {
 public:

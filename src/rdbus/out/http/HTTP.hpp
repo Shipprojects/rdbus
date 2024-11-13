@@ -22,9 +22,10 @@ public:
     explicit HTTP( const config::Address& settings );
     ~HTTP();
 
-    // This function does not actually send data but rather adds it to a buffer
+    // These functions do not actually send data but rather add it to a buffer
     // which gets sent on client request
-    void send( const std::list< rdbus::Data >& list ) override;
+    void send( const std::list< rdbus::Data >& ) override;
+    void send( const processing::Base::OutputList& ) override;
 
 private:
     httplib::Server server;
