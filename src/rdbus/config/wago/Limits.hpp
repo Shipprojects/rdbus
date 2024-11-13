@@ -10,8 +10,9 @@ namespace rdbus::config::wago
 
 struct Limits
 {
-    using Millis = std::chrono::milliseconds;
-    Millis pollTimeMs = Millis( 0 );
+    using Minutes = std::chrono::minutes;
+    // A time duration on how long to keep a record
+    Minutes duration = Minutes( 0 );
 
     // A list of modules for which to store and process min and max values of their fields
     std::list< std::string > modules;
