@@ -1,7 +1,7 @@
 #include "rdbus/config/wago/Limits.hpp"
 #include "rdbus/config/wago/Module.hpp"
 #include "rdbus/processing/limits/Data.hpp"
-#include "rdbus/processing/limits/Processor.hpp"
+#include "rdbus/processing/limits/wago/Processor.hpp"
 #include <gtest/gtest.h>
 
 using namespace rdbus;
@@ -17,7 +17,7 @@ TEST( TestLimitProcessor, Various )
     const config::wago::Limits limits{ .duration = config::wago::Limits::Minutes( 1 ),
                                        .modules = { "Module_2" } };
 
-    std::unique_ptr< processing::Base > processor = std::make_unique< limits::Processor >( modules, limits );
+    std::unique_ptr< processing::Base > processor = std::make_unique< limits::wago::Processor >( modules, limits );
 
     // No readings
     {
@@ -46,12 +46,12 @@ TEST( TestLimitProcessor, Various )
         const auto& results = processor->process( { reading1, reading2 } );
         ASSERT_EQ( results.size(), 1 );
         const auto data = std::dynamic_pointer_cast< limits::Data >( results.front() );
-        EXPECT_EQ( data->moduleName, "Module_2" );
+        EXPECT_EQ( data->deviceName, "Module_2" );
         EXPECT_EQ( data->instanceLimits.size(), 2 );
 
         auto it = data->instanceLimits.begin();
         {
-            EXPECT_EQ( it->instanceName, "instance_2" );
+            EXPECT_EQ( it->name, "instance_2" );
             ASSERT_TRUE( it->max.has_value() );
             ASSERT_TRUE( it->min.has_value() );
             EXPECT_EQ( it->max, 10000 );
@@ -59,7 +59,7 @@ TEST( TestLimitProcessor, Various )
         }
         {
             it++;
-            EXPECT_EQ( it->instanceName, "instance_3" );
+            EXPECT_EQ( it->name, "instance_3" );
             ASSERT_TRUE( it->max.has_value() );
             ASSERT_TRUE( it->min.has_value() );
             EXPECT_EQ( it->max, -20391 );
@@ -80,12 +80,12 @@ TEST( TestLimitProcessor, Various )
         const auto& results = processor->process( { reading } );
         ASSERT_EQ( results.size(), 1 );
         const auto data = std::dynamic_pointer_cast< limits::Data >( results.front() );
-        EXPECT_EQ( data->moduleName, "Module_2" );
+        EXPECT_EQ( data->deviceName, "Module_2" );
         EXPECT_EQ( data->instanceLimits.size(), 2 );
 
         auto it = data->instanceLimits.begin();
         {
-            EXPECT_EQ( it->instanceName, "instance_2" );
+            EXPECT_EQ( it->name, "instance_2" );
             ASSERT_TRUE( it->max.has_value() );
             ASSERT_TRUE( it->min.has_value() );
             EXPECT_EQ( it->max, 12000 );
@@ -93,7 +93,7 @@ TEST( TestLimitProcessor, Various )
         }
         {
             it++;
-            EXPECT_EQ( it->instanceName, "instance_3" );
+            EXPECT_EQ( it->name, "instance_3" );
             ASSERT_TRUE( it->max.has_value() );
             ASSERT_TRUE( it->min.has_value() );
             EXPECT_EQ( it->max, -20391 );
@@ -115,12 +115,12 @@ TEST( TestLimitProcessor, Various )
         const auto& results = processor->process( { reading } );
         ASSERT_EQ( results.size(), 1 );
         const auto data = std::dynamic_pointer_cast< limits::Data >( results.front() );
-        EXPECT_EQ( data->moduleName, "Module_2" );
+        EXPECT_EQ( data->deviceName, "Module_2" );
         EXPECT_EQ( data->instanceLimits.size(), 2 );
 
         auto it = data->instanceLimits.begin();
         {
-            EXPECT_EQ( it->instanceName, "instance_2" );
+            EXPECT_EQ( it->name, "instance_2" );
             ASSERT_TRUE( it->max.has_value() );
             ASSERT_TRUE( it->min.has_value() );
             EXPECT_EQ( it->max, 12000 );
@@ -128,7 +128,7 @@ TEST( TestLimitProcessor, Various )
         }
         {
             it++;
-            EXPECT_EQ( it->instanceName, "instance_3" );
+            EXPECT_EQ( it->name, "instance_3" );
             ASSERT_TRUE( it->max.has_value() );
             ASSERT_TRUE( it->min.has_value() );
             EXPECT_EQ( it->max, 57 );
@@ -149,12 +149,12 @@ TEST( TestLimitProcessor, Various )
         const auto& results = processor->process( { reading } );
         ASSERT_EQ( results.size(), 1 );
         const auto data = std::dynamic_pointer_cast< limits::Data >( results.front() );
-        EXPECT_EQ( data->moduleName, "Module_2" );
+        EXPECT_EQ( data->deviceName, "Module_2" );
         EXPECT_EQ( data->instanceLimits.size(), 2 );
 
         auto it = data->instanceLimits.begin();
         {
-            EXPECT_EQ( it->instanceName, "instance_2" );
+            EXPECT_EQ( it->name, "instance_2" );
             ASSERT_TRUE( it->max.has_value() );
             ASSERT_TRUE( it->min.has_value() );
             EXPECT_EQ( it->max, 12000 );
@@ -162,7 +162,7 @@ TEST( TestLimitProcessor, Various )
         }
         {
             it++;
-            EXPECT_EQ( it->instanceName, "instance_3" );
+            EXPECT_EQ( it->name, "instance_3" );
             ASSERT_TRUE( it->max.has_value() );
             ASSERT_TRUE( it->min.has_value() );
             EXPECT_EQ( it->max, 57 );
@@ -184,12 +184,12 @@ TEST( TestLimitProcessor, Various )
         const auto& results = processor->process( { reading } );
         ASSERT_EQ( results.size(), 1 );
         const auto data = std::dynamic_pointer_cast< limits::Data >( results.front() );
-        EXPECT_EQ( data->moduleName, "Module_2" );
+        EXPECT_EQ( data->deviceName, "Module_2" );
         EXPECT_EQ( data->instanceLimits.size(), 2 );
 
         auto it = data->instanceLimits.begin();
         {
-            EXPECT_EQ( it->instanceName, "instance_2" );
+            EXPECT_EQ( it->name, "instance_2" );
             ASSERT_TRUE( it->max.has_value() );
             ASSERT_TRUE( it->min.has_value() );
             EXPECT_EQ( it->max, 5 );
@@ -197,7 +197,7 @@ TEST( TestLimitProcessor, Various )
         }
         {
             it++;
-            EXPECT_EQ( it->instanceName, "instance_3" );
+            EXPECT_EQ( it->name, "instance_3" );
             EXPECT_FALSE( it->min.has_value() );
             EXPECT_FALSE( it->max.has_value() );
         }

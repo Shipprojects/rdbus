@@ -1,15 +1,20 @@
 #pragma once
 
-#include "Data.hpp"
+#include "rdbus/processing/limits/Data.hpp"
 #include "rdbus/Data.hpp"
 #include "rdbus/config/wago/Limits.hpp"
 #include "rdbus/config/wago/Module.hpp"
 #include "rdbus/processing/Base.hpp"
 #include <chrono>
 
-namespace rdbus::processing::limits
+namespace rdbus::processing::limits::wago
 {
 
+// A processor that outputs minmax values of all selected rdbus::Data field values which came
+// in a timespan of last 'duration' minutes
+// NOTE! The processor is currently specialized to work with incoming Wago data only. In theory,
+// it is possible to make this class a generic processor and specialize it for each protocol
+// by inheriting this class and implementing a custom constructor for that specialization.
 class Processor : public Base
 {
 public:

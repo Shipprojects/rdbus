@@ -9,18 +9,18 @@ namespace rdbus::processing::limits
 
 struct Data : public processing::Base::Data
 {
-    std::string moduleName;
+    std::string deviceName;
 
-    struct InstanceLimit
+    struct FieldLimit
     {
-        std::string instanceName;
+        std::string name;
 
         // There are no values if there were no readings long enough
         std::optional< int > min;
         std::optional< int > max;
     };
 
-    std::list< InstanceLimit > instanceLimits;
+    std::list< FieldLimit > instanceLimits;
 };
 
 void to_json( nlohmann::json& j, const Data& x );

@@ -1,9 +1,10 @@
 #include "Processor.hpp"
-#include "Data.hpp"
+#include "rdbus/processing/limits/Data.hpp"
 #include <iostream>
+
 using namespace rdbus::config::wago;
 
-namespace rdbus::processing::limits
+namespace rdbus::processing::limits::wago
 {
 
 Processor::Processor( const std::list< config::wago::Module >& modules, const config::wago::Limits& limits )
@@ -92,12 +93,12 @@ void Processor::insertNewValues( const ModuleName& module, const std::list< rdbu
 std::shared_ptr< limits::Data > Processor::generateOutput( const ModuleName& module )
 {
     auto output = std::make_shared< limits::Data >();
-    output->moduleName = module;
+    output->deviceName = module;
 
     for ( const auto& [ instanceName, values ] : data.at( module ) )
     {
-        limits::Data::InstanceLimit entry;
-        entry.instanceName = instanceName;
+        limits::Data::FieldLimit entry;
+        entry.name = instanceName;
         if ( !values.empty() )
         {
             const auto minmax = std::minmax_element( values.begin(), values.end(),
@@ -112,4 +113,4 @@ std::shared_ptr< limits::Data > Processor::generateOutput( const ModuleName& mod
     return output;
 }
 
-} // namespace rdbus::processing::limits
+} // namespace rdbus::processing::limits::wago

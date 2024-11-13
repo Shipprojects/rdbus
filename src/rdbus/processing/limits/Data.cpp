@@ -3,6 +3,6 @@
 namespace rdbus::processing::limits
 {
 
-static void to_json( nlohmann::json& j, const Data::InstanceLimit& x );
+static void to_json( nlohmann::json& j, const Data::FieldLimit& x );
 
 }
