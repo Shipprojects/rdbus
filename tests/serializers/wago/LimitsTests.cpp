@@ -17,7 +17,7 @@ TEST( TestLimits, Valid )
     const auto jsonIn = getJsonFromPath( path );
     const Limits limits = jsonIn;
 
-    EXPECT_EQ( limits.pollTimeMs, Limits::Millis( 1000 ) );
+    EXPECT_EQ( limits.duration, Limits::Minutes( 1000 ) );
     EXPECT_EQ( limits.modules.size(), 2 );
     EXPECT_EQ( *limits.modules.begin(), "Sensors" );
     EXPECT_EQ( *std::next( limits.modules.begin() ), "More sensors" );
@@ -49,7 +49,7 @@ TEST( TestLimits, NoModules )
 
 TEST( TestLimits, NoPollTimeMs )
 {
-    const auto path = testFilePath + "no_poll_time_ms.json";
+    const auto path = testFilePath + "no_storage_duration_minutes.json";
 
     const auto jsonIn = getJsonFromPath( path );
 

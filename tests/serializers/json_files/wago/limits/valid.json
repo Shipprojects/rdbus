@@ -1,5 +1,5 @@
 {
-    "poll_time_ms": 1000,
+    "storage_duration_minutes": 1000,
     "modules":
     [
         "Sensors", "More sensors"
