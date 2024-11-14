@@ -1,7 +1,7 @@
 #pragma once
 
 #include "rdbus/Data.hpp"
-#include "rdbus/config/wago/Limits.hpp"
+#include "rdbus/config/processors/Limits.hpp"
 #include "rdbus/config/wago/Module.hpp"
 #include "rdbus/processing/Base.hpp"
 #include "rdbus/processing/limits/Data.hpp"
@@ -19,7 +19,7 @@ namespace rdbus::processing::limits::wago
 class Processor : public Base
 {
 public:
-    Processor( Name name, const std::list< config::wago::Module >&, const config::wago::Limits& );
+    Processor( const std::list< config::wago::Module >&, const config::processors::Limits& );
     Base::OutputList process( const std::list< rdbus::Data >& ) override;
 
 private:

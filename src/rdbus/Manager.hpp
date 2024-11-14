@@ -1,7 +1,6 @@
 #pragma once
 
 #include "out/Output.hpp"
-#include "rdbus/Data.hpp"
 #include "rdbus/processing/Base.hpp"
 #include "tasks/Task.hpp"
 #include <list>
@@ -29,9 +28,6 @@ private:
     Tasks tasks; // Tasks to execute
     Output output; // Output module
     Processors processors; // Optional data processors
-
-    void send( const std::list< rdbus::Data >& );
-    void send( const processing::Base::OutputList& );
 };
 
 } // namespace rdbus

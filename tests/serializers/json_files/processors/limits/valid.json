@@ -1,6 +1,7 @@
 {
     "storage_duration_minutes": 1000,
-    "modules":
+    "devices":
     [
+        "Sensors", "More sensors"
     ]
 }

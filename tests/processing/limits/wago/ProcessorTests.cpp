@@ -1,4 +1,4 @@
-#include "rdbus/config/wago/Limits.hpp"
+#include "rdbus/config/processors/Limits.hpp"
 #include "rdbus/config/wago/Module.hpp"
 #include "rdbus/processing/limits/Data.hpp"
 #include "rdbus/processing/limits/wago/Processor.hpp"
@@ -14,10 +14,10 @@ TEST( TestLimitProcessor, Various )
         config::wago::Module{ .name = "Module_2", .instances{ "instance_2", "instance_3" } },
     };
 
-    const config::wago::Limits limits{ .duration = config::wago::Limits::Minutes( 1 ),
-                                       .modules = { "Module_2" } };
+    const config::processors::Limits limits{ .duration = config::processors::Limits::Minutes( 1 ),
+                                             .devices = { "Module_2" } };
 
-    std::unique_ptr< processing::Base > processor = std::make_unique< limits::wago::Processor >( Name::Limits, modules, limits );
+    std::unique_ptr< processing::Base > processor = std::make_unique< limits::wago::Processor >( modules, limits );
 
     // No readings
     {

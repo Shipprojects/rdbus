@@ -29,12 +29,15 @@
         }
     ],
 
-    "limits":
+    "data_processors":
     {
-        "storage_duration_minutes": 1000,
-        "modules":
-        [
-            "name_2"
-        ]
+        "limits":
+        {
+            "storage_duration_minutes": 1000,
+            "devices":
+            [
+                "name_2"
+            ]
+        }
     }
 }

@@ -16,16 +16,6 @@ const std::string& Manager::getName() const
     return name;
 }
 
-void Manager::send( const std::list< rdbus::Data >& list )
-{
-    output->send( list );
-}
-
-void Manager::send( const processing::Base::OutputList& list )
-{
-    output->send( list );
-}
-
 void Manager::run()
 {
     std::list< rdbus::Data > list;
@@ -37,12 +27,12 @@ void Manager::run()
 
     if ( !list.empty() )
     {
-        send( list );
+        output->send( list );
     }
 
     for ( auto& processor : processors )
     {
-        send( processor->process( list ) );
+        output->send( processor->process( list ), processor->getName() );
     }
 }
 

@@ -4,7 +4,7 @@
 
 using namespace nlohmann;
 
-namespace rdbus::config::wago
+namespace rdbus::config::processors
 {
 
 void from_json( const nlohmann::json& j, Limits& x )
@@ -12,13 +12,13 @@ void from_json( const nlohmann::json& j, Limits& x )
     int durationMinutes = 0;
     tools::parseKeyValue( j, "storage_duration_minutes", durationMinutes, "No 'storage_duration_minutes' field present in limits section!" );
 
-    std::list< std::string > modules;
-    tools::parseKeyValue( j, "modules", modules, "No 'modules' present in limits section!" );
+    std::list< std::string > devices;
+    tools::parseKeyValue( j, "devices", devices, "No 'devices' present in limits section!" );
 
-    tools::throwIf( modules.empty(), "'modules' empty in limits section!" );
+    tools::throwIf( devices.empty(), "'devices' empty in limits section!" );
 
-    x.modules = modules;
+    x.devices = devices;
     x.duration = Limits::Minutes( durationMinutes );
 }
 
-} // namespace rdbus::config::wago
+} // namespace rdbus::config::processors

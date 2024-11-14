@@ -1,18 +1,17 @@
 #include "Processor.hpp"
 #include "rdbus/processing/limits/Data.hpp"
-#include <iostream>
 
 using namespace rdbus::config::wago;
 
 namespace rdbus::processing::limits::wago
 {
 
-Processor::Processor( Name name, const std::list< config::wago::Module >& modules, const config::wago::Limits& limits )
-: Base( name ),
+Processor::Processor( const std::list< config::wago::Module >& modules, const config::processors::Limits& limits )
+: Base( Name::Limits ),
   duration( limits.duration )
 {
     // Generate map of modules which are defined in configuration
-    for ( const auto& moduleName : limits.modules )
+    for ( const auto& moduleName : limits.devices )
     {
         data.insert( { moduleName, {} } );
     }
@@ -69,17 +68,14 @@ auto Processor::getLatestTime( const rdbus::Data& input ) -> Timepoint
 
 void Processor::removeOldValues( const ModuleName& module, const Timepoint& currentTime )
 {
-    std::cout << "removeOldValues" << std::endl;
     auto& instanceMap = data.at( module );
 
     for ( auto& [ instanceName, values ] : instanceMap )
     {
-        std::cout << instanceName << " " << values.size() << std::endl;
         auto it = std::remove_if( values.begin(), values.end(),
                                   [ & ]( const TimestampedValue& tv )
                                   { return ( tv.first + duration ) < currentTime; } );
         values.erase( it, values.end() );
-        std::cout << instanceName << " " << values.size() << std::endl;
     }
 }
 

@@ -171,7 +171,7 @@ TEST( TestConfig, NoTalkerID )
                   config::ParseException );
 }
 
-TEST( TestConfig, ValidIndustrialProtocol )
+TEST( TestConfig, ValidWago )
 {
     const auto path = testFilePath + "valid_wago.json";
 
@@ -183,12 +183,13 @@ TEST( TestConfig, ValidIndustrialProtocol )
     ASSERT_TRUE( config.address.has_value() );
     EXPECT_EQ( config.address->ip, "192.168.10.23" );
     EXPECT_EQ( config.wago.modules.size(), 2 );
-    EXPECT_EQ( config.wago.limits->modules.size(), 1 );
+    ASSERT_TRUE( config.processors.limits.has_value() );
+    EXPECT_EQ( config.processors.limits->devices.size(), 1 );
 }
 
-TEST( TestConfig, UnknownLimitModule )
+TEST( TestConfig, UnknownLimitDevice )
 {
-    const auto path = testFilePath + "unknown_limit_module.json";
+    const auto path = testFilePath + "unknown_limit_device.json";
 
     const auto jsonIn = getJsonFromPath( path );
 
@@ -198,7 +199,7 @@ TEST( TestConfig, UnknownLimitModule )
                   config::ParseException );
 }
 
-TEST( TestConfig, NoIndustrialProtocolLimits )
+TEST( TestConfig, NoWagoLimits )
 {
     const auto path = testFilePath + "no_wago_limits.json";
 
@@ -209,10 +210,10 @@ TEST( TestConfig, NoIndustrialProtocolLimits )
     ASSERT_FALSE( config.serial.has_value() );
     ASSERT_TRUE( config.address.has_value() );
     EXPECT_EQ( config.wago.modules.size(), 2 );
-    EXPECT_FALSE( config.wago.limits.has_value() );
+    EXPECT_FALSE( config.processors.limits.has_value() );
 }
 
-TEST( TestConfig, NoIndustrialPorotocolModules )
+TEST( TestConfig, NoWagoModules )
 {
     const auto path = testFilePath + "no_wago_modules.json";
 

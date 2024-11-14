@@ -45,7 +45,7 @@ public:
     }
 
 private:
-    Name name;
+    const Name name;
 };
 
 } // namespace rdbus::processing
