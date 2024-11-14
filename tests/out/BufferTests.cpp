@@ -1,12 +1,12 @@
-#include "rdbus/out/http/Buffer.hpp"
+#include "rdbus/out/Buffer.hpp"
 #include <chrono>
 #include <gtest/gtest.h>
 
-using namespace rdbus::out::http;
+using namespace rdbus::out;
 
 TEST( TestBuffer, TestAdd )
 {
-    Buffer buffer;
+    Buffer< rdbus::Data > buffer;
 
     {
         rdbus::Data entry;
@@ -36,7 +36,7 @@ TEST( TestBuffer, TestAdd )
 // correctly then this test will hang.
 TEST( TestBuffer, TestSizeConstraint )
 {
-    Buffer buffer;
+    Buffer< rdbus::Data > buffer;
     int i = 0;
     while ( buffer.data.size() * sizeof( rdbus::Data ) < ( buffer.maxBytes + buffer.maxBytes / 10 ) )
     {
@@ -60,9 +60,9 @@ TEST( TestBuffer, TestSizeConstraint )
 
 TEST( TestBuffer, TestParseFromBeginning )
 {
-    Buffer buffer;
+    Buffer< rdbus::Data > buffer;
 
-    Buffer::TimePoint tp{};
+    BufferTimePoint tp{};
 
     {
         rdbus::Data entry;
@@ -91,7 +91,7 @@ TEST( TestBuffer, TestParseFromBeginning )
 
 TEST( TestBuffer, TestParseFromMiddle )
 {
-    Buffer buffer;
+    Buffer< rdbus::Data > buffer;
 
     {
         rdbus::Data entry;
@@ -121,7 +121,7 @@ TEST( TestBuffer, TestParseFromMiddle )
 
 TEST( TestBuffer, TestParseFromEnd )
 {
-    Buffer buffer;
+    Buffer< rdbus::Data > buffer;
 
     {
         rdbus::Data entry;

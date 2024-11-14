@@ -1,10 +1,10 @@
 #pragma once
 
-#include "rdbus/processing/limits/Data.hpp"
 #include "rdbus/Data.hpp"
 #include "rdbus/config/wago/Limits.hpp"
 #include "rdbus/config/wago/Module.hpp"
 #include "rdbus/processing/Base.hpp"
+#include "rdbus/processing/limits/Data.hpp"
 #include <chrono>
 
 namespace rdbus::processing::limits::wago
@@ -19,7 +19,7 @@ namespace rdbus::processing::limits::wago
 class Processor : public Base
 {
 public:
-    Processor( const std::list< config::wago::Module >&, const config::wago::Limits& );
+    Processor( Name name, const std::list< config::wago::Module >&, const config::wago::Limits& );
     Base::OutputList process( const std::list< rdbus::Data >& ) override;
 
 private:
@@ -45,4 +45,4 @@ private:
     const std::chrono::minutes duration;
 };
 
-} // namespace rdbus::processing::limits
+} // namespace rdbus::processing::limits::wago

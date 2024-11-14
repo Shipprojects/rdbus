@@ -7,6 +7,13 @@
 namespace rdbus::processing
 {
 
+// Enum of all processor names
+enum Name
+{
+    Read, // Not a real processor yet
+    Limits
+};
+
 // After getting rdbus::Data it is then possible to process it as necessary by various implementations of this class,
 // and then return type-erased data that can be serialized into JSON and outputted. So, when you implement your custom
 // processor of rdbus::Data, you shall:
@@ -16,6 +23,11 @@ namespace rdbus::processing
 class Base
 {
 public:
+    Base( Name name )
+    : name( name )
+    {
+    }
+
     // A pure virtual class to type erase output of different processors
     struct Data
     {
@@ -26,6 +38,14 @@ public:
     virtual OutputList process( const std::list< rdbus::Data >& ) = 0;
 
     virtual ~Base() = default;
+
+    Name getName() const
+    {
+        return name;
+    }
+
+private:
+    Name name;
 };
 
 } // namespace rdbus::processing

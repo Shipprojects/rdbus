@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Buffer.hpp"
 #include "Sessioner.hpp"
 #include "rdbus/config/Address.hpp"
+#include "rdbus/out/Buffer.hpp"
 #include "rdbus/out/Output.hpp"
 #include <mutex>
 #include <nlohmann/json.hpp>
@@ -32,7 +32,7 @@ private:
     std::thread serverThread;
     std::mutex mutex;
 
-    Buffer buffer;
+    Buffer< rdbus::Data > buffer;
     Sessioner sessioner;
 };
 
