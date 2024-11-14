@@ -21,6 +21,9 @@ struct Data : public processing::Base::Data
     };
 
     std::list< FieldLimit > instanceLimits;
+
+    const std::string& getDeviceName() const override;
+    nlohmann::json toJson() const override;
 };
 
 void to_json( nlohmann::json& j, const Data& x );

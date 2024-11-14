@@ -31,6 +31,9 @@ public:
     // A pure virtual class to type erase output of different processors
     struct Data
     {
+        virtual const std::string& getDeviceName() const = 0;
+        virtual nlohmann::json toJson() const = 0;
+
         virtual ~Data() = default;
     };
 

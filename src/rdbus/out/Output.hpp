@@ -10,7 +10,7 @@ class Output
 {
 public:
     virtual void send( const std::list< rdbus::Data >& ) = 0;
-    virtual void send( const processing::Base::OutputList& ) = 0;
+    virtual void send( const processing::Base::OutputList&, processing::Name ) = 0;
     virtual ~Output() = default;
 };
 

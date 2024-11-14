@@ -84,7 +84,7 @@ int main( int argc, char** argv )
         SPDLOG_INFO( "Starting" );
         const auto& configs = rdbus::initializeConfigs( args.configDir );
 
-        auto output = rdbus::initializeOutput( args.output );
+        auto output = rdbus::initializeOutput( args.output, configs );
         managers = rdbus::initializeManagers( configs, output );
     }
     catch ( const std::exception& e )

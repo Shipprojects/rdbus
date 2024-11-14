@@ -15,11 +15,13 @@ void Pipe::send( const std::list< rdbus::Data >& list )
     std::cout << j.dump( indent ) + '\n';
 }
 
-void Pipe::send( const processing::Base::OutputList& list )
+void Pipe::send( const processing::Base::OutputList& list, processing::Name name )
 {
-    for(const auto& entry: list)
+    for ( const auto& entry : list )
     {
-        // TODO
+        const nlohmann::json j = entry->toJson();
+        constexpr auto indent = 4;
+        std::cout << j.dump( indent ) + '\n';
     }
 }
 } // namespace rdbus::out::pipe

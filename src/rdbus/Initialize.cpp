@@ -8,6 +8,9 @@
 #include "out/pipe/Pipe.hpp"
 #include "rdbus/Exception.hpp"
 #include "rdbus/config/Output.hpp"
+#include "rdbus/config/processors/Processors.hpp"
+#include "rdbus/processing/Base.hpp"
+#include "rdbus/processing/limits/wago/Processor.hpp"
 #include "tasks/modbus/PollSlave.hpp"
 #include "tasks/nmea/Listen.hpp"
 #include "tasks/wago/PollModule.hpp"
@@ -46,12 +49,27 @@ std::list< config::Config > initializeConfigs( const std::string& configDir )
     return std::list< config::Config >( jsonList.begin(), jsonList.end() );
 }
 
-Manager::Output initializeOutput( const config::Output& output )
+static std::map< processing::Name, out::BufferType > processorDescriptions( const std::list< rdbus::config::Config >& configs )
+{
+    std::map< processing::Name, out::BufferType > result;
+
+    for ( const auto& config : configs )
+    {
+        if ( config.processors.limits.has_value() )
+        {
+            result.insert( { processing::Name::Limits, out::BufferType::Single } );
+        }
+    }
+
+    return result;
+}
+
+Manager::Output initializeOutput( const config::Output& output, const std::list< rdbus::config::Config >& configs )
 {
     if ( output.type == config::Output::TCP_IP )
     {
         SPDLOG_INFO( "Outputting using TCP/IP server" );
-        return std::make_shared< out::http::HTTP >( *output.address );
+        return std::make_shared< out::http::HTTP >( *output.address, processorDescriptions( configs ) );
     }
     else if ( output.type == config::Output::Stdout )
     {
@@ -100,9 +118,21 @@ static Manager::Tasks initializeTasks( const config::Config& config )
     return tasks;
 }
 
-std::list< rdbus::Manager > initializeManagers( const std::list< rdbus::config::Config >& configs, std::shared_ptr< out::Output > output )
+static std::list< std::unique_ptr< processing::Base > > initializeProcessors( const config::Config& config )
 {
-    std::list< rdbus::Manager > managers;
+    Manager::Processors processors;
+
+    if ( config.processors.limits.has_value() )
+    {
+        processors.emplace_back( std::make_unique< processing::limits::wago::Processor >( config.wago.modules, *config.processors.limits ) );
+    }
+
+    return processors;
+}
+
+std::list< Manager > initializeManagers( const std::list< config::Config >& configs, std::shared_ptr< out::Output > output )
+{
+    std::list< Manager > managers;
     for ( const auto& config : configs )
     {
         std::string managerName;
@@ -114,11 +144,10 @@ std::list< rdbus::Manager > initializeManagers( const std::list< rdbus::config::
         {
             managerName = config.address->ip + ':' + std::to_string( config.address->port );
         }
-        managers.emplace_back( managerName, initializeTasks( config ), output );
+        managers.emplace_back( managerName, initializeTasks( config ), output, initializeProcessors( config ) );
     }
 
     return managers;
 }
-
 
 } // namespace rdbus

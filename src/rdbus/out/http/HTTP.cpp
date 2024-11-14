@@ -37,7 +37,18 @@ static void exceptionHandler( const httplib::Request&, httplib::Response& res, s
     res.status = httplib::StatusCode::InternalServerError_500;
 }
 
-HTTP::HTTP( const config::Address& address )
+static int getIndent( const httplib::Request& req )
+{
+    if ( req.has_param( "pretty" ) )
+    {
+        return 4;
+    }
+
+    return -1; // no indent by default
+}
+
+HTTP::HTTP( const config::Address& address, const Storage& storage )
+: storage( storage )
 {
     server.Get( "/read",
                 [ & ]( const httplib::Request& req, httplib::Response& res )
@@ -62,16 +73,29 @@ HTTP::HTTP( const config::Address& address )
                             res.set_header( "Set-Cookie", std::to_string( sessionId ) );
                         }
 
-                        json = buffer.parseFrom( lastTime );
+                        json = this->storage.get( lastTime );
                     }
 
-                    int indent = -1; // no indent by default
-                    if ( req.has_param( "pretty" ) )
-                    {
-                        indent = 4;
-                    }
+                    const int indent = getIndent( req );
                     res.set_content( json.dump( indent ), "text/plain" );
                 } );
+
+    server.Get( "/process/limits",
+                [ & ]( const httplib::Request& req, httplib::Response& res )
+                {
+                    SPDLOG_INFO( "Received HTTP request " + req.path + " from " + req.remote_addr + ":" + std::to_string( req.remote_port ) );
+
+                    json json;
+                    // Accessing members, thread unsafe
+                    {
+                        std::lock_guard lock( mutex );
+                        json = this->storage.get( Sessioner::TimePoint(), processing::Name::Limits );
+                    }
+
+                    const int indent = getIndent( req );
+                    res.set_content( json.dump( indent ), "text/plain" );
+                } );
+
 
     server.set_exception_handler( exceptionHandler );
 
@@ -91,11 +115,13 @@ HTTP::~HTTP()
 void HTTP::send( const std::list< rdbus::Data >& list )
 {
     std::lock_guard lock( mutex );
-    buffer.add( list );
+    storage.put( list );
 }
 
-void HTTP::send( const processing::Base::OutputList& list )
+void HTTP::send( const processing::Base::OutputList& list, processing::Name name )
 {
+    std::lock_guard lock( mutex );
+    storage.put( list, name );
 }
 
 } // namespace rdbus::out::http

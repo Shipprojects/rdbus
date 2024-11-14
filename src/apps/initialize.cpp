@@ -87,8 +87,11 @@ rdbus::config::Output toOutputConfig( bool toStdout, const std::string& ipPort )
         const auto& port = ipPort.substr( ipPort.find( ':' ) + 1 );
 
         jsonConfig[ "type" ] = "TCP/IP";
-        jsonConfig[ "ip" ] = ip;
-        jsonConfig[ "port" ] = std::stoi( port );
+
+        nlohmann::json addressJson;
+        addressJson[ "ip" ] = ip;
+        addressJson[ "port" ] = std::stoi( port );
+        jsonConfig[ "address" ] = addressJson;
     }
 
     return jsonConfig;

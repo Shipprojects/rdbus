@@ -32,4 +32,14 @@ void to_json( nlohmann::json& j, const Data& x )
     j[ "fields" ] = x.instanceLimits;
 }
 
+const std::string& Data::getDeviceName() const
+{
+    return deviceName;
+}
+
+nlohmann::json Data::toJson() const
+{
+    return *this;
+}
+
 } // namespace rdbus::processing::limits

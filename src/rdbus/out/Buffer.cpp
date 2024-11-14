@@ -1,6 +1,5 @@
 #include "Buffer.hpp"
 #include "rdbus/processing/Base.hpp"
-#include "rdbus/processing/limits/Data.hpp"
 #include <memory>
 
 using namespace nlohmann;
@@ -16,18 +15,47 @@ Buffer< DataType >::Buffer() requires std::same_as< DataType, rdbus::Data >
 }
 
 template < class DataType >
-Buffer< DataType >::Buffer( BufferType type, processing::Name processorName ) requires std::same_as< DataType, BufferProcessingData >
+Buffer< DataType >::Buffer( BufferType type, processing::Name processorName ) requires std::same_as< DataType, ProcessingData >
 : type( type ),
   processorName( processorName )
 {
 }
 
+template <>
+void Buffer< std::shared_ptr< rdbus::processing::Base::Data > >::removeIntersection( const std::list< std::shared_ptr< rdbus::processing::Base::Data > >& list )
+{
+    for ( const auto& entry : list )
+    {
+        auto it = std::remove_if( data.begin(), data.end(),
+                                  [ & ]( const auto& element )
+                                  {
+                                      return element.second->getDeviceName() == entry->getDeviceName();
+                                  } );
+        data.erase( it, data.end() );
+    }
+}
+
+template <>
+void Buffer< rdbus::Data >::removeIntersection( const std::list< rdbus::Data >& list )
+{
+    for ( const auto& entry : list )
+    {
+        auto it = std::remove_if( data.begin(), data.end(),
+                                  [ & ]( const auto& element )
+                                  {
+                                      return element.second.deviceName == entry.deviceName;
+                                  } );
+        data.erase( it, data.end() );
+    }
+}
+
 template < class DataType >
 void Buffer< DataType >::add( const std::list< DataType >& list )
 {
+    // Erase entries which are going to be updated with new data
     if ( type == BufferType::Single )
     {
-        data.clear();
+        removeIntersection( list );
     }
 
     const auto& now = std::chrono::system_clock::now();
@@ -43,18 +71,21 @@ void Buffer< DataType >::add( const std::list< DataType >& list )
 }
 
 template <>
-json Buffer< rdbus::Data >::parseFrom( const BufferTimePoint& lastTime ) const
+json Buffer< std::shared_ptr< rdbus::processing::Base::Data > >::toJson( TimeDataPairs::const_iterator begin ) const
 {
-    // Find the data entry whos timepoint is bigger than the passed lastTime, because
-    // the bigger the timepoint the later it came.
-    // Note that the buffer will always be sorted relative according to the timepoints
-    // of fields.
-    const auto& begin = std::upper_bound( data.begin(), data.end(), lastTime,
-                                          []( const BufferTimePoint& value, const TimeDataPairs::value_type& pair )
-                                          {
-                                              return value < pair.first;
-                                          } );
+    auto json = json::array();
+    std::for_each( begin, data.end(),
+                   [ & ]( const TimeDataPairs::value_type& pair )
+                   {
+                       json.push_back( pair.second->toJson() );
+                   } );
 
+    return json;
+}
+
+template <>
+json Buffer< rdbus::Data >::toJson( TimeDataPairs::const_iterator begin ) const
+{
     auto json = json::array();
     std::for_each( begin, data.end(),
                    [ & ]( const TimeDataPairs::value_type& pair )
@@ -65,35 +96,23 @@ json Buffer< rdbus::Data >::parseFrom( const BufferTimePoint& lastTime ) const
     return json;
 }
 
-template <>
-json Buffer< std::shared_ptr< rdbus::processing::Base::Data > >::parseFrom( const BufferTimePoint& lastTime ) const
+template < class DataType >
+json Buffer< DataType >::parseFrom( const BufferTimePoint& lastTime ) const
 {
-    // Find the data entry whos timepoint is bigger than the passed lastTime, because
-    // the bigger the timepoint the later it came.
-    // Note that the buffer will always be sorted relative according to the timepoints
-    // of fields.
-    const auto& begin = std::upper_bound( data.begin(), data.end(), lastTime,
-                                          []( const BufferTimePoint& value, const TimeDataPairs::value_type& pair )
-                                          {
-                                              return value < pair.first;
-                                          } );
+    auto begin = data.begin();
+    if ( type == BufferType::Stream )
+    {
+        // Find the data entry whos timepoint is bigger than the passed lastTime, because
+        // the bigger the timepoint the later it came.
+        // Note that the buffer will always be sorted relative to the timepoints of fields.
+        begin = std::upper_bound( data.begin(), data.end(), lastTime,
+                                  []( const BufferTimePoint& value, const TimeDataPairs::value_type& pair )
+                                  {
+                                      return value < pair.first;
+                                  } );
+    }
 
-    auto json = json::array();
-    std::for_each( begin, data.end(),
-                   [ & ]( const TimeDataPairs::value_type& pair )
-                   {
-                       switch ( processorName )
-                       {
-                           case processing::Name::Limits:
-                           default:
-                           {
-                               const auto limits = std::dynamic_pointer_cast< processing::limits::Data >( pair.second );
-                               json.push_back( *limits );
-                           }
-                       }
-                   } );
-
-    return json;
+    return toJson( begin );
 }
 
 template < class DataType >
@@ -107,6 +126,6 @@ void Buffer< DataType >::constrainSize()
 }
 
 template class Buffer< rdbus::Data >;
-template class Buffer< BufferProcessingData >;
+template class Buffer< ProcessingData >;
 
 } // namespace rdbus::out
