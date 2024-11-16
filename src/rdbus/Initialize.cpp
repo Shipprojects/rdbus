@@ -124,7 +124,7 @@ static std::list< std::unique_ptr< processing::Processor > > initializeProcessor
 
     if ( config.processors.limits.has_value() )
     {
-        processors.emplace_back( std::make_unique< processing::limits::wago::Processor >( *config.processors.limits ) );
+        processors.emplace_back( std::make_unique< processing::limits::Processor >( *config.processors.limits ) );
     }
 
     return processors;

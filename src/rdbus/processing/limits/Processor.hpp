@@ -6,15 +6,11 @@
 #include "rdbus/processing/limits/Data.hpp"
 #include <chrono>
 
-namespace rdbus::processing::limits::wago
+namespace rdbus::processing::limits
 {
 
 // A processor that outputs minmax values of all selected rdbus::Data field values which came
 // in a timespan of last 'duration' minutes
-// NOTE! The processor is currently specialized to work with incoming Wago data only. In theory,
-// it is possible to make this class a generic processor and specialize it for each protocol
-// by inheriting this class and implementing a custom constructor for that specialization.
-// The Processor currently supports data of type int16_t only.
 class Processor : public processing::Processor
 {
 public:
@@ -45,4 +41,4 @@ private:
     const std::chrono::minutes duration;
 };
 
-} // namespace rdbus::processing::limits::wago
+} // namespace rdbus::processing::limits

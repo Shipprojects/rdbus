@@ -17,7 +17,7 @@ TEST( TestLimitProcessor, Various )
     const config::processors::Limits limits{ .duration = config::processors::Limits::Minutes( 1 ),
                                              .devices = { "Module_2" } };
 
-    std::unique_ptr< processing::Processor > processor = std::make_unique< limits::wago::Processor >( limits );
+    std::unique_ptr< processing::Processor > processor = std::make_unique< limits::Processor >( limits );
 
     // No readings
     {

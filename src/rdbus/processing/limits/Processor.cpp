@@ -1,7 +1,7 @@
 #include "Processor.hpp"
 #include "rdbus/processing/limits/Data.hpp"
 
-namespace rdbus::processing::limits::wago
+namespace rdbus::processing::limits
 {
 
 Processor::Processor( const config::processors::Limits& limits )
@@ -105,4 +105,4 @@ std::shared_ptr< limits::Data > Processor::generateOutput( const DeviceName& mod
     return output;
 }
 
-} // namespace rdbus::processing::limits::wago
+} // namespace rdbus::processing::limits
