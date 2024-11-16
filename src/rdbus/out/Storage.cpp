@@ -7,7 +7,7 @@ Storage::Storage( const std::map< ProcessorName, BufferType >& processorDescript
 {
     for ( const auto& [ processorName, bufferType ] : processorDescriptions )
     {
-        processorStorage.insert( { processorName, Buffer< ProcessingData >( bufferType, processorName ) } );
+        processorStorage.insert( { processorName, Buffer< ProcessingData >( bufferType ) } );
     }
 }
 
@@ -16,7 +16,7 @@ void Storage::put( const std::list< rdbus::Data >& list )
     rdbusDataStorage.add( list );
 }
 
-void Storage::put( const processing::Base::OutputList& list, ProcessorName processorName )
+void Storage::put( const processing::Processor::OutputList& list, ProcessorName processorName )
 {
     processorStorage.at( processorName ).add( list );
 }

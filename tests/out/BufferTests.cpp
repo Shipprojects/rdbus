@@ -1,5 +1,4 @@
 #include "rdbus/out/Buffer.hpp"
-#include "rdbus/processing/Processor.hpp"
 #include "rdbus/processing/limits/Data.hpp"
 #include <chrono>
 #include <gtest/gtest.h>
@@ -154,7 +153,7 @@ TEST( TestBuffer, BufferTypeSingle )
     using namespace rdbus::processing;
     using namespace nlohmann::literals;
 
-    Buffer< ProcessingData > buffer( BufferType::Single, Name::Limits );
+    Buffer< ProcessingData > buffer( BufferType::Single );
 
     {
         std::list< ProcessingData > list;
