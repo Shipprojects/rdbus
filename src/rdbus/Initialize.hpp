@@ -9,7 +9,7 @@ namespace rdbus
 {
 
 std::list< rdbus::config::Config > initializeConfigs( const std::string& configDir );
-rdbus::Manager::Output initializeOutput( const rdbus::config::Output& );
+rdbus::Manager::Output initializeOutput( const rdbus::config::Output&, const std::list< rdbus::config::Config >& );
 std::list< rdbus::Manager > initializeManagers( const std::list< rdbus::config::Config >&, std::shared_ptr< out::Output > );
 
 } // namespace rdbus

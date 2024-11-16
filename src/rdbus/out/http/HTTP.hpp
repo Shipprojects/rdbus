@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Buffer.hpp"
 #include "Sessioner.hpp"
 #include "rdbus/config/Address.hpp"
 #include "rdbus/out/Output.hpp"
+#include "rdbus/out/Storage.hpp"
 #include <mutex>
 #include <nlohmann/json.hpp>
 #include <thread>
@@ -19,19 +19,20 @@ namespace rdbus::out::http
 class HTTP : public Output
 {
 public:
-    explicit HTTP( const config::Address& settings );
+    HTTP( const config::Address& settings, const Storage& storage );
     ~HTTP();
 
-    // This function does not actually send data but rather adds it to a buffer
+    // These functions do not actually send data but rather add it to a buffer
     // which gets sent on client request
-    void send( const std::list< rdbus::Data >& list ) override;
+    void send( const std::list< rdbus::Data >& ) override;
+    void send( const processing::Processor::OutputList&, processing::Name ) override;
 
 private:
     httplib::Server server;
     std::thread serverThread;
     std::mutex mutex;
 
-    Buffer buffer;
+    Storage storage;
     Sessioner sessioner;
 };
 

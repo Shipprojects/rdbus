@@ -8,6 +8,7 @@
 using namespace nlohmann;
 using namespace rdbus::config::modbus;
 using namespace rdbus::config::nmea;
+using namespace rdbus::config::processors;
 using namespace rdbus::config::wago;
 
 namespace rdbus::config
@@ -33,11 +34,11 @@ static void checkDuplicateModuleNames( std::list< Module > modules )
 
 static void validateLimitModules( const std::list< Module >& modules, const Limits& limits )
 {
-    for ( const auto& limitModule : limits.modules )
+    for ( const auto& device : limits.devices )
     {
         tools::throwIf( std::find_if( modules.begin(), modules.end(), [ & ]( const Module& module )
-                                      { return limitModule == module.name; } ) == modules.end(),
-                        "No module named " + limitModule + " found in 'modules' section!" );
+                                      { return device == module.name; } ) == modules.end(),
+                        "No module named " + device + " found in 'modules' section!" );
     }
 }
 
@@ -203,13 +204,22 @@ static void parseWago( const nlohmann::json& j, Config& x )
     std::list< Module > modules;
     tools::parseKeyValue( j, "modules", modules, "No 'modules' section present!" );
 
-    if ( j.contains( "limits" ) )
+    // TODO
+    // This is a hack! 'data_processors' has to be checked in main from_json function
+    // to be able to validate limit modules for all protocols, and not only that of wago.
+    // It is currently permissible to do so only because limits module works with wago
+    // only.
+    if ( j.contains( "data_processors" ) )
     {
-        Limits limits;
-        tools::parseKeyValue( j, "limits", limits );
-        x.wago.limits = limits;
+        Processors processors;
+        tools::parseKeyValue( j, "data_processors", processors );
 
-        validateLimitModules( modules, limits );
+        if ( processors.limits.has_value() )
+        {
+            validateLimitModules( modules, *processors.limits );
+        }
+
+        x.processors = processors;
     }
 
     checkDuplicateModuleNames( modules );
@@ -239,6 +249,15 @@ void from_json( const nlohmann::json& j, Config& x )
         Address address;
         tools::parseKeyValue( j, "address", address );
         x.address = address;
+    }
+
+    if ( j.contains( "data_processors" ) )
+    {
+        Processors processors;
+        tools::parseKeyValue( j, "data_processors", processors );
+
+        tools::throwIf( j.contains( "limits" ) && ( protocol == "modbus" || protocol == "nmea" ),
+                        "'limits' processor is currently available for wago protocol only!" );
     }
 
     if ( protocol == "modbus" )
