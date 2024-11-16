@@ -40,7 +40,6 @@ TEST( TestData, DataFieldToJson )
     Data::Field field;
     field.name = "Torque";
     field.timestamp = timePoint;
-    field.type = Type::Int16;
     field.value = int16_t( 10 );
 
     const nlohmann::json j = field;
@@ -72,7 +71,6 @@ TEST( TestData, DataToJson )
         Data::Field field;
         field.name = "Torque";
         field.timestamp = timePoint;
-        field.type = Type::Int16;
         field.value = int16_t( 10 );
         fields.emplace_back( std::move( field ) );
     }
@@ -81,7 +79,6 @@ TEST( TestData, DataToJson )
         Data::Field field;
         field.name = "Shaft speed";
         field.timestamp = timePoint;
-        field.type = Type::Float;
         field.value = float( -23.959999084472656 );
         fields.emplace_back( std::move( field ) );
     }
@@ -90,7 +87,6 @@ TEST( TestData, DataToJson )
         Data::Field field;
         field.name = "Power";
         field.timestamp = timePoint;
-        field.type = Type::Uint32;
         field.value = uint32_t( 982 );
         fields.emplace_back( std::move( field ) );
     }

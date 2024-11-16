@@ -1,7 +1,7 @@
 #include "rdbus/config/processors/Limits.hpp"
 #include "rdbus/config/wago/Module.hpp"
+#include "rdbus/processing/limits//Processor.hpp"
 #include "rdbus/processing/limits/Data.hpp"
-#include "rdbus/processing/limits/wago/Processor.hpp"
 #include <gtest/gtest.h>
 
 using namespace rdbus;
@@ -17,7 +17,7 @@ TEST( TestLimitProcessor, Various )
     const config::processors::Limits limits{ .duration = config::processors::Limits::Minutes( 1 ),
                                              .devices = { "Module_2" } };
 
-    std::unique_ptr< processing::Processor > processor = std::make_unique< limits::wago::Processor >( modules, limits );
+    std::unique_ptr< processing::Processor > processor = std::make_unique< limits::Processor >( limits );
 
     // No readings
     {
@@ -31,15 +31,15 @@ TEST( TestLimitProcessor, Various )
         const rdbus::Data reading1{
             .deviceName = "Module_1",
             .fields = {
-            Data::Field{ .name = "instance_1", .value = static_cast< int16_t >( 7531 ), .type = Type::Int16, .timestamp = tp },
+            Data::Field{ .name = "instance_1", .value = static_cast< int16_t >( 7531 ), .timestamp = tp },
             },
         };
 
         const rdbus::Data reading2{
             .deviceName = "Module_2",
             .fields = {
-            Data::Field{ .name = "instance_2", .value = static_cast< int16_t >( 10000 ), .type = Type::Int16, .timestamp = tp },
-            Data::Field{ .name = "instance_3", .value = static_cast< int16_t >( -20391 ), .type = Type::Int16, .timestamp = tp },
+            Data::Field{ .name = "instance_2", .value = static_cast< int16_t >( 10000 ), .timestamp = tp },
+            Data::Field{ .name = "instance_3", .value = static_cast< int16_t >( -20391 ), .timestamp = tp },
             },
         };
 
@@ -54,16 +54,16 @@ TEST( TestLimitProcessor, Various )
             EXPECT_EQ( it->name, "instance_2" );
             ASSERT_TRUE( it->max.has_value() );
             ASSERT_TRUE( it->min.has_value() );
-            EXPECT_EQ( it->max, 10000 );
-            EXPECT_EQ( it->min, 10000 );
+            EXPECT_EQ( std::get< int16_t >( *it->max ), 10000 );
+            EXPECT_EQ( std::get< int16_t >( *it->min ), 10000 );
         }
         {
             it++;
             EXPECT_EQ( it->name, "instance_3" );
             ASSERT_TRUE( it->max.has_value() );
             ASSERT_TRUE( it->min.has_value() );
-            EXPECT_EQ( it->max, -20391 );
-            EXPECT_EQ( it->min, -20391 );
+            EXPECT_EQ( std::get< int16_t >( *it->max ), -20391 );
+            EXPECT_EQ( std::get< int16_t >( *it->min ), -20391 );
         }
     }
 
@@ -73,7 +73,7 @@ TEST( TestLimitProcessor, Various )
         const rdbus::Data reading{
             .deviceName = "Module_2",
             .fields = {
-            Data::Field{ .name = "instance_2", .value = static_cast< int16_t >( 12000 ), .type = Type::Int16, .timestamp = tp },
+            Data::Field{ .name = "instance_2", .value = static_cast< int16_t >( 12000 ), .timestamp = tp },
             },
         };
 
@@ -88,16 +88,16 @@ TEST( TestLimitProcessor, Various )
             EXPECT_EQ( it->name, "instance_2" );
             ASSERT_TRUE( it->max.has_value() );
             ASSERT_TRUE( it->min.has_value() );
-            EXPECT_EQ( it->max, 12000 );
-            EXPECT_EQ( it->min, 10000 );
+            EXPECT_EQ( std::get< int16_t >( *it->max ), 12000 );
+            EXPECT_EQ( std::get< int16_t >( *it->min ), 10000 );
         }
         {
             it++;
             EXPECT_EQ( it->name, "instance_3" );
             ASSERT_TRUE( it->max.has_value() );
             ASSERT_TRUE( it->min.has_value() );
-            EXPECT_EQ( it->max, -20391 );
-            EXPECT_EQ( it->min, -20391 );
+            EXPECT_EQ( std::get< int16_t >( *it->max ), -20391 );
+            EXPECT_EQ( std::get< int16_t >( *it->min ), -20391 );
         }
     }
 
@@ -107,8 +107,8 @@ TEST( TestLimitProcessor, Various )
         const rdbus::Data reading{
             .deviceName = "Module_2",
             .fields = {
-            Data::Field{ .name = "instance_2", .value = static_cast< int16_t >( 11500 ), .type = Type::Int16, .timestamp = tp },
-            Data::Field{ .name = "instance_3", .value = static_cast< int16_t >( 57 ), .type = Type::Int16, .timestamp = tp },
+            Data::Field{ .name = "instance_2", .value = static_cast< int16_t >( 11500 ), .timestamp = tp },
+            Data::Field{ .name = "instance_3", .value = static_cast< int16_t >( 57 ), .timestamp = tp },
             },
         };
 
@@ -123,16 +123,16 @@ TEST( TestLimitProcessor, Various )
             EXPECT_EQ( it->name, "instance_2" );
             ASSERT_TRUE( it->max.has_value() );
             ASSERT_TRUE( it->min.has_value() );
-            EXPECT_EQ( it->max, 12000 );
-            EXPECT_EQ( it->min, 10000 );
+            EXPECT_EQ( std::get< int16_t >( *it->max ), 12000 );
+            EXPECT_EQ( std::get< int16_t >( *it->min ), 10000 );
         }
         {
             it++;
             EXPECT_EQ( it->name, "instance_3" );
             ASSERT_TRUE( it->max.has_value() );
             ASSERT_TRUE( it->min.has_value() );
-            EXPECT_EQ( it->max, 57 );
-            EXPECT_EQ( it->min, -20391 );
+            EXPECT_EQ( std::get< int16_t >( *it->max ), 57 );
+            EXPECT_EQ( std::get< int16_t >( *it->min ), -20391 );
         }
     }
 
@@ -142,7 +142,7 @@ TEST( TestLimitProcessor, Various )
         const rdbus::Data reading{
             .deviceName = "Module_2",
             .fields = {
-            Data::Field{ .name = "instance_2", .value = static_cast< int16_t >( 11900 ), .type = Type::Int16, .timestamp = tp },
+            Data::Field{ .name = "instance_2", .value = static_cast< int16_t >( 11900 ), .timestamp = tp },
             },
         };
 
@@ -157,16 +157,16 @@ TEST( TestLimitProcessor, Various )
             EXPECT_EQ( it->name, "instance_2" );
             ASSERT_TRUE( it->max.has_value() );
             ASSERT_TRUE( it->min.has_value() );
-            EXPECT_EQ( it->max, 12000 );
-            EXPECT_EQ( it->min, 11500 );
+            EXPECT_EQ( std::get< int16_t >( *it->max ), 12000 );
+            EXPECT_EQ( std::get< int16_t >( *it->min ), 11500 );
         }
         {
             it++;
             EXPECT_EQ( it->name, "instance_3" );
             ASSERT_TRUE( it->max.has_value() );
             ASSERT_TRUE( it->min.has_value() );
-            EXPECT_EQ( it->max, 57 );
-            EXPECT_EQ( it->min, 57 );
+            EXPECT_EQ( std::get< int16_t >( *it->max ), 57 );
+            EXPECT_EQ( std::get< int16_t >( *it->min ), 57 );
         }
     }
 
@@ -177,7 +177,7 @@ TEST( TestLimitProcessor, Various )
         const rdbus::Data reading{
             .deviceName = "Module_2",
             .fields = {
-            Data::Field{ .name = "instance_2", .value = static_cast< int16_t >( 5 ), .type = Type::Int16, .timestamp = tp },
+            Data::Field{ .name = "instance_2", .value = static_cast< int16_t >( 5 ), .timestamp = tp },
             },
         };
 
@@ -192,8 +192,8 @@ TEST( TestLimitProcessor, Various )
             EXPECT_EQ( it->name, "instance_2" );
             ASSERT_TRUE( it->max.has_value() );
             ASSERT_TRUE( it->min.has_value() );
-            EXPECT_EQ( it->max, 5 );
-            EXPECT_EQ( it->min, 5 );
+            EXPECT_EQ( std::get< int16_t >( *it->max ), 5 );
+            EXPECT_EQ( std::get< int16_t >( *it->min ), 5 );
         }
         {
             it++;

@@ -2,6 +2,7 @@
 #include "Exception.hpp"
 #include "modbus/Modbus.hpp"
 #include "modbus/Register.hpp"
+#include "rdbus/config/nmea/Sentence.hpp"
 #include "utility.hpp"
 #include <nlohmann/json.hpp>
 
@@ -17,6 +18,7 @@ namespace rdbus::config
 using Slaves = Modbus::Slaves;
 using Registers = Slave::Registers;
 using Sentences = NMEA::Sentences;
+using Modules = Wago::Modules;
 
 static void checkDuplicateModuleNames( std::list< Module > modules )
 {
@@ -32,7 +34,27 @@ static void checkDuplicateModuleNames( std::list< Module > modules )
     tools::throwIf( it != modules.end(), "Duplicate module names found!" );
 }
 
-static void validateLimitModules( const std::list< Module >& modules, const Limits& limits )
+static void validateLimitsProcessorModbus( const Slaves& slaves, const Limits& limits )
+{
+    for ( const auto& device : limits.devices )
+    {
+        tools::throwIf( std::find_if( slaves.begin(), slaves.end(), [ & ]( const Slave& slave )
+                                      { return device == slave.name; } ) == slaves.end(),
+                        "No slave named " + device + " found in 'slaves' section!" );
+    }
+}
+
+static void validateLimitsProcessorNMEA( const Sentences& sentences, const Limits& limits )
+{
+    for ( const auto& device : limits.devices )
+    {
+        tools::throwIf( std::find_if( sentences.begin(), sentences.end(), [ & ]( const Sentence& sentence )
+                                      { return device == sentence.id; } ) == sentences.end(),
+                        "No sentence named " + device + " found in 'sentences' section!" );
+    }
+}
+
+static void validateLimitsProcessorWago( const Modules& modules, const Limits& limits )
 {
     for ( const auto& device : limits.devices )
     {
@@ -178,6 +200,14 @@ static void parseModbus( const nlohmann::json& j, Config& x )
     checkDuplicateSlaveIDs( slaves );
     checkDuplicateSlaveNames( slaves );
 
+    if ( j.contains( "data_processors" ) )
+    {
+        Processors processors;
+        tools::parseKeyValue( j, "data_processors", processors );
+        validateLimitsProcessorModbus( slaves, *processors.limits );
+        x.processors = processors;
+    }
+
     x.modbus.slaves = slaves;
 }
 
@@ -194,6 +224,14 @@ static void parseNMEA( const nlohmann::json& j, Config& x )
 
     checkDuplicateSentenceIDs( sentences );
 
+    if ( j.contains( "data_processors" ) )
+    {
+        Processors processors;
+        tools::parseKeyValue( j, "data_processors", processors );
+        validateLimitsProcessorNMEA( sentences, *processors.limits );
+        x.processors = processors;
+    }
+
     x.nmea.sentences = sentences;
     x.nmea.name = name;
     x.nmea.withChecksum = withChecksum;
@@ -204,27 +242,17 @@ static void parseWago( const nlohmann::json& j, Config& x )
     std::list< Module > modules;
     tools::parseKeyValue( j, "modules", modules, "No 'modules' section present!" );
 
-    // TODO
-    // This is a hack! 'data_processors' has to be checked in main from_json function
-    // to be able to validate limit modules for all protocols, and not only that of wago.
-    // It is currently permissible to do so only because limits module works with wago
-    // only.
+    checkDuplicateModuleNames( modules );
+    checkOverlappingOffsets( modules );
+    setOffsetValues( modules );
+
     if ( j.contains( "data_processors" ) )
     {
         Processors processors;
         tools::parseKeyValue( j, "data_processors", processors );
-
-        if ( processors.limits.has_value() )
-        {
-            validateLimitModules( modules, *processors.limits );
-        }
-
+        validateLimitsProcessorWago( modules, *processors.limits );
         x.processors = processors;
     }
-
-    checkDuplicateModuleNames( modules );
-    checkOverlappingOffsets( modules );
-    setOffsetValues( modules );
 
     x.wago.modules = modules;
 }
@@ -249,15 +277,6 @@ void from_json( const nlohmann::json& j, Config& x )
         Address address;
         tools::parseKeyValue( j, "address", address );
         x.address = address;
-    }
-
-    if ( j.contains( "data_processors" ) )
-    {
-        Processors processors;
-        tools::parseKeyValue( j, "data_processors", processors );
-
-        tools::throwIf( j.contains( "limits" ) && ( protocol == "modbus" || protocol == "nmea" ),
-                        "'limits' processor is currently available for wago protocol only!" );
     }
 
     if ( protocol == "modbus" )

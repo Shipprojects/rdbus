@@ -189,14 +189,38 @@ TEST( TestConfig, ValidWago )
 
 TEST( TestConfig, UnknownLimitDevice )
 {
-    const auto path = testFilePath + "unknown_limit_device.json";
+    {
+        const auto path = testFilePath + "unknown_limit_device_modbus.json";
 
-    const auto jsonIn = getJsonFromPath( path );
+        const auto jsonIn = getJsonFromPath( path );
 
-    EXPECT_THROW( {
-        config::Config config = jsonIn;
-    },
-                  config::ParseException );
+        EXPECT_THROW( {
+            config::Config config = jsonIn;
+        },
+                      config::ParseException );
+    }
+
+    {
+        const auto path = testFilePath + "unknown_limit_device_wago.json";
+
+        const auto jsonIn = getJsonFromPath( path );
+
+        EXPECT_THROW( {
+            config::Config config = jsonIn;
+        },
+                      config::ParseException );
+    }
+
+    {
+        const auto path = testFilePath + "unknown_limit_device_nmea.json";
+
+        const auto jsonIn = getJsonFromPath( path );
+
+        EXPECT_THROW( {
+            config::Config config = jsonIn;
+        },
+                      config::ParseException );
+    }
 }
 
 TEST( TestConfig, NoWagoLimits )

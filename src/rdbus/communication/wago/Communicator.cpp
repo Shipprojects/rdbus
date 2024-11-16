@@ -50,7 +50,6 @@ rdbus::Data Communicator::request( const Module& module )
 
             data.fields.emplace_back( rdbus::Data::Field{ .name = instanceName,
                                                           .value = extractAnalog( raw ),
-                                                          .type = Type::Int16,
                                                           .timestamp = std::chrono::system_clock::now() } );
         }
     }

@@ -10,7 +10,7 @@
 #include "rdbus/config/Output.hpp"
 #include "rdbus/config/processors/Processors.hpp"
 #include "rdbus/processing/Processor.hpp"
-#include "rdbus/processing/limits/wago/Processor.hpp"
+#include "rdbus/processing/limits//Processor.hpp"
 #include "tasks/modbus/PollSlave.hpp"
 #include "tasks/nmea/Listen.hpp"
 #include "tasks/wago/PollModule.hpp"
@@ -124,7 +124,7 @@ static std::list< std::unique_ptr< processing::Processor > > initializeProcessor
 
     if ( config.processors.limits.has_value() )
     {
-        processors.emplace_back( std::make_unique< processing::limits::wago::Processor >( config.wago.modules, *config.processors.limits ) );
+        processors.emplace_back( std::make_unique< processing::limits::Processor >( *config.processors.limits ) );
     }
 
     return processors;

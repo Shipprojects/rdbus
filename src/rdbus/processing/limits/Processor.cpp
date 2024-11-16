@@ -1,37 +1,17 @@
 #include "Processor.hpp"
 #include "rdbus/processing/limits/Data.hpp"
 
-using namespace rdbus::config::wago;
-
-namespace rdbus::processing::limits::wago
+namespace rdbus::processing::limits
 {
 
-Processor::Processor( const std::list< config::wago::Module >& modules, const config::processors::Limits& limits )
+Processor::Processor( const config::processors::Limits& limits )
 : processing::Processor( Name::Limits ),
   duration( limits.duration )
 {
-    // Generate map of modules which are defined in configuration
+    // Generate a map of enabled devices for which to process data
     for ( const auto& moduleName : limits.devices )
     {
         data.insert( { moduleName, {} } );
-    }
-
-    // Generate map of instances for each module in configuration
-    for ( auto& [ moduleName, instanceValueMap ] : data )
-    {
-        for ( const auto& module : modules )
-        {
-            // If the module is not present in limits configuration
-            if ( module.name != moduleName )
-            {
-                continue;
-            }
-
-            for ( const auto& instanceName : module.instances )
-            {
-                instanceValueMap.insert( { instanceName, {} } );
-            }
-        }
     }
 }
 
@@ -51,6 +31,7 @@ auto Processor::process( const std::list< rdbus::Data >& inputList ) -> OutputLi
         removeOldValues( module, getLatestTime( input ) );
 
         const auto& fields = input.fields;
+        addMissingFields( module, fields );
         insertNewValues( module, fields );
 
         auto output = generateOutput( module );
@@ -60,13 +41,23 @@ auto Processor::process( const std::list< rdbus::Data >& inputList ) -> OutputLi
     return outputList;
 }
 
+// If we encounter the field for the first time, we first have to prepare our device-field map
+void Processor::addMissingFields( const DeviceName& module, const std::list< rdbus::Data::Field >& fields )
+{
+    for ( const auto& field : fields )
+    {
+        // The std::map::insert adds the key only when the key did not exist yet
+        data.at( module ).insert( { field.name, {} } );
+    }
+}
+
 auto Processor::getLatestTime( const rdbus::Data& input ) -> Timepoint
 {
     // The fields here must not be empty, otherwise this part will cause Undefined Behavior!
     return input.fields.front().timestamp;
 }
 
-void Processor::removeOldValues( const ModuleName& module, const Timepoint& currentTime )
+void Processor::removeOldValues( const DeviceName& module, const Timepoint& currentTime )
 {
     auto& instanceMap = data.at( module );
 
@@ -79,15 +70,19 @@ void Processor::removeOldValues( const ModuleName& module, const Timepoint& curr
     }
 }
 
-void Processor::insertNewValues( const ModuleName& module, const std::list< rdbus::Data::Field >& fields )
+void Processor::insertNewValues( const DeviceName& module, const std::list< rdbus::Data::Field >& fields )
 {
     for ( const auto& field : fields )
     {
-        data.at( module ).at( field.name ).emplace_back( field.timestamp, std::get< int16_t >( field.value ) );
+        // We cannot process valueless fields
+        if ( field.value.has_value() )
+        {
+            data.at( module ).at( field.name ).emplace_back( field.timestamp, field.value.value() );
+        }
     }
 }
 
-std::shared_ptr< limits::Data > Processor::generateOutput( const ModuleName& module )
+std::shared_ptr< limits::Data > Processor::generateOutput( const DeviceName& module )
 {
     auto output = std::make_shared< limits::Data >();
     output->deviceName = module;
@@ -110,4 +105,4 @@ std::shared_ptr< limits::Data > Processor::generateOutput( const ModuleName& mod
     return output;
 }
 
-} // namespace rdbus::processing::limits::wago
+} // namespace rdbus::processing::limits

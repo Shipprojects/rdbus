@@ -1,0 +1,43 @@
+{
+    "protocol": "nmea",
+
+    "serial": {
+      "baud_rate": 4800,
+      "parity": "even",
+      "path": "/dev/ttyS0",
+      "stop_bits_count": 1,
+      "response_timeout_ms": 500,
+      "line_timeout_ms": 10
+    },
+
+    "checksum": true,
+    "name": "RPM reader",
+
+    "sentences":[
+        {
+            "id": "RPM",
+            "fields": [
+                {
+                    "name": "Source",
+                    "data_type": "STRING"
+                },
+                {
+                    "name": "Engine",
+                    "data_type": "UINT"
+                }
+            ]
+        }
+    ],
+
+    "data_processors":
+    {
+        "limits":
+        {
+            "storage_duration_minutes": 1000,
+            "devices":
+            [
+                "TIM"
+            ]
+        }
+    }
+}
