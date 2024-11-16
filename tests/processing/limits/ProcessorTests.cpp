@@ -1,7 +1,7 @@
 #include "rdbus/config/processors/Limits.hpp"
 #include "rdbus/config/wago/Module.hpp"
+#include "rdbus/processing/limits//Processor.hpp"
 #include "rdbus/processing/limits/Data.hpp"
-#include "rdbus/processing/limits/wago/Processor.hpp"
 #include <gtest/gtest.h>
 
 using namespace rdbus;

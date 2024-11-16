@@ -10,7 +10,7 @@
 #include "rdbus/config/Output.hpp"
 #include "rdbus/config/processors/Processors.hpp"
 #include "rdbus/processing/Processor.hpp"
-#include "rdbus/processing/limits/wago/Processor.hpp"
+#include "rdbus/processing/limits//Processor.hpp"
 #include "tasks/modbus/PollSlave.hpp"
 #include "tasks/nmea/Listen.hpp"
 #include "tasks/wago/PollModule.hpp"
