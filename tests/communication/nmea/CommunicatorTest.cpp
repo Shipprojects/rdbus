@@ -249,38 +249,45 @@ TEST( TestCommunicatorNMEA, MergedResponse )
 
         auto fieldIt = it->fields.begin();
         EXPECT_EQ( fieldIt->name, "Degrees true" );
-        EXPECT_EQ( fieldIt->type, Type::Uint64 );
-        EXPECT_EQ( std::get< uint64_t >( fieldIt->value ), 55 );
+        ASSERT_TRUE( fieldIt->value.has_value() );
+        ASSERT_TRUE( std::holds_alternative< uint64_t >( fieldIt->value.value() ) );
+        EXPECT_EQ( std::get< uint64_t >( *fieldIt->value ), 55 );
 
         fieldIt++;
         EXPECT_EQ( fieldIt->name, "True" );
-        EXPECT_EQ( fieldIt->type, Type::String );
-        EXPECT_EQ( std::get< std::string >( fieldIt->value ), "T" );
+        ASSERT_TRUE( fieldIt->value.has_value() );
+        ASSERT_TRUE( std::holds_alternative< std::string >( fieldIt->value.value() ) );
+        EXPECT_EQ( std::get< std::string >( *fieldIt->value ), "T" );
 
         fieldIt++;
         EXPECT_EQ( fieldIt->name, "Degrees magnetic" );
-        EXPECT_EQ( fieldIt->type, Type::Uint64 );
-        EXPECT_EQ( std::get< uint64_t >( fieldIt->value ), 43 );
+        ASSERT_TRUE( fieldIt->value.has_value() );
+        ASSERT_TRUE( std::holds_alternative< uint64_t >( fieldIt->value.value() ) );
+        EXPECT_EQ( std::get< uint64_t >( *fieldIt->value ), 43 );
 
         fieldIt++;
         EXPECT_EQ( fieldIt->name, "Magnetic" );
-        EXPECT_EQ( fieldIt->type, Type::String );
-        EXPECT_EQ( std::get< std::string >( fieldIt->value ), "M" );
+        ASSERT_TRUE( fieldIt->value.has_value() );
+        ASSERT_TRUE( std::holds_alternative< std::string >( fieldIt->value.value() ) );
+        EXPECT_EQ( std::get< std::string >( *fieldIt->value ), "M" );
 
         fieldIt++;
         EXPECT_EQ( fieldIt->name, "STW (knots/h)" );
-        EXPECT_EQ( fieldIt->type, Type::Uint64 );
-        EXPECT_EQ( std::get< uint64_t >( fieldIt->value ), 22 );
+        ASSERT_TRUE( fieldIt->value.has_value() );
+        ASSERT_TRUE( std::holds_alternative< uint64_t >( fieldIt->value.value() ) );
+        EXPECT_EQ( std::get< uint64_t >( *fieldIt->value ), 22 );
 
         fieldIt++;
         EXPECT_EQ( fieldIt->name, "Units" );
-        EXPECT_EQ( fieldIt->type, Type::String );
-        EXPECT_EQ( std::get< std::string >( fieldIt->value ), "N" );
+        ASSERT_TRUE( fieldIt->value.has_value() );
+        ASSERT_TRUE( std::holds_alternative< std::string >( fieldIt->value.value() ) );
+        EXPECT_EQ( std::get< std::string >( *fieldIt->value ), "N" );
 
         fieldIt++;
         EXPECT_EQ( fieldIt->name, "More" );
-        EXPECT_EQ( fieldIt->type, Type::String );
-        EXPECT_EQ( std::get< std::string >( fieldIt->value ), "11" );
+        ASSERT_TRUE( fieldIt->value.has_value() );
+        ASSERT_TRUE( std::holds_alternative< std::string >( fieldIt->value.value() ) );
+        EXPECT_EQ( std::get< std::string >( *fieldIt->value ), "11" );
     }
 
     it++;
@@ -293,32 +300,37 @@ TEST( TestCommunicatorNMEA, MergedResponse )
 
         auto fieldIt = it->fields.begin();
         EXPECT_EQ( fieldIt->name, "Longitudinal water speed" );
-        EXPECT_EQ( fieldIt->type, Type::Double );
-        EXPECT_EQ( std::get< double >( fieldIt->value ), 55.42 );
+        ASSERT_TRUE( fieldIt->value.has_value() );
+        ASSERT_TRUE( std::holds_alternative< double >( fieldIt->value.value() ) );
+        EXPECT_EQ( std::get< double >( *fieldIt->value ), 55.42 );
 
         fieldIt++;
         EXPECT_EQ( fieldIt->name, "Transverse water speed" );
-        EXPECT_EQ( fieldIt->type, Type::None );
+        EXPECT_FALSE( fieldIt->value.has_value() );
 
         fieldIt++;
         EXPECT_EQ( fieldIt->name, "Data valid" );
-        EXPECT_EQ( fieldIt->type, Type::String );
-        EXPECT_EQ( std::get< std::string >( fieldIt->value ), "V" );
+        ASSERT_TRUE( fieldIt->value.has_value() );
+        ASSERT_TRUE( std::holds_alternative< std::string >( fieldIt->value.value() ) );
+        EXPECT_EQ( std::get< std::string >( *fieldIt->value ), "V" );
 
         fieldIt++;
         EXPECT_EQ( fieldIt->name, "Longitudinal ground speed" );
-        EXPECT_EQ( fieldIt->type, Type::Double );
-        EXPECT_EQ( std::get< double >( fieldIt->value ), 424.33 );
+        ASSERT_TRUE( fieldIt->value.has_value() );
+        ASSERT_TRUE( std::holds_alternative< double >( fieldIt->value.value() ) );
+        EXPECT_EQ( std::get< double >( *fieldIt->value ), 424.33 );
 
         fieldIt++;
         EXPECT_EQ( fieldIt->name, "Transverse ground speed" );
-        EXPECT_EQ( fieldIt->type, Type::Double );
-        EXPECT_EQ( std::get< double >( fieldIt->value ), 2321.22 );
+        ASSERT_TRUE( fieldIt->value.has_value() );
+        ASSERT_TRUE( std::holds_alternative< double >( fieldIt->value.value() ) );
+        EXPECT_EQ( std::get< double >( *fieldIt->value ), 2321.22 );
 
         fieldIt++;
         EXPECT_EQ( fieldIt->name, "Data valid" );
-        EXPECT_EQ( fieldIt->type, Type::String );
-        EXPECT_EQ( std::get< std::string >( fieldIt->value ), "V" );
+        ASSERT_TRUE( fieldIt->value.has_value() );
+        ASSERT_TRUE( std::holds_alternative< std::string >( fieldIt->value.value() ) );
+        EXPECT_EQ( std::get< std::string >( *fieldIt->value ), "V" );
     }
 
     it++;
@@ -359,31 +371,35 @@ TEST( TestCommunicatorNMEA, MergedResponse )
 
         auto fieldIt = it->fields.begin();
         EXPECT_EQ( fieldIt->name, "Depth" );
-        EXPECT_EQ( fieldIt->type, Type::Double );
-        EXPECT_EQ( std::get< double >( fieldIt->value ), 1330.5 );
+        ASSERT_TRUE( fieldIt->value.has_value() );
+        ASSERT_TRUE( std::holds_alternative< double >( fieldIt->value.value() ) );
+        EXPECT_EQ( std::get< double >( *fieldIt->value ), 1330.5 );
 
         fieldIt++;
         EXPECT_EQ( fieldIt->name, "Units" );
-        EXPECT_EQ( fieldIt->type, Type::String );
-        EXPECT_EQ( std::get< std::string >( fieldIt->value ), "f" );
+        ASSERT_TRUE( fieldIt->value.has_value() );
+        ASSERT_TRUE( std::holds_alternative< std::string >( fieldIt->value.value() ) );
+        EXPECT_EQ( std::get< std::string >( *fieldIt->value ), "f" );
 
         fieldIt++;
         EXPECT_EQ( fieldIt->name, "Depth" );
-        EXPECT_EQ( fieldIt->type, Type::Double );
-        EXPECT_EQ( std::get< double >( fieldIt->value ), 405.5 );
+        ASSERT_TRUE( fieldIt->value.has_value() );
+        ASSERT_TRUE( std::holds_alternative< double >( fieldIt->value.value() ) );
+        EXPECT_EQ( std::get< double >( *fieldIt->value ), 405.5 );
 
         fieldIt++;
         EXPECT_EQ( fieldIt->name, "Units" );
-        EXPECT_EQ( fieldIt->type, Type::String );
-        EXPECT_EQ( std::get< std::string >( fieldIt->value ), "M" );
+        ASSERT_TRUE( fieldIt->value.has_value() );
+        ASSERT_TRUE( std::holds_alternative< std::string >( fieldIt->value.value() ) );
+        EXPECT_EQ( std::get< std::string >( *fieldIt->value ), "M" );
 
         fieldIt++;
         EXPECT_EQ( fieldIt->name, "Depth" );
-        EXPECT_EQ( fieldIt->type, Type::None );
+        EXPECT_FALSE( fieldIt->value.has_value() );
 
         fieldIt++;
         EXPECT_EQ( fieldIt->name, "Units" );
-        EXPECT_EQ( fieldIt->type, Type::None );
+        EXPECT_FALSE( fieldIt->value.has_value() );
     }
 
     it++;
@@ -473,38 +489,45 @@ TEST( TestCommunicatorNMEA, UnindentifiebleMessageBeforeValidOne )
 
     auto fieldIt = data.front().fields.begin();
     EXPECT_EQ( fieldIt->name, "Degrees true" );
-    EXPECT_EQ( fieldIt->type, Type::Uint64 );
-    EXPECT_EQ( std::get< uint64_t >( fieldIt->value ), 55 );
+    ASSERT_TRUE( fieldIt->value.has_value() );
+    ASSERT_TRUE( std::holds_alternative< uint64_t >( fieldIt->value.value() ) );
+    EXPECT_EQ( std::get< uint64_t >( *fieldIt->value ), 55 );
 
     fieldIt++;
     EXPECT_EQ( fieldIt->name, "True" );
-    EXPECT_EQ( fieldIt->type, Type::String );
-    EXPECT_EQ( std::get< std::string >( fieldIt->value ), "T" );
+    ASSERT_TRUE( fieldIt->value.has_value() );
+    ASSERT_TRUE( std::holds_alternative< std::string >( fieldIt->value.value() ) );
+    EXPECT_EQ( std::get< std::string >( *fieldIt->value ), "T" );
 
     fieldIt++;
     EXPECT_EQ( fieldIt->name, "Degrees magnetic" );
-    EXPECT_EQ( fieldIt->type, Type::Uint64 );
-    EXPECT_EQ( std::get< uint64_t >( fieldIt->value ), 43 );
+    ASSERT_TRUE( fieldIt->value.has_value() );
+    ASSERT_TRUE( std::holds_alternative< uint64_t >( fieldIt->value.value() ) );
+    EXPECT_EQ( std::get< uint64_t >( *fieldIt->value ), 43 );
 
     fieldIt++;
     EXPECT_EQ( fieldIt->name, "Magnetic" );
-    EXPECT_EQ( fieldIt->type, Type::String );
-    EXPECT_EQ( std::get< std::string >( fieldIt->value ), "M" );
+    ASSERT_TRUE( fieldIt->value.has_value() );
+    ASSERT_TRUE( std::holds_alternative< std::string >( fieldIt->value.value() ) );
+    EXPECT_EQ( std::get< std::string >( *fieldIt->value ), "M" );
 
     fieldIt++;
     EXPECT_EQ( fieldIt->name, "STW (knots/h)" );
-    EXPECT_EQ( fieldIt->type, Type::Uint64 );
-    EXPECT_EQ( std::get< uint64_t >( fieldIt->value ), 22 );
+    ASSERT_TRUE( fieldIt->value.has_value() );
+    ASSERT_TRUE( std::holds_alternative< uint64_t >( fieldIt->value.value() ) );
+    EXPECT_EQ( std::get< uint64_t >( *fieldIt->value ), 22 );
 
     fieldIt++;
     EXPECT_EQ( fieldIt->name, "Units" );
-    EXPECT_EQ( fieldIt->type, Type::String );
-    EXPECT_EQ( std::get< std::string >( fieldIt->value ), "N" );
+    ASSERT_TRUE( fieldIt->value.has_value() );
+    ASSERT_TRUE( std::holds_alternative< std::string >( fieldIt->value.value() ) );
+    EXPECT_EQ( std::get< std::string >( *fieldIt->value ), "N" );
 
     fieldIt++;
     EXPECT_EQ( fieldIt->name, "More" );
-    EXPECT_EQ( fieldIt->type, Type::String );
-    EXPECT_EQ( std::get< std::string >( fieldIt->value ), "11" );
+    ASSERT_TRUE( fieldIt->value.has_value() );
+    ASSERT_TRUE( std::holds_alternative< std::string >( fieldIt->value.value() ) );
+    EXPECT_EQ( std::get< std::string >( *fieldIt->value ), "11" );
 }
 
 

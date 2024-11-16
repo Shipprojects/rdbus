@@ -31,15 +31,15 @@ TEST( TestLimitProcessor, Various )
         const rdbus::Data reading1{
             .deviceName = "Module_1",
             .fields = {
-            Data::Field{ .name = "instance_1", .value = static_cast< int16_t >( 7531 ), .type = Type::Int16, .timestamp = tp },
+            Data::Field{ .name = "instance_1", .value = static_cast< int16_t >( 7531 ), .timestamp = tp },
             },
         };
 
         const rdbus::Data reading2{
             .deviceName = "Module_2",
             .fields = {
-            Data::Field{ .name = "instance_2", .value = static_cast< int16_t >( 10000 ), .type = Type::Int16, .timestamp = tp },
-            Data::Field{ .name = "instance_3", .value = static_cast< int16_t >( -20391 ), .type = Type::Int16, .timestamp = tp },
+            Data::Field{ .name = "instance_2", .value = static_cast< int16_t >( 10000 ), .timestamp = tp },
+            Data::Field{ .name = "instance_3", .value = static_cast< int16_t >( -20391 ), .timestamp = tp },
             },
         };
 
@@ -73,7 +73,7 @@ TEST( TestLimitProcessor, Various )
         const rdbus::Data reading{
             .deviceName = "Module_2",
             .fields = {
-            Data::Field{ .name = "instance_2", .value = static_cast< int16_t >( 12000 ), .type = Type::Int16, .timestamp = tp },
+            Data::Field{ .name = "instance_2", .value = static_cast< int16_t >( 12000 ), .timestamp = tp },
             },
         };
 
@@ -107,8 +107,8 @@ TEST( TestLimitProcessor, Various )
         const rdbus::Data reading{
             .deviceName = "Module_2",
             .fields = {
-            Data::Field{ .name = "instance_2", .value = static_cast< int16_t >( 11500 ), .type = Type::Int16, .timestamp = tp },
-            Data::Field{ .name = "instance_3", .value = static_cast< int16_t >( 57 ), .type = Type::Int16, .timestamp = tp },
+            Data::Field{ .name = "instance_2", .value = static_cast< int16_t >( 11500 ), .timestamp = tp },
+            Data::Field{ .name = "instance_3", .value = static_cast< int16_t >( 57 ), .timestamp = tp },
             },
         };
 
@@ -142,7 +142,7 @@ TEST( TestLimitProcessor, Various )
         const rdbus::Data reading{
             .deviceName = "Module_2",
             .fields = {
-            Data::Field{ .name = "instance_2", .value = static_cast< int16_t >( 11900 ), .type = Type::Int16, .timestamp = tp },
+            Data::Field{ .name = "instance_2", .value = static_cast< int16_t >( 11900 ), .timestamp = tp },
             },
         };
 
@@ -177,7 +177,7 @@ TEST( TestLimitProcessor, Various )
         const rdbus::Data reading{
             .deviceName = "Module_2",
             .fields = {
-            Data::Field{ .name = "instance_2", .value = static_cast< int16_t >( 5 ), .type = Type::Int16, .timestamp = tp },
+            Data::Field{ .name = "instance_2", .value = static_cast< int16_t >( 5 ), .timestamp = tp },
             },
         };
 
