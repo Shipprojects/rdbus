@@ -83,7 +83,7 @@ void Processor::insertNewValues( const ModuleName& module, const std::list< rdbu
 {
     for ( const auto& field : fields )
     {
-        data.at( module ).at( field.name ).emplace_back( field.timestamp, std::get< int16_t >( field.value ) );
+        data.at( module ).at( field.name ).emplace_back( field.timestamp, field.value );
     }
 }
 

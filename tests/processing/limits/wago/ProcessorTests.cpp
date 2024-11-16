@@ -54,16 +54,16 @@ TEST( TestLimitProcessor, Various )
             EXPECT_EQ( it->name, "instance_2" );
             ASSERT_TRUE( it->max.has_value() );
             ASSERT_TRUE( it->min.has_value() );
-            EXPECT_EQ( it->max, 10000 );
-            EXPECT_EQ( it->min, 10000 );
+            EXPECT_EQ( std::get< int16_t>( *it->max ), 10000 );
+            EXPECT_EQ( std::get< int16_t>( *it->min ), 10000 );
         }
         {
             it++;
             EXPECT_EQ( it->name, "instance_3" );
             ASSERT_TRUE( it->max.has_value() );
             ASSERT_TRUE( it->min.has_value() );
-            EXPECT_EQ( it->max, -20391 );
-            EXPECT_EQ( it->min, -20391 );
+            EXPECT_EQ( std::get< int16_t>( *it->max ), -20391 );
+            EXPECT_EQ( std::get< int16_t>( *it->min ), -20391 );
         }
     }
 
@@ -88,16 +88,16 @@ TEST( TestLimitProcessor, Various )
             EXPECT_EQ( it->name, "instance_2" );
             ASSERT_TRUE( it->max.has_value() );
             ASSERT_TRUE( it->min.has_value() );
-            EXPECT_EQ( it->max, 12000 );
-            EXPECT_EQ( it->min, 10000 );
+            EXPECT_EQ( std::get< int16_t>( *it->max ), 12000 );
+            EXPECT_EQ( std::get< int16_t>( *it->min ), 10000 );
         }
         {
             it++;
             EXPECT_EQ( it->name, "instance_3" );
             ASSERT_TRUE( it->max.has_value() );
             ASSERT_TRUE( it->min.has_value() );
-            EXPECT_EQ( it->max, -20391 );
-            EXPECT_EQ( it->min, -20391 );
+            EXPECT_EQ( std::get< int16_t>( *it->max ), -20391 );
+            EXPECT_EQ( std::get< int16_t>( *it->min ), -20391 );
         }
     }
 
@@ -123,16 +123,16 @@ TEST( TestLimitProcessor, Various )
             EXPECT_EQ( it->name, "instance_2" );
             ASSERT_TRUE( it->max.has_value() );
             ASSERT_TRUE( it->min.has_value() );
-            EXPECT_EQ( it->max, 12000 );
-            EXPECT_EQ( it->min, 10000 );
+            EXPECT_EQ( std::get< int16_t>( *it->max ), 12000 );
+            EXPECT_EQ( std::get< int16_t>( *it->min ), 10000 );
         }
         {
             it++;
             EXPECT_EQ( it->name, "instance_3" );
             ASSERT_TRUE( it->max.has_value() );
             ASSERT_TRUE( it->min.has_value() );
-            EXPECT_EQ( it->max, 57 );
-            EXPECT_EQ( it->min, -20391 );
+            EXPECT_EQ( std::get< int16_t>( *it->max ), 57 );
+            EXPECT_EQ( std::get< int16_t>( *it->min ), -20391 );
         }
     }
 
@@ -157,16 +157,16 @@ TEST( TestLimitProcessor, Various )
             EXPECT_EQ( it->name, "instance_2" );
             ASSERT_TRUE( it->max.has_value() );
             ASSERT_TRUE( it->min.has_value() );
-            EXPECT_EQ( it->max, 12000 );
-            EXPECT_EQ( it->min, 11500 );
+            EXPECT_EQ( std::get< int16_t>( *it->max ), 12000 );
+            EXPECT_EQ( std::get< int16_t>( *it->min ), 11500 );
         }
         {
             it++;
             EXPECT_EQ( it->name, "instance_3" );
             ASSERT_TRUE( it->max.has_value() );
             ASSERT_TRUE( it->min.has_value() );
-            EXPECT_EQ( it->max, 57 );
-            EXPECT_EQ( it->min, 57 );
+            EXPECT_EQ( std::get< int16_t>( *it->max ), 57 );
+            EXPECT_EQ( std::get< int16_t>( *it->min ), 57 );
         }
     }
 
@@ -192,8 +192,8 @@ TEST( TestLimitProcessor, Various )
             EXPECT_EQ( it->name, "instance_2" );
             ASSERT_TRUE( it->max.has_value() );
             ASSERT_TRUE( it->min.has_value() );
-            EXPECT_EQ( it->max, 5 );
-            EXPECT_EQ( it->min, 5 );
+            EXPECT_EQ( std::get< int16_t>( *it->max ), 5 );
+            EXPECT_EQ( std::get< int16_t>( *it->min ), 5 );
         }
         {
             it++;

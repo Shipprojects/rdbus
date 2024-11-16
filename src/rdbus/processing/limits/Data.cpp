@@ -1,4 +1,5 @@
 #include "Data.hpp"
+#include "rdbus/Data.hpp"
 
 namespace rdbus::processing::limits
 {
@@ -9,7 +10,7 @@ static void to_json( nlohmann::json& j, const Data::FieldLimit& x )
 
     if ( x.min.has_value() )
     {
-        j[ "min" ] = x.min.value();
+        rdbus::to_json( j[ "min" ], x.min.value() );
     }
     else
     {
@@ -18,7 +19,7 @@ static void to_json( nlohmann::json& j, const Data::FieldLimit& x )
 
     if ( x.max.has_value() )
     {
-        j[ "max" ] = x.max.value();
+        rdbus::to_json( j[ "max" ], x.max.value() );
     }
     else
     {

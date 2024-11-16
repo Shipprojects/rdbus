@@ -21,6 +21,50 @@ static std::string formattedTime( Data::Field::Timestamp timestamp )
     return std::string( buf );
 }
 
+void to_json( nlohmann::json& j, const Data::Field::Variant& x )
+{
+    if ( std::holds_alternative< int16_t >( x ) )
+    {
+        j = std::get< int16_t >( x );
+    }
+    else if ( std::holds_alternative< uint16_t >( x ) )
+    {
+        j = std::get< uint16_t >( x );
+    }
+    else if ( std::holds_alternative< int32_t >( x ) )
+    {
+        j = std::get< int32_t >( x );
+    }
+    else if ( std::holds_alternative< uint32_t >( x ) )
+    {
+        j = std::get< uint32_t >( x );
+    }
+    else if ( std::holds_alternative< int64_t >( x ) )
+    {
+        j = std::get< int64_t >( x );
+    }
+    else if ( std::holds_alternative< uint64_t >( x ) )
+    {
+        j = std::get< uint64_t >( x );
+    }
+    else if ( std::holds_alternative< float >( x ) )
+    {
+        j = std::get< float >( x );
+    }
+    else if ( std::holds_alternative< double >( x ) )
+    {
+        j = std::get< double >( x );
+    }
+    else if ( std::holds_alternative< std::string >( x ) )
+    {
+        j = std::get< std::string >( x );
+    }
+    else
+    {
+        throw config::ParseException( "Unknown variant type!" );
+    }
+}
+
 void to_json( nlohmann::json& j, const Data::Field& x )
 {
     j[ "name" ] = x.name;
@@ -29,31 +73,15 @@ void to_json( nlohmann::json& j, const Data::Field& x )
     switch ( x.type )
     {
         case Type::Int16:
-            j[ "value" ] = std::get< int16_t >( x.value );
-            break;
         case Type::Uint16:
-            j[ "value" ] = std::get< uint16_t >( x.value );
-            break;
         case Type::Int32:
-            j[ "value" ] = std::get< int32_t >( x.value );
-            break;
         case Type::Uint32:
-            j[ "value" ] = std::get< uint32_t >( x.value );
-            break;
         case Type::Int64:
-            j[ "value" ] = std::get< int64_t >( x.value );
-            break;
         case Type::Uint64:
-            j[ "value" ] = std::get< uint64_t >( x.value );
-            break;
         case Type::Float:
-            j[ "value" ] = std::get< float >( x.value );
-            break;
         case Type::Double:
-            j[ "value" ] = std::get< double >( x.value );
-            break;
         case Type::String:
-            j[ "value" ] = std::get< std::string >( x.value );
+            to_json( j[ "value" ], x.value );
             break;
         case Type::None:
             j[ "value" ] = nullptr;

@@ -32,6 +32,8 @@ struct Data
     struct Field
     {
         std::string name;
+
+        using Variant =
         std::variant< std::string,
                       float,
                       double,
@@ -40,8 +42,9 @@ struct Data
                       uint32_t,
                       int32_t,
                       uint16_t,
-                      int16_t >
-        value;
+                      int16_t >;
+
+        Variant value;
 
         Type type;
 
@@ -70,6 +73,7 @@ struct Data
 };
 
 void to_json( nlohmann::json& j, const Data& x );
+void to_json( nlohmann::json& j, const Data::Field::Variant& x );
 void to_json( nlohmann::json& j, const Data::Error& x );
 void to_json( nlohmann::json& j, const Data::Field& x );
 

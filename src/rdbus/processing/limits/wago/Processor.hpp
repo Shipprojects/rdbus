@@ -26,7 +26,7 @@ private:
     using ModuleName = std::string;
     using InstanceName = std::string;
     using Timepoint = std::chrono::time_point< std::chrono::system_clock >;
-    using TimestampedValue = std::pair< Timepoint, int16_t >;
+    using TimestampedValue = std::pair< Timepoint, rdbus::Data::Field::Variant >;
     using TimestampedInstanceValues = std::list< TimestampedValue >;
     std::map< ModuleName, std::map< InstanceName, TimestampedInstanceValues > > data;
 

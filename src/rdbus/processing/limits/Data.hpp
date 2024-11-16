@@ -1,6 +1,7 @@
 #pragma once
 
 #include "rdbus/processing/Processor.hpp"
+#include "rdbus/Data.hpp"
 #include <nlohmann/json.hpp>
 #include <optional>
 
@@ -16,8 +17,8 @@ struct Data : public processing::Processor::Data
         std::string name;
 
         // There are no values if there were no readings long enough
-        std::optional< int > min;
-        std::optional< int > max;
+        std::optional< rdbus::Data::Field::Variant > min;
+        std::optional< rdbus::Data::Field::Variant > max;
     };
 
     std::list< FieldLimit > instanceLimits;
