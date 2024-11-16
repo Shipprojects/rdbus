@@ -70,25 +70,13 @@ void to_json( nlohmann::json& j, const Data::Field& x )
     j[ "name" ] = x.name;
     j[ "timestamp" ] = formattedTime( x.timestamp );
 
-    switch ( x.type )
+    if ( x.value.has_value() )
     {
-        case Type::Int16:
-        case Type::Uint16:
-        case Type::Int32:
-        case Type::Uint32:
-        case Type::Int64:
-        case Type::Uint64:
-        case Type::Float:
-        case Type::Double:
-        case Type::String:
-            to_json( j[ "value" ], x.value );
-            break;
-        case Type::None:
-            j[ "value" ] = nullptr;
-            break;
-        default:
-            throw config::ParseException( "Unknown argument " + std::to_string( static_cast< int >( x.type ) ) + "!" );
-            break;
+        to_json( j[ "value" ], x.value.value() );
+    }
+    else
+    {
+        j[ "value" ] = nullptr;
     }
 }
 

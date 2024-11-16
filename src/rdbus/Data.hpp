@@ -44,9 +44,7 @@ struct Data
                       uint16_t,
                       int16_t >;
 
-        Variant value;
-
-        Type type;
+        std::optional< Variant > value;
 
         using Timestamp = std::chrono::time_point< std::chrono::system_clock >;
         Timestamp timestamp;

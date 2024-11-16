@@ -109,7 +109,6 @@ Fields toParsedFields( const SmallEndianRegisters& input, const Registers& regis
         const int i = output.size();
         rdbus::Data::Field field = {
             .name = regIt->name,
-            .type = regIt->type,
             .timestamp = timestamp
         };
 

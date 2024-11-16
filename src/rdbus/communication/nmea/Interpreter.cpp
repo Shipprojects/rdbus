@@ -54,51 +54,47 @@ std::list< rdbus::Data::Field > parse( const Response& response,
     {
         rdbus::Data::Field field = {
             .name = sentenceIt->name,
-            .type = sentenceIt->type,
             .timestamp = timestamp
         };
 
-        // Indicate that field is empty
-        if ( fieldIt->empty() )
+        if ( !fieldIt->empty() )
         {
-            field.type = rdbus::Type::None;
-        }
-
-        // Since we are parsing string fields to various different types, there is a possibility that
-        // the string is not convertible to other types due to it containing unexpected characters
-        // resulting in exception.
-        try
-        {
-            switch ( field.type )
+            // Since we are parsing string fields to various different types, there is a possibility that
+            // the string is not convertible to other types due to it containing unexpected characters
+            // resulting in exception.
+            try
             {
-                case Type::Int64:
-                    field.value = std::stoll( *fieldIt );
-                    break;
-                case Type::Uint64:
-                    field.value = std::stoull( *fieldIt );
-                    break;
-                case Type::Double:
-                    field.value = std::stod( *fieldIt );
-                    break;
-                case Type::String:
-                    field.value = *fieldIt;
-                    break;
-                case Type::None:
-                    break;
-                default:
-                    throw Exception( "Unsupported type " + std::to_string( static_cast< int >( field.type ) ) + "!" );
-                    break;
+                switch ( sentenceIt->type )
+                {
+                    case Type::Int64:
+                        field.value = std::stoll( *fieldIt );
+                        break;
+                    case Type::Uint64:
+                        field.value = std::stoull( *fieldIt );
+                        break;
+                    case Type::Double:
+                        field.value = std::stod( *fieldIt );
+                        break;
+                    case Type::String:
+                        field.value = *fieldIt;
+                        break;
+                    case Type::None:
+                        break;
+                    default:
+                        throw Exception( "Unsupported type " + std::to_string( static_cast< int >( sentenceIt->type ) ) + "!" );
+                        break;
+                }
             }
-        }
-        catch ( const Exception& )
-        {
-            // This is known exception, rethrow it
-            std::rethrow_exception( std::current_exception() );
-        }
-        catch ( const std::exception& e )
-        {
-            // The exception is not critical - make it rdbus exception
-            throw Exception( e.what() );
+            catch ( const Exception& )
+            {
+                // This is known exception, rethrow it
+                std::rethrow_exception( std::current_exception() );
+            }
+            catch ( const std::exception& e )
+            {
+                // The exception is not critical - make it rdbus exception
+                throw Exception( e.what() );
+            }
         }
 
         output.emplace_back( std::move( field ) );

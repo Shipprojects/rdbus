@@ -83,7 +83,11 @@ void Processor::insertNewValues( const ModuleName& module, const std::list< rdbu
 {
     for ( const auto& field : fields )
     {
-        data.at( module ).at( field.name ).emplace_back( field.timestamp, field.value );
+        // We cannot process valueless fields
+        if ( field.value.has_value() )
+        {
+            data.at( module ).at( field.name ).emplace_back( field.timestamp, field.value.value() );
+        }
     }
 }
 
