@@ -1,46 +1,59 @@
 # ReadBus (rdbus)
 
-Readbus (`rdbus`) is a program designed for serial data reading, data interpretation, and output. The program is designed to run on Little Endian processors regardless of cross-compilation capabilities. `rdbus` is a standalone executable and does not require any additional runtime libraries besides the system ones. It can read from multiple serial ports simultaneously.
+Readbus (`rdbus`) is a program designed for Naval/Industrial data reading, interpretation, processsing and output **in a single, common way** despite the various different protocols and devices on the inputs. It is achieved by interpreting (starting at the configuration file level) all various target appliances as a set of devices where each device has a set of fields to be read. Such abstraction allows us to describe and processs data in a single, common way, despite actually having various different protocols and appliances connected.
+
+The program is designed to run on Little Endian processors regardless of cross-compilation capabilities. `rdbus` is a standalone executable and does not require any additional runtime libraries besides the system ones. It can read from multiple data ports (serial/TCP) simultaneously. It requires some command line arguments and configuration file/-s, and will not start with invalid configuration and will tell you what is wrong.
 
 # Table of contents
 
 - [ReadBus (rdbus)](#readbus-rdbus)
 - [Table of contents](#table-of-contents)
-- [API](#api)
-   * [Command line](#command-line)
-   * [Configuration files](#configuration-files)
-      + [Modbus](#modbus)
-      + [NMEA](#nmea)
-      + [Protocol](#protocol)
-      + [Serial](#serial)
-   * [Output](#output)
-      + [HTTP server](#http-server)
-      + [Stdout](#stdout)
-   * [Stopping the progam](#stopping-the-progam)
-- [Docker environment](#docker-environment)
-- [Building](#building)
-- [Running](#running)
-- [Smoke tests](#smoke-tests)
-- [Versioning](#versioning)
+- [Command line](#command-line)
+- [Configuration](#configuration)
+  - [Modbus](#modbus)
+    - [Data order](#data-order)
+    - [Standard data types](#standard-data-types)
+    - [Wild data types](#wild-data-types)
+  - [NMEA](#nmea)
+    - [Data types](#data-types)
+  - [Wago](#wago)
+  - [Protocol](#protocol)
+  - [Output](#output)
+    - [Serial](#serial)
+    - [Address (TCP/IP)](#address-tcpip)
+  - [Data processing](#data-processing)
+- [Output](#output-1)
+  - [Read](#read)
+  - [Data processing](#data-processing-1)
+    - [limits](#limits)
+  - [HTTP server](#http-server)
+    - [`/read` request](#read-request)
+    - [`/process/limits` request](#processlimits-request)
+  - [Stdout](#stdout)
+  - [Stopping the progam](#stopping-the-progam)
+- [Project specifics](#project-specifics)
+  - [Docker environment](#docker-environment)
+  - [Building](#building)
+  - [Running](#running)
+  - [Smoke tests](#smoke-tests)
+  - [Versioning](#versioning)
 
-# API
-
-`rdbus` was made with configurability in mind, so you can make it work in various different input/output combinations. The program requires some command line arguments and configuration file/-s. `rdbus` will not start with invalid configuration and will tell you what is wrong.
-
-## Command line
+# Command line
 Run
 ```bash
 $ rdbus --help
 ```
 to see command line arguments.
 
-## Configuration files
+# Configuration
 
-The root of `rdbus` are `*.rdbus.json` configuration files. On startup, `rdbus` searches for them in current directory. You can also specify a different directory through the command line. Currently `rdbus` supports two input protocols - NMEA 0183 and Modbus RTU. The configuration for both protocols differs.
+The root of `rdbus` are `*.rdbus.json` configuration files. On startup, `rdbus` searches for them in current directory. You can also specify a different directory through the command line. Currently `rdbus` supports three input protocols - NMEA 0183, Modbus RTU and Wago specific Ethernet Industrial Protocol. The configuration for each protocol differs.
 
-### Modbus
+## Modbus
 
-Example configuration for Modbus:
+<details>
+<summary>Example configuration for Modbus.</summary>
+
 ```json
 {
     "protocol": "modbus",
@@ -81,6 +94,9 @@ Example configuration for Modbus:
     ]
 }
 ```
+</details>
+<br />
+
 The Modbus specific part is `"slaves"`. Also note that `"protocol": "modbus"`. You can learn more about Modbus commands and responses [here](https://www.simplymodbus.ca/FAQ.htm#Command).
 
 In `"slaves"` section, you must specify each Modbus slave that you want to read from.
@@ -102,7 +118,7 @@ Now you must specify each register that you want to read. You can skip those reg
 | `"data_order"` | Data order of wild data types (required with wild `"data_type"`-s only).                                                 |
 | `"name"`       | The name of register. Used for field identification in `rdbus` data output.                                            |
 
-#### Data order
+### Data order
 
 There are two kinds of data types - _standard_ and _wild_. The only difference between them is that the former is already hardcoded in `rdbus` and does not require additional `"data_order"` field - just select the necessary `"data_type"`.
 
@@ -111,9 +127,9 @@ The data order describes where each of the bytes is stored in Modbus register/-s
 "data_type": "UINT",
 "data_order": "CDAB",
 ```
-describes a 2 consecutive register combination that is going to be interpreted as an unsigned integer with the described data order. You can put the letter combinations however you like.
+describes a combination of 2 consecutive registers that is going to be interpreted as an unsigned integer with the described data order. You can put the letter combinations however you like.
 
-#### Standard data types
+### Standard data types
 
 | Data type     | Data order   |
 |---------------|--------------|
@@ -140,7 +156,7 @@ describes a 2 consecutive register combination that is going to be interpreted a
 | `"INT_16A"`   | `"AB"`       |
 | `"INT_16B"`   | `"BA"`       |
 
-#### Wild data types
+### Wild data types
 
 | Data type | Data order |
 |-----------|------------|
@@ -148,9 +164,11 @@ describes a 2 consecutive register combination that is going to be interpreted a
 | `"INT"`   | any        |
 | `"UINT"`  | any        |
 
-### NMEA
+## NMEA
 
-Example configuration for NMEA:
+<details>
+<summary>Example configuration for NMEA.</summary>
+
 ```json
 {
     "protocol": "nmea",
@@ -234,6 +252,9 @@ Example configuration for NMEA:
     ]
 }
 ```
+</details>
+<br />
+
 The NMEA specific part is `"checksum"`, `"name"` and `"sentences"`. Also note that `"protocol": "nmea"`. In case of NMEA, you will only have one device connected to a serial port.
 
 | Field name    | Description                                                                                 |
@@ -256,9 +277,14 @@ And each field in sentence.
 | `"name"`      | The name of the field. Used for field identification in `rdbus` output. |
 | `"data_type"` | Data type of the field.                                                 |
 
+
+### Data types
+
 Allowed values for `"data_type"` are `"INT"`, `"UINT"`, `"FLOAT"`, `"STRING"`.
 
-### Protocol
+## Wago
+
+## Protocol
 
 As was seen in previous examples, at the top of the json file we have the `"protocol"` field.
 ```json
@@ -266,11 +292,15 @@ As was seen in previous examples, at the top of the json file we have the `"prot
     "protocol": "modbus",
     ...
 ```
-The two allowed values are `"modbus"` and `"nmea"`. Depending on which you select your config will be parsed accordingly.
+The allowed values are `"modbus"`, `"nmea"` and `"wago"`. Depending on which you select your config will be parsed accordingly.
+
+## Output
+
+Each config file is meant to operate with one data port. Either serial port or TCP/IP. In each config file there must be a `"serial"` or `"address"` section. Currently the `"serial"` section works with NMEA and Modbus protocols only, and `"address"` section works with `"wago"` protocol only.
 
 ### Serial
 
-Each config file is meant to operate with one serial port. In each config file there must be a `"serial"` section.
+If you use NMEA or Modbus protocol, there must be `"serial"` section in the config file.
 ```json
 {
 ...
@@ -295,9 +325,22 @@ Each config file is meant to operate with one serial port. In each config file t
 | `"response_timeout_ms"` | Max time to wait for data to arrive.                            |
 | `"line_timeout_ms"`     | Max time to wait for each data segment (8 bytes) to arrive. You can calculate the minimum time (in milliseconds) by using formula `y=64000/baud_rate`. It is strongly recommended to round the result up, e.g. 6.6ms to 10ms, 13ms to 20ms, etc.|
 
-## Output
+### Address (TCP/IP)
 
-`rdbus` can output data in 2 ways - either by stdout or by HTTP server. You can select the desired output type using command line arguments. The output is a list of JSON objects whenever it gets available (read). There may be data present from different devices in a single list. You can see which device the data comes from by checking the `"device"` field. Example output:
+## Data processing
+
+# Output
+
+`rdbus` can output data in 2 ways - either by stdout or by HTTP server. You can select the desired output type using command line arguments. The output is a list of JSON objects, whenever it gets available.
+
+Logs get outputted to `stderr`.
+
+## Read
+
+The main output of `rdbus` are simple data readings according to the given configuration. The data will be abstracted in the `"device"`/`"field"` form. There may be data present from different devices in a single list. You can see which device the data comes from by checking the `"device"` field.
+
+<details>
+<summary>Example output</summary>
 
 ```json
 [
@@ -345,20 +388,23 @@ Each config file is meant to operate with one serial port. In each config file t
     }
 ]
 ```
+</details>
+<br />
+
 where a single entry can consist of either
+
+| Field name   | Description                                                             |
+|--------------|-------------------------------------------------------------------------|
+| `"device"`   | Slave `"name"` in case of Modbus or top level `"name"` in case of NMEA. |
+| `"fields"`   | A list of data fields.                                                  |
+| `"metadata"` | An optional helper field. Currently present in NMEA only - contains sentence id so you could have sentences with the same field names but different meanings.|
+
+or
 
 | Field name | Description                                                             |
 |------------|-------------------------------------------------------------------------|
 | `"device"` | Slave `"name"` in case of Modbus or top level `"name"` in case of NMEA. |
-| `"fields"` | A list of data fields.                                                  |
-| `"metadata"` | An optional helper field. Currently not present in Modbus, but in case of NMEA contains sentence id so you could have sentences with the same field names but different meanings. |
-
-or
-
-| Field name | Description                                                        |
-|------------|--------------------------------------------------------------------|
-| `"device"` | Slave `"name"` in case of Modbus or top level `"name"` in case of NMEA. |
-| `"error"`  | Error description object.                                          |
+| `"error"`  | Error description object.                                               |
 
 Structure of a single entry in `"fields"`:
 
@@ -375,14 +421,18 @@ Structure of an `"error"`:
 | `"code"`   | `1` - OS exception (e.g. could not read from port). `2` - Modbus error (e.g. invalid message). `3` - NMEA error (e.g. invalid checksum). |
 | `"what"`   | Description of an error.
 
-### HTTP server
+## Data processing
 
-If you have passed `--ip` parameter to `rdbus` it starts an HTTP server on given address. To retrieve data you have to perform an HTTP request. For example:
+### limits
+
+## HTTP server
+
+If you have passed `--ip` parameter to `rdbus`, it starts an HTTP server on given address. To retrieve data you have to perform an HTTP request. For example:
 ```bash
 $ curl --verbose http://0.0.0.0:5000/read?pretty
 ```
 
-#### `/read` request
+### `/read` request
 
 The `/read` request asks `rdbus` for all it's buffered data.
 
@@ -392,7 +442,11 @@ The `/read` request asks `rdbus` for all it's buffered data.
 
 The server buffers all data read from serial ports up to a hardcoded limit of 500 KB, after reaching it, the buffer will start to delete the oldest elements. Note that the server stores data in binary format, which takes up much less space than the JSON that it outputs, meaning that the 500 KB of internally buffered data means several MB of JSON output.
 
-You will probably want to read all buffered data only once - when you perform the first request, after which you will be interested only in reading new data. To achieve this, `rdbus` uses cookies. When you send a `/read` request without a cookie, the server will start a session for you which expires after 5 minutes and gets extended each time you `/read`. For example:
+You will probably want to read all buffered data only once - when you perform the first request, after which you will be interested only in reading new data. To achieve this, `rdbus` uses cookies. When you send a `/read` request without a cookie, the server will start a session for you which expires after 5 minutes and gets extended each time you `/read`.
+
+<details>
+<summary>Example</summary>
+
 ```bash
 $ curl --verbose http://0.0.0.0:5000/read?pretty
 *   Trying 0.0.0.0:5000...
@@ -482,11 +536,20 @@ $ curl -v --cookie "id=1" http://0.0.0.0:5000/read?pretty
 * Connection #0 to host 0.0.0.0 left intact
 ]
 ```
+</details>
+<br />
+
 As you can see, there is a `Set-Cookie: 1` field present in first response header. If you send this cookie back on the next request in format `id=<id>` then you will receive only the new data that you have not read yet.
 
-### Stdout
+### `/process/limits` request
 
-In case of stdout output, each time the data is read, it will be immediately outputted to `stdout`. For example:
+## Stdout
+
+In case of stdout output, each time the data is read, it will be immediately outputted to `stdout`.
+
+<details>
+<summary>Example of stdout output</summary>
+
 ```bash
 $ ./rdbus --stdout --log info
 [2024-08-23 12:48:38:971] [info] [239494] Starting
@@ -539,7 +602,8 @@ $ ./rdbus --stdout --log info
     }
 ]
 ```
-Note that the logs get outputted to `stderr`.
+</details>
+<br />
 
 ## Stopping the progam
 
@@ -550,15 +614,17 @@ $ kill -s SIGINT <rdbus_process_id>
 
 `0` return code means no errors. `1` means that something went wrong during execution.
 
-# Docker environment
+# Project specifics
 
-There is a Docker image available with everything you need to develop and build `rdbus`. Follow [this guide](https://docs.docker.com/engine/install/ubuntu/) to install Docker and [this guide](https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user) to finalize your Docker setup. For development you will also need Visual Studio Code with `ms-vscode-remote.remote-containers` extension installed and `~/.ssh` directory present on your machine that will be mounted in Docker container.
+## Docker environment
+
+There is a Docker image available with everything you need to develop and build `rdbus`. Follow [this guide](https://docs.docker.com/engine/install/ubuntu/) to install Docker and [this guide](https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user) to finalize your Docker setup. For development you will also need Visual Studio Code with `ms-vscode-remote.remote-containers` extension installed and `~/.ssh` directory present on your machine that will be automatically mounted in Docker container.
 
 To open the development environment you have to open the `rdbus` project root directory in `vscode` and run `>Dev Containers: Reopen in Container`. Wait for the image to build for the first time and then wait until all extensions get automatically installed. Now you are ready to go.
 
 This README file does not go into further details on how to develop the program or use the environment. Just know that this setup has all the necessary tools installed and gets automatically configured.
 
-# Building
+## Building
 
 There are 2 main targets that you can build - `rdbus` and `rdbus_tests`. The latter is a unit testing executable that is tied to the environment. Before building, you have to perform CMake configure once:
 ```bash
@@ -581,7 +647,7 @@ $ cmake --build --preset Release --target rdbus_tests
 
 The binaries are located in `build/Release/src/apps/` and `build/Release/tests/` respectively.
 
-# Running
+## Running
 
 "But.. but I can't run it without Modbus/NMEA devices connected to my machine!". That is valid thought, until we remember that we use superior operating system - Linux. You can use `rdbus` locally without any additional ports and devices attached to your machine using `run.py` script. It starts `socat` serial port emulation along with preconfigured Modbus slave and `rdbus` that is located in your `build/Release` directory.
 
@@ -613,14 +679,14 @@ $ nmeasimulator --no-sandbox
 > [!WARNING]
 > As of now `run.py` is not perfect and cannot be cleanly shut down with `Ctrl+C`. Please use `kill <run.py_process_id>`. Otherwise you will have dangling processes left.
 
-# Smoke tests
+## Smoke tests
 
 While there are no smoke tests yet, there are placeholders for them. In `smoke_tests/` directory you can find various config directories for different cases that you can check with `run.py`:
 ```bash
 $ ./run.py --config-dir smoke_tests/your_directory --stdout
 ```
 
-# Versioning
+## Versioning
 
 The versioning of this project adheres to [Semantic Versioning 2.0.0](https://semver.org/) specification. In summary:
 > Given a version number MAJOR.MINOR.PATCH, increment the:
