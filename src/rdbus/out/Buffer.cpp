@@ -1,5 +1,5 @@
 #include "Buffer.hpp"
-#include "rdbus/processing/Base.hpp"
+#include "rdbus/processing/Processor.hpp"
 #include <memory>
 
 using namespace nlohmann;
@@ -9,20 +9,18 @@ namespace rdbus::out
 
 template < class DataType >
 Buffer< DataType >::Buffer() requires std::same_as< DataType, rdbus::Data >
-: type( BufferType::Stream ),
-  processorName( processing::Name::Read )
+: type( BufferType::Stream )
 {
 }
 
 template < class DataType >
-Buffer< DataType >::Buffer( BufferType type, processing::Name processorName ) requires std::same_as< DataType, ProcessingData >
-: type( type ),
-  processorName( processorName )
+Buffer< DataType >::Buffer( BufferType type ) requires std::same_as< DataType, ProcessingData >
+: type( type )
 {
 }
 
 template <>
-void Buffer< std::shared_ptr< rdbus::processing::Base::Data > >::removeIntersection( const std::list< std::shared_ptr< rdbus::processing::Base::Data > >& list )
+void Buffer< std::shared_ptr< rdbus::processing::Processor::Data > >::removeIntersection( const std::list< std::shared_ptr< rdbus::processing::Processor::Data > >& list )
 {
     for ( const auto& entry : list )
     {
@@ -71,7 +69,7 @@ void Buffer< DataType >::add( const std::list< DataType >& list )
 }
 
 template <>
-json Buffer< std::shared_ptr< rdbus::processing::Base::Data > >::toJson( TimeDataPairs::const_iterator begin ) const
+json Buffer< std::shared_ptr< rdbus::processing::Processor::Data > >::toJson( TimeDataPairs::const_iterator begin ) const
 {
     auto json = json::array();
     std::for_each( begin, data.end(),

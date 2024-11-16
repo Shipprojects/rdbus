@@ -7,7 +7,7 @@ namespace rdbus::processing::limits::wago
 {
 
 Processor::Processor( const std::list< config::wago::Module >& modules, const config::processors::Limits& limits )
-: Base( Name::Limits ),
+: processing::Processor( Name::Limits ),
   duration( limits.duration )
 {
     // Generate map of modules which are defined in configuration

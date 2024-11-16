@@ -9,7 +9,7 @@
 #include "rdbus/Exception.hpp"
 #include "rdbus/config/Output.hpp"
 #include "rdbus/config/processors/Processors.hpp"
-#include "rdbus/processing/Base.hpp"
+#include "rdbus/processing/Processor.hpp"
 #include "rdbus/processing/limits/wago/Processor.hpp"
 #include "tasks/modbus/PollSlave.hpp"
 #include "tasks/nmea/Listen.hpp"
@@ -118,7 +118,7 @@ static Manager::Tasks initializeTasks( const config::Config& config )
     return tasks;
 }
 
-static std::list< std::unique_ptr< processing::Base > > initializeProcessors( const config::Config& config )
+static std::list< std::unique_ptr< processing::Processor > > initializeProcessors( const config::Config& config )
 {
     Manager::Processors processors;
 

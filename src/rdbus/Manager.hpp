@@ -1,7 +1,7 @@
 #pragma once
 
 #include "out/Output.hpp"
-#include "rdbus/processing/Base.hpp"
+#include "rdbus/processing/Processor.hpp"
 #include "tasks/Task.hpp"
 #include <list>
 #include <memory>
@@ -15,7 +15,7 @@ class Manager
 public:
     using Output = std::shared_ptr< out::Output >;
     using Tasks = std::list< std::unique_ptr< tasks::Task > >;
-    using Processors = std::list< std::unique_ptr< processing::Base > >;
+    using Processors = std::list< std::unique_ptr< processing::Processor > >;
     Manager( const std::string& name, Tasks, Output, Processors = {} );
 
     // Execute all tasks once

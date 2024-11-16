@@ -1,5 +1,5 @@
 #include "rdbus/out/Buffer.hpp"
-#include "rdbus/processing/Base.hpp"
+#include "rdbus/processing/Processor.hpp"
 #include "rdbus/processing/limits/Data.hpp"
 #include <chrono>
 #include <gtest/gtest.h>

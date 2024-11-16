@@ -1,6 +1,6 @@
 #pragma once
 
-#include "rdbus/processing/Base.hpp"
+#include "rdbus/processing/Processor.hpp"
 #include <concepts>
 #include <deque>
 #include <list>
@@ -16,7 +16,7 @@ enum BufferType
 };
 
 using BufferTimePoint = std::chrono::time_point< std::chrono::system_clock >;
-using ProcessingData = std::shared_ptr< rdbus::processing::Base::Data >;
+using ProcessingData = std::shared_ptr< rdbus::processing::Processor::Data >;
 
 // A self-cleaning buffer that you can get all data from starting at your
 // given time point
@@ -25,7 +25,7 @@ class Buffer
 {
 public:
     Buffer() requires std::same_as< DataType, rdbus::Data >;
-    Buffer( BufferType type, processing::Name processorName ) requires std::same_as< DataType, ProcessingData >;
+    Buffer( BufferType type ) requires std::same_as< DataType, ProcessingData >;
 
     void add( const std::list< DataType >& list );
 
@@ -41,7 +41,6 @@ private:
     nlohmann::json toJson( TimeDataPairs::const_iterator begin ) const;
 
     BufferType type;
-    processing::Name processorName;
 };
 
 } // namespace rdbus::out

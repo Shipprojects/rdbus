@@ -25,7 +25,7 @@ public:
     // These functions do not actually send data but rather add it to a buffer
     // which gets sent on client request
     void send( const std::list< rdbus::Data >& ) override;
-    void send( const processing::Base::OutputList&, processing::Name ) override;
+    void send( const processing::Processor::OutputList&, processing::Name ) override;
 
 private:
     httplib::Server server;

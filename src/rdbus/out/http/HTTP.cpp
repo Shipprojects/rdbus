@@ -118,7 +118,7 @@ void HTTP::send( const std::list< rdbus::Data >& list )
     storage.put( list );
 }
 
-void HTTP::send( const processing::Base::OutputList& list, processing::Name name )
+void HTTP::send( const processing::Processor::OutputList& list, processing::Name name )
 {
     std::lock_guard lock( mutex );
     storage.put( list, name );

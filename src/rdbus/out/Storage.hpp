@@ -2,7 +2,7 @@
 
 #include "Buffer.hpp"
 #include "rdbus/Data.hpp"
-#include "rdbus/processing/Base.hpp"
+#include "rdbus/processing/Processor.hpp"
 #include <nlohmann/json.hpp>
 
 namespace rdbus::out
@@ -19,7 +19,7 @@ public:
     Storage( const std::map< ProcessorName, BufferType >& processorDescriptions );
 
     void put( const std::list< rdbus::Data >& );
-    void put( const processing::Base::OutputList&, ProcessorName );
+    void put( const processing::Processor::OutputList&, ProcessorName );
 
     nlohmann::json get( BufferTimePoint ); // Returns parsed rdbus::Data
     nlohmann::json get( BufferTimePoint, ProcessorName ); // Returns parsed processor data

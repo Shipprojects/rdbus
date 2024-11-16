@@ -10,7 +10,6 @@ namespace rdbus::processing
 // Enum of all processor names
 enum Name
 {
-    Read, // Not a real processor yet
     Limits
 };
 
@@ -19,11 +18,12 @@ enum Name
 // processor of rdbus::Data, you shall:
 // - write an implementation of your processsor;
 // - create your Base::Data structure that will be returned by the processor, and define it's to_json function;
-// - update output module(-s), to output your serialized data (it is recommended to create separate output for each processor).
-class Base
+// - register your new processor in initializer;
+// - make adjustments to output modules as necesssary.
+class Processor
 {
 public:
-    Base( Name name )
+    Processor( Name name )
     : name( name )
     {
     }
@@ -37,10 +37,10 @@ public:
         virtual ~Data() = default;
     };
 
-    using OutputList = std::list< std::shared_ptr< Base::Data > >;
+    using OutputList = std::list< std::shared_ptr< Processor::Data > >;
     virtual OutputList process( const std::list< rdbus::Data >& ) = 0;
 
-    virtual ~Base() = default;
+    virtual ~Processor() = default;
 
     Name getName() const
     {

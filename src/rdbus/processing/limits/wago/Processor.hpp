@@ -3,7 +3,7 @@
 #include "rdbus/Data.hpp"
 #include "rdbus/config/processors/Limits.hpp"
 #include "rdbus/config/wago/Module.hpp"
-#include "rdbus/processing/Base.hpp"
+#include "rdbus/processing/Processor.hpp"
 #include "rdbus/processing/limits/Data.hpp"
 #include <chrono>
 
@@ -16,11 +16,11 @@ namespace rdbus::processing::limits::wago
 // it is possible to make this class a generic processor and specialize it for each protocol
 // by inheriting this class and implementing a custom constructor for that specialization.
 // The Processor currently supports data of type int16_t only.
-class Processor : public Base
+class Processor : public processing::Processor
 {
 public:
     Processor( const std::list< config::wago::Module >&, const config::processors::Limits& );
-    Base::OutputList process( const std::list< rdbus::Data >& ) override;
+    Processor::OutputList process( const std::list< rdbus::Data >& ) override;
 
 private:
     using ModuleName = std::string;

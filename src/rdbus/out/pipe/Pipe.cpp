@@ -15,7 +15,7 @@ void Pipe::send( const std::list< rdbus::Data >& list )
     std::cout << j.dump( indent ) + '\n';
 }
 
-void Pipe::send( const processing::Base::OutputList& list, processing::Name name )
+void Pipe::send( const processing::Processor::OutputList& list, processing::Name name )
 {
     for ( const auto& entry : list )
     {

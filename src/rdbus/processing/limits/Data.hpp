@@ -1,13 +1,13 @@
 #pragma once
 
-#include "rdbus/processing/Base.hpp"
+#include "rdbus/processing/Processor.hpp"
 #include <nlohmann/json.hpp>
 #include <optional>
 
 namespace rdbus::processing::limits
 {
 
-struct Data : public processing::Base::Data
+struct Data : public processing::Processor::Data
 {
     std::string deviceName;
 
