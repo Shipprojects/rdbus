@@ -204,7 +204,12 @@ static void parseModbus( const nlohmann::json& j, Config& x )
     {
         Processors processors;
         tools::parseKeyValue( j, "data_processors", processors );
-        validateLimitsProcessorModbus( slaves, *processors.limits );
+
+        if ( processors.limits.has_value() )
+        {
+            validateLimitsProcessorModbus( slaves, *processors.limits );
+        }
+
         x.processors = processors;
     }
 
@@ -228,7 +233,12 @@ static void parseNMEA( const nlohmann::json& j, Config& x )
     {
         Processors processors;
         tools::parseKeyValue( j, "data_processors", processors );
-        validateLimitsProcessorNMEA( sentences, *processors.limits );
+
+        // Since we store top level NMEA device name as the main device name, and not sentence names as device names,
+        // it raises difficulties in storing and processing data that comes from NMEA module, as all of them have
+        // the same device name, but may have fields with the same name.
+        tools::throwIf( processors.limits.has_value(), "'limits' processor is currently disabled for 'protocol' nmea!" );
+
         x.processors = processors;
     }
 
@@ -250,7 +260,12 @@ static void parseWago( const nlohmann::json& j, Config& x )
     {
         Processors processors;
         tools::parseKeyValue( j, "data_processors", processors );
-        validateLimitsProcessorWago( modules, *processors.limits );
+
+        if ( processors.limits.has_value() )
+        {
+            validateLimitsProcessorWago( modules, *processors.limits );
+        }
+
         x.processors = processors;
     }
 

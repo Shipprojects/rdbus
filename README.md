@@ -433,7 +433,7 @@ Finds minmax values of all fields for specified devices in a specified timespan.
 
 # Output
 
-`rdbus` can output data in 2 ways - either by stdout or by HTTP server. You can select the desired output type using command line arguments. The output is a list of JSON objects, whenever it gets available.
+`rdbus` can output data in 2 ways - either by stdout or by HTTP server. You can select the desired output type using command line arguments. The output is always a list of JSON objects, whenever it gets available.
 
 Logs get outputted to `stderr`.
 
@@ -687,13 +687,59 @@ As you can see, there is a `Set-Cookie: 1` field present in first response heade
 
 ### `/process/limits` request
 
-The `/process/limits` request asks `rdbus` for all it's limits data. The request has no additional parameters.
+The `/process/limits` request asks `rdbus` for all it's limits data.
+
+| Parameters | Description              |
+|------------|--------------------------|
+| `"pretty"` | Output indented json.    |
+
 
 <details>
 <summary>Example</summary>
 
 ```bash
-
+$ curl --verbose http://0.0.0.0:6060/process/limits?pretty
+*   Trying 0.0.0.0:6060...
+* Connected to 0.0.0.0 (127.0.0.1) port 6060 (#0)
+> GET /process/limits?pretty HTTP/1.1
+> Host: 0.0.0.0:6060
+> User-Agent: curl/7.81.0
+> Accept: */*
+>
+* Mark bundle as not supporting multiuse
+< HTTP/1.1 200 OK
+< Keep-Alive: timeout=5, max=100
+< Content-Length: 545
+< Content-Type: text/plain
+<
+[
+    {
+        "device": "Sensor",
+        "fields": [
+            {
+                "max": 0,
+                "min": -30820,
+                "name": "Input A"
+            },
+            {
+                "max": 2038,
+                "min": 0,
+                "name": "Input B"
+            },
+            {
+                "max": 100,
+                "min": 100,
+                "name": "Input C"
+            },
+            {
+                "max": 15,
+                "min": -10,
+                "name": "Input D"
+            }
+        ]
+    }
+* Connection #0 to host 0.0.0.0 left intact
+]
 ```
 </details>
 <br />

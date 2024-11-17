@@ -1,5 +1,4 @@
 #include "rdbus/config/processors/Limits.hpp"
-#include "rdbus/config/wago/Module.hpp"
 #include "rdbus/processing/limits//Processor.hpp"
 #include "rdbus/processing/limits/Data.hpp"
 #include <gtest/gtest.h>
@@ -9,11 +8,6 @@ using namespace rdbus::processing;
 
 TEST( TestLimitProcessor, Various )
 {
-    const std::list< config::wago::Module > modules = {
-        config::wago::Module{ .name = "Module_1", .instances{ "instance_1" } },
-        config::wago::Module{ .name = "Module_2", .instances{ "instance_2", "instance_3" } },
-    };
-
     const config::processors::Limits limits{ .duration = config::processors::Limits::Minutes( 1 ),
                                              .devices = { "Module_2" } };
 
@@ -201,5 +195,43 @@ TEST( TestLimitProcessor, Various )
             EXPECT_FALSE( it->min.has_value() );
             EXPECT_FALSE( it->max.has_value() );
         }
+    }
+}
+
+
+TEST( TestLimitProcessor, ErrorData )
+{
+    const config::processors::Limits limits{ .duration = config::processors::Limits::Minutes( 1 ),
+                                             .devices = { "Slave_1", "Slave_2" } };
+
+    std::unique_ptr< processing::Processor > processor = std::make_unique< limits::Processor >( limits );
+
+    auto tp = std::chrono::system_clock::now();
+    const rdbus::Data reading1{
+        .deviceName = "Slave_1",
+        .error = rdbus::Data::Error{ .code = rdbus::Data::Error::Code::Modbus,
+                                     .what = "An error" }
+    };
+
+    const rdbus::Data reading2{
+        .deviceName = "Slave_2",
+        .fields = {
+        Data::Field{ .name = "Field", .value = static_cast< int16_t >( 100 ), .timestamp = tp },
+        },
+    };
+
+    const auto& results = processor->process( { reading1, reading2 } );
+    ASSERT_EQ( results.size(), 1 );
+    const auto data = std::dynamic_pointer_cast< limits::Data >( results.front() );
+    EXPECT_EQ( data->deviceName, "Slave_2" );
+    EXPECT_EQ( data->instanceLimits.size(), 1 );
+
+    auto it = data->instanceLimits.begin();
+    {
+        EXPECT_EQ( it->name, "Field" );
+        ASSERT_TRUE( it->max.has_value() );
+        ASSERT_TRUE( it->min.has_value() );
+        EXPECT_EQ( std::get< int16_t >( *it->max ), 100 );
+        EXPECT_EQ( std::get< int16_t >( *it->min ), 100 );
     }
 }
