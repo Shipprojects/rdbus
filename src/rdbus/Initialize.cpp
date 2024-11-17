@@ -2,13 +2,18 @@
 #include "Manager.hpp"
 #include "communication/modbus/Communicator.hpp"
 #include "communication/nmea/Communicator.hpp"
+#include "communication/wago/Communicator.hpp"
 #include "config/Config.hpp"
 #include "out/http/HTTP.hpp"
 #include "out/pipe/Pipe.hpp"
 #include "rdbus/Exception.hpp"
 #include "rdbus/config/Output.hpp"
+#include "rdbus/config/processors/Processors.hpp"
+#include "rdbus/processing/Processor.hpp"
+#include "rdbus/processing/limits//Processor.hpp"
 #include "tasks/modbus/PollSlave.hpp"
 #include "tasks/nmea/Listen.hpp"
+#include "tasks/wago/PollModule.hpp"
 #include <filesystem>
 
 namespace rdbus
@@ -44,12 +49,27 @@ std::list< config::Config > initializeConfigs( const std::string& configDir )
     return std::list< config::Config >( jsonList.begin(), jsonList.end() );
 }
 
-Manager::Output initializeOutput( const config::Output& output )
+static std::map< processing::Name, out::BufferType > processorDescriptions( const std::list< rdbus::config::Config >& configs )
+{
+    std::map< processing::Name, out::BufferType > result;
+
+    for ( const auto& config : configs )
+    {
+        if ( config.processors.limits.has_value() )
+        {
+            result.insert( { processing::Name::Limits, out::BufferType::Single } );
+        }
+    }
+
+    return result;
+}
+
+Manager::Output initializeOutput( const config::Output& output, const std::list< rdbus::config::Config >& configs )
 {
     if ( output.type == config::Output::TCP_IP )
     {
         SPDLOG_INFO( "Outputting using TCP/IP server" );
-        return std::make_shared< out::http::HTTP >( output );
+        return std::make_shared< out::http::HTTP >( *output.address, processorDescriptions( configs ) );
     }
     else if ( output.type == config::Output::Stdout )
     {
@@ -67,32 +87,67 @@ static Manager::Tasks initializeTasks( const config::Config& config )
 
     if ( config.protocol == "nmea" )
     {
-        auto communicator = std::make_shared< communication::nmea::Communicator >( config.serial, std::make_unique< communication::OSWrapper >() );
+        throwIf( !config.serial.has_value(), "'serial' configuration required for 'protocol' nmea!" );
+
+        auto communicator = std::make_shared< communication::nmea::Communicator >( *config.serial, std::make_unique< communication::OSWrapper >() );
         tasks.emplace_back( std::make_unique< tasks::nmea::Listen >( config.nmea, communicator ) );
     }
     else if ( config.protocol == "modbus" )
     {
-        auto communicator = std::make_shared< communication::modbus::Communicator >( config.serial, std::make_unique< communication::OSWrapper >() );
+        throwIf( !config.serial.has_value(), "'serial' configuration required for 'protocol' modbus!" );
+
+        auto communicator = std::make_shared< communication::modbus::Communicator >( *config.serial, std::make_unique< communication::OSWrapper >() );
         for ( const auto& slave : config.modbus.slaves )
         {
             // 1 slave == 1 task
             tasks.emplace_back( std::make_unique< tasks::modbus::PollSlave >( slave, communicator ) );
         }
     }
+    else if ( config.protocol == "wago" )
+    {
+        throwIf( !config.address.has_value(), "'address' configuration required for 'protocol' wago!" );
+
+        auto communicator = std::make_shared< communication::wago::Communicator >( *config.address );
+        for ( const auto& module : config.wago.modules )
+        {
+            // 1 module == 1 task
+            tasks.emplace_back( std::make_unique< tasks::wago::PollModule >( module, communicator ) );
+        }
+    }
 
     return tasks;
 }
 
-std::list< rdbus::Manager > initializeManagers( const std::list< rdbus::config::Config >& configs, std::shared_ptr< out::Output > output )
+static std::list< std::unique_ptr< processing::Processor > > initializeProcessors( const config::Config& config )
 {
-    std::list< rdbus::Manager > managers;
+    Manager::Processors processors;
+
+    if ( config.processors.limits.has_value() )
+    {
+        processors.emplace_back( std::make_unique< processing::limits::Processor >( *config.processors.limits ) );
+    }
+
+    return processors;
+}
+
+std::list< Manager > initializeManagers( const std::list< config::Config >& configs, std::shared_ptr< out::Output > output )
+{
+    std::list< Manager > managers;
     for ( const auto& config : configs )
     {
-        managers.emplace_back( config.serial.path, initializeTasks( config ), output );
+        std::string managerName;
+        if ( config.serial.has_value() )
+        {
+            managerName = config.serial->path;
+        }
+        else if ( config.address.has_value() )
+        {
+            managerName = config.address->ip + ':' + std::to_string( config.address->port );
+        }
+        managers.emplace_back( managerName, initializeTasks( config ), output, initializeProcessors( config ) );
     }
 
     return managers;
 }
-
 
 } // namespace rdbus

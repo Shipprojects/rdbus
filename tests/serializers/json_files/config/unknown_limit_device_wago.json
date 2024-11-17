@@ -1,0 +1,33 @@
+{
+    "protocol": "wago",
+
+    "address": {
+        "ip": "192.168.10.23",
+        "port": 1000
+    },
+
+    "modules":
+    [
+        {
+            "name": "name_1",
+            "poll_time_ms": 150,
+            "instances":
+            [
+                "input_a",
+                "input_b"
+            ]
+        }
+    ],
+
+    "data_processors":
+    {
+        "limits":
+        {
+            "storage_duration_minutes": 1000,
+            "devices":
+            [
+                "name_2"
+            ]
+        }
+    }
+}

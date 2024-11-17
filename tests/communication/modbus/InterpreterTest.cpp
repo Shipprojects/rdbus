@@ -161,25 +161,29 @@ TEST( TestInterpreter, TestToParsedFields )
 
     auto it = fields.begin();
     EXPECT_EQ( it->name, "Register_A" );
-    EXPECT_EQ( it->type, Type::Uint32 );
-    EXPECT_EQ( std::get< uint32_t >( it->value ), 92835769 );
+    ASSERT_TRUE( it->value.has_value() );
+    ASSERT_TRUE( std::holds_alternative< uint32_t >( it->value.value() ) );
+    EXPECT_EQ( std::get< uint32_t >( *it->value ), 92835769 );
     EXPECT_EQ( it->timestamp, now );
 
     it++;
     EXPECT_EQ( it->name, "Register_B" );
-    EXPECT_EQ( it->type, Type::Double );
-    EXPECT_EQ( std::get< double >( it->value ), 0.20983570928375 );
+    ASSERT_TRUE( it->value.has_value() );
+    ASSERT_TRUE( std::holds_alternative< double >( it->value.value() ) );
+    EXPECT_EQ( std::get< double >( *it->value ), 0.20983570928375 );
     EXPECT_EQ( it->timestamp, now );
 
     it++;
     EXPECT_EQ( it->name, "Register_C" );
-    EXPECT_EQ( it->type, Type::Uint16 );
-    EXPECT_EQ( std::get< uint16_t >( it->value ), 26717 );
+    ASSERT_TRUE( it->value.has_value() );
+    ASSERT_TRUE( std::holds_alternative< uint16_t >( it->value.value() ) );
+    EXPECT_EQ( std::get< uint16_t >( *it->value ), 26717 );
     EXPECT_EQ( it->timestamp, now );
 
     it++;
     EXPECT_EQ( it->name, "Register_D" );
-    EXPECT_EQ( it->type, Type::Int32 );
-    EXPECT_EQ( std::get< int32_t >( it->value ), -1720492 );
+    ASSERT_TRUE( it->value.has_value() );
+    ASSERT_TRUE( std::holds_alternative< int32_t >( it->value.value() ) );
+    EXPECT_EQ( std::get< int32_t >( *it->value ), -1720492 );
     EXPECT_EQ( it->timestamp, now );
 }

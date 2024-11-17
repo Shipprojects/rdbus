@@ -161,68 +161,77 @@ TEST( TestNMEAInterpreter, TestParse )
 
     auto it = fields.begin();
     EXPECT_EQ( it->name, "Current time in U.T.C" );
-    EXPECT_EQ( it->type, Type::Uint64 );
-    EXPECT_EQ( std::get< uint64_t >( it->value ), 181704 );
+    ASSERT_TRUE( it->value.has_value() );
+    ASSERT_TRUE( std::holds_alternative< uint64_t >( it->value.value() ) );
+    EXPECT_EQ( std::get< uint64_t >( *it->value ), 181704 );
     EXPECT_EQ( it->timestamp, now );
 
     it++;
     EXPECT_EQ( it->name, "GPS Status" );
-    EXPECT_EQ( it->type, Type::String );
-    EXPECT_EQ( std::get< std::string >( it->value ), "A" );
+    ASSERT_TRUE( it->value.has_value() );
+    ASSERT_TRUE( std::holds_alternative< std::string >( it->value.value() ) );
+    EXPECT_EQ( std::get< std::string >( *it->value ), "A" );
     EXPECT_EQ( it->timestamp, now );
 
     it++;
     EXPECT_EQ( it->name, "Latitude" );
-    EXPECT_EQ( it->type, Type::Double );
-    EXPECT_EQ( std::get< double >( it->value ), 5209.6815 );
+    ASSERT_TRUE( it->value.has_value() );
+    ASSERT_TRUE( std::holds_alternative< double >( it->value.value() ) );
+    EXPECT_EQ( std::get< double >( *it->value ), 5209.6815 );
     EXPECT_EQ( it->timestamp, now );
 
     it++;
     EXPECT_EQ( it->name, "N/S" );
-    EXPECT_EQ( it->type, Type::String );
-    EXPECT_EQ( std::get< std::string >( it->value ), "N" );
+    ASSERT_TRUE( it->value.has_value() );
+    ASSERT_TRUE( std::holds_alternative< std::string >( it->value.value() ) );
+    EXPECT_EQ( std::get< std::string >( *it->value ), "N" );
     EXPECT_EQ( it->timestamp, now );
 
     it++;
     EXPECT_EQ( it->name, "Longitude" );
-    EXPECT_EQ( it->type, Type::Double );
-    EXPECT_EQ( std::get< double >( it->value ), 00643.0724 );
+    ASSERT_TRUE( it->value.has_value() );
+    ASSERT_TRUE( std::holds_alternative< double >( it->value.value() ) );
+    EXPECT_EQ( std::get< double >( *it->value ), 00643.0724 );
     EXPECT_EQ( it->timestamp, now );
 
     it++;
     EXPECT_EQ( it->name, "E/W" );
-    EXPECT_EQ( it->type, Type::String );
-    EXPECT_EQ( std::get< std::string >( it->value ), "E" );
+    ASSERT_TRUE( it->value.has_value() );
+    ASSERT_TRUE( std::holds_alternative< std::string >( it->value.value() ) );
+    EXPECT_EQ( std::get< std::string >( *it->value ), "E" );
     EXPECT_EQ( it->timestamp, now );
 
     it++;
     EXPECT_EQ( it->name, "SOG" );
-    EXPECT_EQ( it->type, Type::Double );
-    EXPECT_EQ( std::get< double >( it->value ), 000.1 );
+    ASSERT_TRUE( it->value.has_value() );
+    ASSERT_TRUE( std::holds_alternative< double >( it->value.value() ) );
+    EXPECT_EQ( std::get< double >( *it->value ), 000.1 );
     EXPECT_EQ( it->timestamp, now );
 
 
     it++;
     EXPECT_EQ( it->name, "COG" );
-    EXPECT_EQ( it->type, Type::Double );
-    EXPECT_EQ( std::get< double >( it->value ), 187.0 );
+    ASSERT_TRUE( it->value.has_value() );
+    ASSERT_TRUE( std::holds_alternative< double >( it->value.value() ) );
+    EXPECT_EQ( std::get< double >( *it->value ), 187.0 );
     EXPECT_EQ( it->timestamp, now );
 
 
     it++;
     EXPECT_EQ( it->name, "Date" );
-    EXPECT_EQ( it->type, Type::String );
-    EXPECT_EQ( std::get< std::string >( it->value ), "310109" );
+    ASSERT_TRUE( it->value.has_value() );
+    ASSERT_TRUE( std::holds_alternative< std::string >( it->value.value() ) );
+    EXPECT_EQ( std::get< std::string >( *it->value ), "310109" );
     EXPECT_EQ( it->timestamp, now );
 
     it++;
     EXPECT_EQ( it->name, "More_1" );
-    EXPECT_EQ( it->type, Type::None );
+    EXPECT_FALSE( it->value.has_value() );
     EXPECT_EQ( it->timestamp, now );
 
     it++;
     EXPECT_EQ( it->name, "More_2" );
-    EXPECT_EQ( it->type, Type::None );
+    EXPECT_FALSE( it->value.has_value() );
     EXPECT_EQ( it->timestamp, now );
 }
 

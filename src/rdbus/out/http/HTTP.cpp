@@ -1,5 +1,4 @@
 #include "HTTP.hpp"
-#include "rdbus/config/Output.hpp"
 #include <httplib.h>
 #include <mutex>
 #include <nlohmann/json.hpp>
@@ -38,7 +37,18 @@ static void exceptionHandler( const httplib::Request&, httplib::Response& res, s
     res.status = httplib::StatusCode::InternalServerError_500;
 }
 
-HTTP::HTTP( const config::Output& settings )
+static int getIndent( const httplib::Request& req )
+{
+    if ( req.has_param( "pretty" ) )
+    {
+        return 4;
+    }
+
+    return -1; // no indent by default
+}
+
+HTTP::HTTP( const config::Address& address, const Storage& storage )
+: storage( storage )
 {
     server.Get( "/read",
                 [ & ]( const httplib::Request& req, httplib::Response& res )
@@ -63,23 +73,36 @@ HTTP::HTTP( const config::Output& settings )
                             res.set_header( "Set-Cookie", std::to_string( sessionId ) );
                         }
 
-                        json = buffer.parseFrom( lastTime );
+                        json = this->storage.get( lastTime );
                     }
 
-                    int indent = -1; // no indent by default
-                    if ( req.has_param( "pretty" ) )
-                    {
-                        indent = 4;
-                    }
+                    const int indent = getIndent( req );
                     res.set_content( json.dump( indent ), "text/plain" );
                 } );
+
+    server.Get( "/process/limits",
+                [ & ]( const httplib::Request& req, httplib::Response& res )
+                {
+                    SPDLOG_INFO( "Received HTTP request " + req.path + " from " + req.remote_addr + ":" + std::to_string( req.remote_port ) );
+
+                    json json;
+                    // Accessing members, thread unsafe
+                    {
+                        std::lock_guard lock( mutex );
+                        json = this->storage.get( Sessioner::TimePoint(), processing::Name::Limits );
+                    }
+
+                    const int indent = getIndent( req );
+                    res.set_content( json.dump( indent ), "text/plain" );
+                } );
+
 
     server.set_exception_handler( exceptionHandler );
 
     serverThread = std::thread( std::bind( &httplib::Server::listen,
                                            &server,
-                                           settings.ip.value(),
-                                           settings.port.value(),
+                                           address.ip,
+                                           address.port,
                                            0 ) );
 }
 
@@ -92,7 +115,13 @@ HTTP::~HTTP()
 void HTTP::send( const std::list< rdbus::Data >& list )
 {
     std::lock_guard lock( mutex );
-    buffer.add( list );
+    storage.put( list );
+}
+
+void HTTP::send( const processing::Processor::OutputList& list, processing::Name name )
+{
+    std::lock_guard lock( mutex );
+    storage.put( list, name );
 }
 
 } // namespace rdbus::out::http

@@ -263,10 +263,14 @@ TEST( TestCommunicator, TestValid )
     EXPECT_EQ( data.deviceName, "slave" );
     ASSERT_EQ( data.fields.size(), 2 );
     auto it = data.fields.begin();
-    EXPECT_EQ( std::get< uint32_t >( it->value ), 2 );
+    ASSERT_TRUE( it->value.has_value() );
+    ASSERT_TRUE( std::holds_alternative< uint32_t >( it->value.value() ) );
+    EXPECT_EQ( std::get< uint32_t >( *it->value ), 2 );
     EXPECT_EQ( it->name, "Register_A" );
     it++;
-    EXPECT_EQ( std::get< uint64_t >( it->value ), 5 );
+    ASSERT_TRUE( it->value.has_value() );
+    ASSERT_TRUE( std::holds_alternative< uint64_t >( it->value.value() ) );
+    EXPECT_EQ( std::get< uint64_t >( *it->value ), 5 );
     EXPECT_EQ( it->name, "Register_B" );
     ASSERT_FALSE( data.error.has_value() );
 }

@@ -1,0 +1,40 @@
+{
+    "protocol": "modbus",
+
+    "serial": {
+      "baud_rate": 4800,
+      "parity": "even",
+      "path": "/dev/ttyS0",
+      "stop_bits_count": 1,
+      "response_timeout_ms": 500,
+      "line_timeout_ms": 10
+    },
+
+    "slaves": [
+      {
+        "id": 3,
+        "name": "name_1",
+        "poll_time_ms": 150,
+        "analog_input_registers": [
+          {
+          "address": 40000,
+            "data_order": "ABCD",
+            "data_type": "INT",
+            "name": "REGISTER_A"
+          }
+        ]
+      }
+    ],
+
+    "data_processors":
+    {
+        "limits":
+        {
+            "storage_duration_minutes": 1000,
+            "devices":
+            [
+                "name_2"
+            ]
+        }
+    }
+}

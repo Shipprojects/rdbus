@@ -15,7 +15,7 @@ function(add_modbus TARGET_NAME)
     FetchContent_Declare(
             modbus
             GIT_REPOSITORY  "https://github.com/Mazurel/Modbus"
-            GIT_TAG         "master"
+            GIT_TAG         "96661a0"
     )
 
     set( MODBUS_COMMUNICATION off )
@@ -41,7 +41,7 @@ function(add_gtest TARGET_NAME)
         googletest
         URL https://github.com/google/googletest/archive/5376968f6948923e2411081fd9372e71a59d8e77.zip
     )
-    FetchContent_MakeAvailable(googletest)
+    FetchContent_MakeAvailable( googletest )
 endfunction()
 
 function(add_argparse TARGET_NAME)
@@ -49,8 +49,9 @@ function(add_argparse TARGET_NAME)
     FetchContent_Declare(
         argparse
         GIT_REPOSITORY https://github.com/p-ranav/argparse.git
+        GIT_TAG         "v3.1"
     )
-    FetchContent_MakeAvailable(argparse)
+    FetchContent_MakeAvailable( argparse )
     target_include_directories ( ${TARGET_NAME} PUBLIC ${argparse_SOURCE_DIR}/include )
 endfunction()
 
@@ -59,8 +60,20 @@ function(add_http TARGET_NAME)
     FetchContent_Declare(
         httplib
         GIT_REPOSITORY https://github.com/yhirose/cpp-httplib.git
+        GIT_TAG         "v0.18.1"
     )
-    FetchContent_MakeAvailable(httplib)
+    FetchContent_MakeAvailable( httplib )
     target_include_directories ( ${TARGET_NAME} PUBLIC ${httplib_SOURCE_DIR} )
 endfunction()
 
+function(add_eipscanner TARGET_NAME)
+    include(FetchContent)
+    FetchContent_Declare(
+        eipscanner
+        GIT_REPOSITORY https://github.com/nimbuscontrols/EIPScanner.git
+        GIT_TAG         "d20ef61"
+    )
+    set( ENABLE_VENDOR_SRC OFF )
+    FetchContent_MakeAvailable( eipscanner )
+    target_include_directories ( ${TARGET_NAME} PUBLIC ${eipscanner_SOURCE_DIR}/src )
+endfunction()

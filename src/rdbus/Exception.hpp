@@ -12,10 +12,9 @@ namespace rdbus
 // converted to rdbus exception, then it is considered critical and shall make the program exit.
 struct Exception : public std::runtime_error
 {
-    Exception( const std::string& what )
-    : std::runtime_error( what )
-    {
-    }
+    Exception( const std::string& what );
 };
+
+void throwIf( bool condition, const std::string& message );
 
 } // namespace rdbus

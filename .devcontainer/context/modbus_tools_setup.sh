@@ -2,6 +2,7 @@ set -e
 
 git clone https://github.com/serhmarch/ModbusTools.git
 cd ModbusTools
+git checkout 52163bd587b8397ddae9527a79ff3e284b2ea5a9
 git submodule update --init --recursive
 
 mkdir build

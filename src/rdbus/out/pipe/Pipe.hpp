@@ -8,7 +8,8 @@ namespace rdbus::out::pipe
 class Pipe : public Output
 {
 public:
-    void send( const std::list< rdbus::Data >& list ) override;
+    void send( const std::list< rdbus::Data >& ) override;
+    void send( const processing::Processor::OutputList&, processing::Name ) override;
 };
 
 } // namespace rdbus::out::pipe
