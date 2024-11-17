@@ -60,6 +60,13 @@ rdbus::Data Communicator::request( const Module& module )
         data.error = rdbus::Data::Error{ .code = rdbus::Data::Error::OS,
                                          .what = e.what() };
     }
+    catch ( const std::exception& e )
+    {
+        SPDLOG_ERROR( e.what() );
+        data.fields.clear();
+        data.error = rdbus::Data::Error{ .code = rdbus::Data::Error::OS,
+                                         .what = e.what() };
+    }
 
     return data;
 }
