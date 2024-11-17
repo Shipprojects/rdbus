@@ -32,10 +32,10 @@ private:
     // single reading will have time deviations of at most some milliseconds.
     Timepoint getLatestTime( const rdbus::Data& );
 
-    void removeOldValues( const DeviceName& module, const Timepoint& currentTime );
-    void addMissingFields( const DeviceName& module, const std::list< rdbus::Data::Field >& fields );
-    void insertNewValues( const DeviceName& module, const std::list< rdbus::Data::Field >& fields );
-    std::shared_ptr< limits::Data > generateOutput( const DeviceName& module );
+    void removeOldValues( const DeviceName& device, const Timepoint& currentTime );
+    void addMissingFields( const DeviceName& device, const std::list< rdbus::Data::Field >& fields );
+    void insertNewValues( const DeviceName& device, const std::list< rdbus::Data::Field >& fields );
+    std::shared_ptr< limits::Data > generateOutput( const DeviceName& device );
 
     // How long to store the values for
     const std::chrono::minutes duration;

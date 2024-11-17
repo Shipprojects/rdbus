@@ -433,7 +433,7 @@ Finds minmax values of all fields for specified devices in a specified timespan.
 
 # Output
 
-`rdbus` can output data in 2 ways - either by stdout or by HTTP server. You can select the desired output type using command line arguments. The output is a list of JSON objects, whenever it gets available.
+`rdbus` can output data in 2 ways - either by stdout or by HTTP server. You can select the desired output type using command line arguments. The output is always a list of JSON objects, whenever it gets available.
 
 Logs get outputted to `stderr`.
 
