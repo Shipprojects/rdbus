@@ -1,6 +1,6 @@
 # ReadBus (rdbus)
 
-Readbus (`rdbus`) is a program designed for Naval/Industrial data reading, interpretation, processsing and output **in a single, common way** despite the various different protocols and devices on the inputs. It is achieved by interpreting (starting at the configuration file level) all various target appliances as a set of devices where each device has a set of fields to be read. Such abstraction allows us to describe and processs data in a single, common way, despite actually having various different protocols and appliances connected.
+Readbus (`rdbus`) is a program designed for Naval/Industrial data reading, interpretation, processsing and **output in a single, common way** despite the various different protocols and devices on the inputs. It is achieved by interpreting (starting at the configuration file level) all various target appliances as a set of devices where each device has a set of fields to be read. Such abstraction allows us to describe and processs data in a single, common way, despite actually having various different protocols and appliances connected.
 
 The program is designed to run on Little Endian processors regardless of cross-compilation capabilities. `rdbus` is a standalone executable and does not require any additional runtime libraries besides the system ones. It can read from multiple data ports (serial/TCP) simultaneously. It requires some command line arguments and configuration file/-s, and will not start with invalid configuration and will tell you what is wrong.
 
@@ -17,15 +17,16 @@ The program is designed to run on Little Endian processors regardless of cross-c
   - [NMEA](#nmea)
     - [Data types](#data-types)
   - [Wago](#wago)
-  - [Protocol](#protocol)
+  - [`protocol`](#protocol)
   - [Output](#output)
-    - [Serial](#serial)
-    - [Address (TCP/IP)](#address-tcpip)
-  - [Data processing](#data-processing)
+    - [`serial`](#serial)
+    - [`address` (TCP/IP)](#address-tcpip)
+  - [`data_processing`](#data_processing)
+    - [`limits`](#limits)
 - [Output](#output-1)
   - [Read](#read)
-  - [Data processing](#data-processing-1)
-    - [limits](#limits)
+  - [Data Processing](#data-processing)
+    - [Limits](#limits-1)
   - [HTTP server](#http-server)
     - [`/read` request](#read-request)
     - [`/process/limits` request](#processlimits-request)
@@ -284,7 +285,57 @@ Allowed values for `"data_type"` are `"INT"`, `"UINT"`, `"FLOAT"`, `"STRING"`.
 
 ## Wago
 
-## Protocol
+<details>
+<summary>Example configuration for Wago.</summary>
+
+```json
+{
+    "protocol": "wago",
+
+    "address": {
+        "ip": "192.168.0.30",
+        "port": 32768
+    },
+
+    "modules":
+    [
+        {
+            "name": "750-459",
+            "poll_time_ms": 1000,
+            "instances":
+            [
+                "sensor_1",
+                "sensor_2"
+            ]
+        },
+        {
+            "name": "750-455",
+            "poll_time_ms": 2000,
+            "offset": 12,
+            "instances":
+            [
+                "sensor_1",
+                "sensor_2"
+            ]
+        }
+    ],
+}
+```
+</details>
+<br />
+
+The Wago specific part is `"modules"`. Also note that `"protocol": "wago"`. In case of Wago, you will have a separate config for each connected PLC, due to each of them having different `adddress` section. Only reading of analog values is currently supported (EIP Wago class `0x67`), you can read more about Wago PLC [here](https://www.wago.com/medias/m07500363-00000000-0en.pdf?context=bWFzdGVyfGRvd25sb2Fkc3w0NTcyNzEzfGFwcGxpY2F0aW9uL3BkZnxhRGcyTDJnMU1pOHhNemt3TURZd016VTFOVGczTUM5dE1EYzFNREF6TmpOZk1EQXdNREF3TURCZk1HVnVMbkJrWmd8ZjZmZDRiN2VhMmMwYWE4M2Q4OGNjZGRkYTY0NjQ0NDY5MzlkMmVhMjJkNGRhMzcxNDcwYzMwYjNiYzkyZWE5Mg&attachment=true).
+
+In `"modules"` section, you must specify each wago module that you want to read from.
+
+| Field name       | Description                                                                 |
+|------------------|-----------------------------------------------------------------------------|
+| `"name"`         | The name of module. Used for section identification in `rdbus` data output. |
+| `"poll_time_ms"` | A pause between each request in milliseconds.                               |
+| `"offset"`       | Optional. The ID of each **field** gets calculated dynamically by taking in account each previous module's fields defined in the configuration, meaning that by default it is assumed that all modules are put one after another. If you would like to skip a module in between, you must specify an explicit, absolute, offset of **fields** from the beginning. |
+| `"instances"`    | A list of field names.                                                      |
+
+## `protocol`
 
 As was seen in previous examples, at the top of the json file we have the `"protocol"` field.
 ```json
@@ -298,7 +349,7 @@ The allowed values are `"modbus"`, `"nmea"` and `"wago"`. Depending on which you
 
 Each config file is meant to operate with one data port. Either serial port or TCP/IP. In each config file there must be a `"serial"` or `"address"` section. Currently the `"serial"` section works with NMEA and Modbus protocols only, and `"address"` section works with `"wago"` protocol only.
 
-### Serial
+### `serial`
 
 If you use NMEA or Modbus protocol, there must be `"serial"` section in the config file.
 ```json
@@ -325,9 +376,60 @@ If you use NMEA or Modbus protocol, there must be `"serial"` section in the conf
 | `"response_timeout_ms"` | Max time to wait for data to arrive.                            |
 | `"line_timeout_ms"`     | Max time to wait for each data segment (8 bytes) to arrive. You can calculate the minimum time (in milliseconds) by using formula `y=64000/baud_rate`. It is strongly recommended to round the result up, e.g. 6.6ms to 10ms, 13ms to 20ms, etc.|
 
-### Address (TCP/IP)
+### `address` (TCP/IP)
 
-## Data processing
+If you use Wago, there must be `"address"` section in the config file.
+```json
+{
+...
+    "address": {
+        "ip": "192.168.0.30",
+        "port": 32768
+    },
+...
+}
+```
+
+| Field name | Description                  |
+|------------|------------------------------|
+| `"ip"`     | IP address of target device. |
+| `"port"`   | Port numer of target device. |
+
+## `data_processing`
+
+Since all data gets output in a single, unified way, it is possible to install data processors that additionally process and output it. By adding data processing configurations in `data_processing`, you can install such processors.
+
+```json
+{
+...
+    "data_processing": {
+        "limits": { ... }
+    }
+...
+}
+```
+
+### `limits`
+
+Finds minmax values of all fields for specified devices in a specified timespan.
+
+```json
+...
+    "limits":
+    {
+        "storage_duration_minutes": 10,
+        "devices":
+        [
+            "Torque meter"
+        ]
+    }
+...
+```
+
+| Field name                   | Description                                                                                                       |
+|------------------------------|-------------------------------------------------------------------------------------------------------------------|
+| `"storage_duration_minutes"` | Max duration in minutes for how long to store the values of fields for.                                           |
+| `"devices"`                  | A list of slave `name`-s (Modbus)/top level `name` (NMEA)/module `name`-s (Wago) for which to find minmax values. |
 
 # Output
 
@@ -393,37 +495,79 @@ The main output of `rdbus` are simple data readings according to the given confi
 
 where a single entry can consist of either
 
-| Field name   | Description                                                             |
-|--------------|-------------------------------------------------------------------------|
-| `"device"`   | Slave `"name"` in case of Modbus or top level `"name"` in case of NMEA. |
-| `"fields"`   | A list of data fields.                                                  |
+| Field name   | Description                                                              |
+|--------------|--------------------------------------------------------------------------|
+| `"device"`   | slave `"name"` (Modbus)/top level `"name"` (NMEA)/module `"name"` (Wago) |
+| `"fields"`   | A list of data fields.                                                   |
 | `"metadata"` | An optional helper field. Currently present in NMEA only - contains sentence id so you could have sentences with the same field names but different meanings.|
 
 or
 
-| Field name | Description                                                             |
-|------------|-------------------------------------------------------------------------|
-| `"device"` | Slave `"name"` in case of Modbus or top level `"name"` in case of NMEA. |
-| `"error"`  | Error description object.                                               |
+| Field name | Description                                                                |
+|------------|----------------------------------------------------------------------------|
+| `"device"` | slave `"name"` (Modbus)/top level `"name"` (NMEA)/module `"name"` (Wago) |
+| `"error"`  | Error description object.                                                  |
 
 Structure of a single entry in `"fields"`:
 
 | Field name    | Description                                                                                                     |
 |---------------|-----------------------------------------------------------------------------------------------------------------|
-| `"name"`      | Register `"name"` in case of Modbus or sentence field `"name"` in case of NMEA.                                 |
+| `"name"`      | register `"name"` (Modbus)/sentence field `"name"` (NMEA)/instance name (Wago).                                 |
 | `"timestamp"` | Timestamp of when the reading was made. Note that in a single list of fields there may be different timestamps. |
 | `"value"`     | The value of field.                                                                                             |
 
 Structure of an `"error"`:
 
-| Field name | Description                                                                                                                                       |
-|------------|---------------------------------------------------------------------------------------------------------------------------------------------------|
-| `"code"`   | `1` - OS exception (e.g. could not read from port). `2` - Modbus error (e.g. invalid message). `3` - NMEA error (e.g. invalid checksum). |
-| `"what"`   | Description of an error.
+| Field name | Description                                                                                                                                                |
+|------------|------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `"code"`   | `1` - OS exception (e.g. could not read from port). `2` - Modbus error (e.g. invalid message). `3` - NMEA error (e.g. invalid checksum). `4` - Wago error. |
+| `"what"`   | Description of an error.                                                                                                                                   |
 
-## Data processing
+## Data Processing
 
-### limits
+### Limits
+
+Minmax values of all fields in a given device. Does not process fields of string data type.
+
+<details>
+<summary>Example output</summary>
+
+```json
+[
+    {
+        "device": "Sensor",
+        "fields": [
+            {
+                "name": "Analog_Field_1",
+                "min": 100,
+                "max": 100
+            },
+            {
+                "name": "Analog_Field_2",
+                "min": -2547,
+                "max": 259
+            }
+        ]
+    }
+]
+```
+</details>
+<br />
+
+Structure of a single limits JSON object:
+
+| Field name | Description                                                              |
+|------------|--------------------------------------------------------------------------|
+| `"device"` | slave `"name"` (Modbus)/top level `"name"` (NMEA)/module `"name"` (Wago) |
+| `"fields"` | A list of minmax values of fields.                                       |
+
+Structure of a single entry in `fields`:
+
+| Field name | Description             |
+|------------|-------------------------|
+| `"name"`   | Name of the field.      |
+| `"min"`    | Min value of the field. |
+| `"max"`    | Max value of the field. |
 
 ## HTTP server
 
@@ -542,6 +686,17 @@ $ curl -v --cookie "id=1" http://0.0.0.0:5000/read?pretty
 As you can see, there is a `Set-Cookie: 1` field present in first response header. If you send this cookie back on the next request in format `id=<id>` then you will receive only the new data that you have not read yet.
 
 ### `/process/limits` request
+
+The `/process/limits` request asks `rdbus` for all it's limits data. The request has no additional parameters.
+
+<details>
+<summary>Example</summary>
+
+```bash
+
+```
+</details>
+<br />
 
 ## Stdout
 
