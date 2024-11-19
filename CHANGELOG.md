@@ -1,9 +1,9 @@
 # rdbus
 
+# 0.4.0
 - Added value mapping of incoming wago analog data to the value range defined for given instance in the configuration.
 
 # 0.3.0
-
 - Added new data processing module - `"limits"`, for keeping track of minmax values in the given time period. Available for Modbus and Wago protocols.
 - Added new configuration section - `"data_processors"` to enable data processing modules for given configuration.
 - Added configuration settings for new `"wago"` (based on Ethernet Industrial Protocol) `"protocol"`. `rdbus` is now able to read analog data from Wago PLCs.
