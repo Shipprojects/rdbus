@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Instance.hpp"
 #include <chrono>
 #include <list>
 #include <nlohmann/json.hpp>
@@ -15,7 +16,7 @@ struct Module
     using Millis = std::chrono::milliseconds;
     Millis pollTimeMs = Millis( 0 );
 
-    std::list< std::string > instances;
+    std::list< Instance > instances;
 
     // Absolute instance offset from all fields of other instances
     // Instances start at 1

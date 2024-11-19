@@ -233,7 +233,7 @@ TEST( TestConfig, NoWagoLimits )
     EXPECT_EQ( config.protocol, "wago" );
     ASSERT_FALSE( config.serial.has_value() );
     ASSERT_TRUE( config.address.has_value() );
-    EXPECT_EQ( config.wago.modules.size(), 2 );
+    EXPECT_EQ( config.wago.modules.size(), 1 );
     EXPECT_FALSE( config.processors.limits.has_value() );
 }
 

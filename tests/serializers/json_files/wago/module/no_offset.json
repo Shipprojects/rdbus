@@ -3,6 +3,10 @@
     "poll_time_ms": 150,
     "instances":
     [
-        "sensor_2"
+        {
+            "name": "sensor_2",
+            "min": 0,
+            "max": 10
+        }
     ]
 }

@@ -30,6 +30,11 @@ static int16_t extractAnalog( int16_t value )
     return value;
 }
 
+static int16_t map( int16_t x, int16_t in_min, int16_t in_max, int16_t out_min, int16_t out_max )
+{
+    return ( x - in_min ) * ( out_max - out_min ) / ( in_max - in_min ) + out_min;
+}
+
 rdbus::Data Communicator::request( const Module& module )
 {
     rdbus::Data data;
@@ -38,7 +43,7 @@ rdbus::Data Communicator::request( const Module& module )
     try
     {
         int offset = module.offset;
-        for ( const auto& instanceName : module.instances )
+        for ( const auto& instance : module.instances )
         {
             // 0x67 - Wago Analog Input Point
             // offset - instance ID
@@ -48,8 +53,12 @@ rdbus::Data Communicator::request( const Module& module )
             EIP eip( address );
             const int16_t raw = eip.getSingle( epath, serviceId );
 
-            data.fields.emplace_back( rdbus::Data::Field{ .name = instanceName,
-                                                          .value = extractAnalog( raw ),
+            constexpr int16_t minAnalogValue = 0;
+            constexpr int16_t maxAnalogValue = 0x7ff; // Max value of 11 bit integer
+            const auto value = map( extractAnalog( raw ), minAnalogValue, maxAnalogValue, instance.min, instance.max );
+
+            data.fields.emplace_back( rdbus::Data::Field{ .name = instance.name,
+                                                          .value = value,
                                                           .timestamp = std::chrono::system_clock::now() } );
         }
     }

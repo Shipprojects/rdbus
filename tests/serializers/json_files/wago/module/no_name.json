@@ -3,7 +3,10 @@
     "offset": 12,
     "instances":
     [
-        "sensor_1",
-        "sensor_2"
+        {
+            "name": "sensor_1",
+            "min": 0,
+            "max": 10
+        }
     ]
 }

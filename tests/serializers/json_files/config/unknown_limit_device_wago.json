@@ -13,8 +13,16 @@
             "poll_time_ms": 150,
             "instances":
             [
-                "input_a",
-                "input_b"
+                {
+                    "name": "input_a",
+                    "min": 0,
+                    "max": 10
+                },
+                {
+                    "name": "input_b",
+                    "min": 0,
+                    "max": 10
+                }
             ]
         }
     ],

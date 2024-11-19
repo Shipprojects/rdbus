@@ -15,7 +15,7 @@ void from_json( const nlohmann::json& j, Module& x )
     int pollTimeMs = 0;
     tools::parseKeyValue( j, "poll_time_ms", pollTimeMs, "No 'poll_time_ms' field present in module!" );
 
-    std::list< std::string > instances;
+    std::list< Instance > instances;
     tools::parseKeyValue( j, "instances", instances, "No 'instances' present in module!" );
 
     int offset = Module::defaultOffset;

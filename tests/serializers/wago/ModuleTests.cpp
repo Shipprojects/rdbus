@@ -21,8 +21,12 @@ TEST( TestModule, Valid )
     EXPECT_EQ( module.pollTimeMs, Module::Millis( 150 ) );
     EXPECT_EQ( module.offset, 12 );
     EXPECT_EQ( module.instances.size(), 2 );
-    EXPECT_EQ( *module.instances.begin(), "sensor_1" );
-    EXPECT_EQ( *std::next( module.instances.begin() ), "sensor_2" );
+    EXPECT_EQ( module.instances.begin()->name, "sensor_1" );
+    EXPECT_EQ( module.instances.begin()->min, 0 );
+    EXPECT_EQ( module.instances.begin()->max, 10 );
+    EXPECT_EQ( std::next( module.instances.begin() )->name, "sensor_2" );
+    EXPECT_EQ( std::next( module.instances.begin() )->min, -100 );
+    EXPECT_EQ( std::next( module.instances.begin() )->max, 100 );
 }
 
 TEST( TestModule, ThreeInstances )
@@ -84,7 +88,9 @@ TEST( TestModule, NoOffset )
     EXPECT_EQ( module.pollTimeMs, Module::Millis( 150 ) );
     EXPECT_EQ( module.offset, Module::defaultOffset );
     EXPECT_EQ( module.instances.size(), 1 );
-    EXPECT_EQ( *module.instances.begin(), "sensor_2" );
+    EXPECT_EQ( module.instances.begin()->name, "sensor_2" );
+    EXPECT_EQ( module.instances.begin()->min, 0 );
+    EXPECT_EQ( module.instances.begin()->max, 10 );
 }
 
 TEST( TestModule, NoInstances )
