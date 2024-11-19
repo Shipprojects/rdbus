@@ -233,7 +233,7 @@ TEST( TestConfig, NoWagoLimits )
     EXPECT_EQ( config.protocol, "wago" );
     ASSERT_FALSE( config.serial.has_value() );
     ASSERT_TRUE( config.address.has_value() );
-    EXPECT_EQ( config.wago.modules.size(), 2 );
+    EXPECT_EQ( config.wago.modules.size(), 1 );
     EXPECT_FALSE( config.processors.limits.has_value() );
 }
 
@@ -252,6 +252,18 @@ TEST( TestConfig, NoWagoModules )
 TEST( TestConfig, DuplicateModuleNames )
 {
     const auto path = testFilePath + "duplicate_module_names.json";
+
+    const auto jsonIn = getJsonFromPath( path );
+
+    EXPECT_THROW( {
+        config::Config config = jsonIn;
+    },
+                  config::ParseException );
+}
+
+TEST( TestConfig, DuplicateInstanceNames )
+{
+    const auto path = testFilePath + "duplicate_instance_names.json";
 
     const auto jsonIn = getJsonFromPath( path );
 

@@ -3,8 +3,20 @@
     "poll_time_ms": 300,
     "instances":
     [
-        "sensor_1",
-        "sensor_2",
-        "sensor_3"
+        {
+            "name": "sensor_1",
+            "min": 0,
+            "max": 10
+        },
+        {
+            "name": "sensor_2",
+            "min": -100,
+            "max": 100
+        },
+        {
+            "name": "sensor_3",
+            "min": 0,
+            "max": 0
+        }
     ]
 }

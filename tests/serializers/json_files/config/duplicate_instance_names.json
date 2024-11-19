@@ -19,23 +19,11 @@
                     "max": 10
                 },
                 {
-                    "name": "input_b",
+                    "name": "input_a",
                     "min": 0,
                     "max": 10
                 }
             ]
         }
-    ],
-
-    "data_processors":
-    {
-        "limits":
-        {
-            "storage_duration_minutes": 1000,
-            "devices":
-            [
-                "name_2"
-            ]
-        }
-    }
+    ]
 }
