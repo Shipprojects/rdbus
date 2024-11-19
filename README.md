@@ -304,8 +304,16 @@ Allowed values for `"data_type"` are `"INT"`, `"UINT"`, `"FLOAT"`, `"STRING"`.
             "poll_time_ms": 1000,
             "instances":
             [
-                "sensor_1",
-                "sensor_2"
+                {
+                    "name": "sensor_1",
+                    "min": 0,
+                    "max": 100
+                },
+                {
+                    "name": "sensor_2",
+                    "min": 0,
+                    "max": 1000
+                },
             ]
         },
         {
@@ -314,8 +322,16 @@ Allowed values for `"data_type"` are `"INT"`, `"UINT"`, `"FLOAT"`, `"STRING"`.
             "offset": 12,
             "instances":
             [
-                "sensor_1",
-                "sensor_2"
+                {
+                    "name": "sensor_1",
+                    "min": 300,
+                    "max": 500
+                },
+                {
+                    "name": "sensor_2",
+                    "min": 100,
+                    "max": 200
+                },
             ]
         }
     ],
