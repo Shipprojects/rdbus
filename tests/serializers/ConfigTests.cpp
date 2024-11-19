@@ -261,6 +261,18 @@ TEST( TestConfig, DuplicateModuleNames )
                   config::ParseException );
 }
 
+TEST( TestConfig, DuplicateInstanceNames )
+{
+    const auto path = testFilePath + "duplicate_instance_names.json";
+
+    const auto jsonIn = getJsonFromPath( path );
+
+    EXPECT_THROW( {
+        config::Config config = jsonIn;
+    },
+                  config::ParseException );
+}
+
 TEST( TestConfig, OffsetGap )
 {
     const auto path = testFilePath + "offset_gap.json";

@@ -34,6 +34,23 @@ static void checkDuplicateModuleNames( std::list< Module > modules )
     tools::throwIf( it != modules.end(), "Duplicate module names found!" );
 }
 
+static void checkDuplicateInstanceNames( std::list< Module > modules )
+{
+    for ( auto module : modules )
+    {
+        module.instances.sort( []( const Instance& left, const Instance& right )
+                               { return left.name < right.name; } );
+
+        const auto& it = std::adjacent_find( module.instances.begin(), module.instances.end(),
+                                             []( const Instance& left, const Instance& right )
+                                             {
+                                                 return left.name == right.name;
+                                             } );
+
+        tools::throwIf( it != module.instances.end(), "Duplicate instance names found!" );
+    }
+}
+
 static void validateLimitsProcessorModbus( const Slaves& slaves, const Limits& limits )
 {
     for ( const auto& device : limits.devices )
@@ -253,6 +270,7 @@ static void parseWago( const nlohmann::json& j, Config& x )
     tools::parseKeyValue( j, "modules", modules, "No 'modules' section present!" );
 
     checkDuplicateModuleNames( modules );
+    checkDuplicateInstanceNames( modules );
     checkOverlappingOffsets( modules );
     setOffsetValues( modules );
 

@@ -1,5 +1,7 @@
 # rdbus
 
+- Added value mapping of incoming wago analog data to the value range defined for given instance in the configuration.
+
 # 0.3.0
 
 - Added new data processing module - `"limits"`, for keeping track of minmax values in the given time period. Available for Modbus and Wago protocols.

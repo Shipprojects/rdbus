@@ -333,7 +333,15 @@ In `"modules"` section, you must specify each wago module that you want to read 
 | `"name"`         | The name of module. Used for section identification in `rdbus` data output. |
 | `"poll_time_ms"` | A pause between each request in milliseconds.                               |
 | `"offset"`       | Optional. The ID of each **field** gets calculated dynamically by taking in account each previous module's fields defined in the configuration, meaning that by default it is assumed that all modules are put one after another. If you would like to skip a module in between, you must specify an explicit, absolute, offset of **fields** from the beginning. |
-| `"instances"`    | A list of field names.                                                      |
+| `"instances"`    | A list of instances and their range of values.                               |
+
+Where each instance is:
+
+| Field name | Description                                                               |
+|------------|---------------------------------------------------------------------------|
+| `"name"`   | The name of the instance, used for identification in `rdbus` data output. |
+| `"min"`    | Incoming analog value from wago gets mapped from this lower range value.  |
+| `"max"`    | Incoming analog value from wago gets mapped to this upper range value.    |
 
 ## `protocol`
 
